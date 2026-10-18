@@ -21,3 +21,4 @@ npm run build
 
 Документация находится в `docs/design-system/`. Файлы BICUBIK и Akzentica не входят в исходные материалы; точки подключения и fallback-цепочки подготовлены в `assets/styles/tokens.css`.
 # Bunker_Design
+sdf
