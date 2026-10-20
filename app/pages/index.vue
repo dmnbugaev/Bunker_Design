@@ -33,17 +33,16 @@ useHead({
     <HeroSection />
     <div class="signal-strip" aria-hidden="true">
       <div class="signal-strip__track">
+        <!-- Повторы добиваем до ширины вдвое больше 4K-вьюпорта: анимация
+             сдвигает ленту на 50% трека, стык проходит незаметно. -->
         <span
-          >Бункер<span class="signal-strip__mark"></span>Смотри глубже<span
+          v-for="copy in 14"
+          :key="copy"
+          >Бункер<span class="signal-strip__mark"></span>Резерв — просто<span
             class="signal-strip__mark"
           ></span
-          >Найди свой магазин<span class="signal-strip__mark"></span
-        ></span>
-        <span
-          >Бункер<span class="signal-strip__mark"></span>Смотри глубже<span
-            class="signal-strip__mark"
-          ></span
-          >Найди свой магазин<span class="signal-strip__mark"></span
+          >Каталог под рукой<span class="signal-strip__mark"></span
+          >Заходи в гости<span class="signal-strip__mark"></span
         ></span>
       </div>
     </div>

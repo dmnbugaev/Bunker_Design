@@ -24,7 +24,7 @@ usePageSeo(
       ]"
     />
     <div class="page-heading">
-      <h1>Согласие на обработку<br />персональных данных</h1>
+      <h1>Согласие на обработку персональных данных</h1>
     </div>
     <article class="reading-content">
       <p>

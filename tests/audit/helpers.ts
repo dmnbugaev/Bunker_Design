@@ -114,6 +114,9 @@ export const LAYOUT_DEFECTS_SCRIPT = `
 
     const overRight = r.right - vw;
     const overLeft = -r.left;
+    // Honeypot-поля форм (left:-9999px, вне экрана для ботов) — намеренно
+    // невидимы и не создают пользовательского скролла, не дефект.
+    if (overLeft > 2 && r.left < -500) continue;
     if ((overRight > 2 || overLeft > 2) && !clipChainFits(el)) {
       // Декоративные бегущие строки сами шире экрана — пропускаем трек,
       // обрезка контролируется в отдельной визуальной проверке.

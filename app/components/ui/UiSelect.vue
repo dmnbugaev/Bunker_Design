@@ -7,7 +7,7 @@ const id = useId();
 <template>
   <div class="field">
     <label :for="id" class="field__label">{{ label }}</label>
-    <select :id="id" v-model="model" v-bind="$attrs">
+    <select :id="id" class="select" v-model="model" v-bind="$attrs">
       <option
         v-for="option in options"
         :key="option.value"

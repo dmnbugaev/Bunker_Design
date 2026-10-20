@@ -46,7 +46,9 @@ test("first visit chooses a real city and store", async ({ page, context }) => {
   await page.getByRole("button", { name: "Принять" }).click();
   const picker = page.getByRole("dialog", { name: "Ваш город и магазин" });
   await expect(picker).toBeVisible();
-  await picker.getByLabel("Город", { exact: true }).selectOption("engels");
+  // Города — чипы: клик фильтрует список точек, повторный клик снял бы
+  // фильтр и показал все магазины сети.
+  await picker.getByRole("button", { name: "Энгельс", exact: true }).click();
   // Магазин применяется сразу при выборе — отдельной кнопки больше нет.
   await picker.getByRole("radio", { name: /Энгельс/ }).check();
   await expect(picker).not.toBeVisible();
@@ -103,7 +105,7 @@ test("store changes availability and city price without losing the product", asy
   // В Северном остаток 0 — оптимистичная метка «Скоро в наличии».
   await expect(info.locator(".availability")).toHaveText("Скоро в наличии");
   await info.getByRole("button", { name: "Изменить магазин" }).click();
-  await picker.getByLabel("Город", { exact: true }).selectOption("engels");
+  await picker.getByRole("button", { name: "Энгельс", exact: true }).click();
   await picker.getByRole("radio", { name: /Энгельс/ }).check();
   // Цена Энгельса выше московской… саратовской: 3 590 ₽ против 3 490 ₽.
   await expect(info.locator(".product-price strong")).toContainText(/3\s?590/);

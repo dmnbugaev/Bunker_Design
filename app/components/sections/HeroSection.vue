@@ -1,7 +1,10 @@
 <script setup lang="ts">
 // Герой главной в системе «Бункера» (docs/design-system/DESIGN_SYSTEM.md):
-// один поставленный момент — дым распускается слоями за постером, дальше
-// только реактивное движение. На касании и prefers-reduced-motion — статично.
+// стартовая хореография как в design-kit/demo — заголовок раскрывается
+// клипом, строки копирайта всплывают со стаггером, визуал влетает справа,
+// три слоя дыма распускаются (bloom) по всей секции и уходят
+// в бесконечный дрейф; дальше только реактивное движение. На касании
+// и prefers-reduced-motion — статично.
 const reduceMotion = ref(false);
 let onPointer: ((event: PointerEvent) => void) | undefined;
 onMounted(() => {
@@ -45,41 +48,47 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <UiContainer as="section" class="hero" aria-labelledby="hero-title">
-    <div class="hero__copy">
-      <p class="edition"><span class="edition__dot" />Сеть вейпшопов</p>
-      <h1 id="hero-title" class="hero__title">
-        <span>Твой Бункер.</span><span>Смотри глубже.</span>
-      </h1>
-      <p class="hero__intro">
-        Каталог ассортимента сети: выберите магазин, чтобы увидеть наличие и
-        цены. Бронирование — в выбранный магазин, оплата на месте.
-      </p>
-      <NuxtLink to="/catalog" class="button button--primary button--large"
-        >Смотреть каталог <span aria-hidden="true">↗</span></NuxtLink
-      >
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__atmosphere" aria-hidden="true">
+      <span class="hero__smoke" />
+      <span class="hero__smoke hero__smoke--two" />
+      <span class="hero__smoke hero__smoke--three" />
+      <span class="hero__spark" />
     </div>
-    <div id="hero-visual" class="hero__visual">
-      <span class="hero__smoke" aria-hidden="true" />
-      <span class="hero__smoke hero__smoke--two" aria-hidden="true" />
-      <img
-        class="hero__poster"
-        src="/images/hero.webp"
-        alt="Постер сети «Бункер»: фирменный персонаж с устройства в руках"
-        width="720"
-        height="960"
-        fetchpriority="high"
-      />
-      <span class="hero__stamp" aria-hidden="true">Bunker · Vape shop</span>
-    </div>
-    <div class="hero__bottom">
-      <NuxtLink to="/catalog" class="hero__bottom-link"
-        >Каталог <span class="small-mark" aria-hidden="true">↗</span></NuxtLink
-      >
-      <NuxtLink to="/stores" class="hero__bottom-link"
-        >Магазины сети
-        <span class="small-mark" aria-hidden="true">✳</span></NuxtLink
-      >
-    </div>
-  </UiContainer>
+    <UiContainer class="hero__inner">
+      <div class="hero__copy">
+        <p class="edition"><span class="edition__dot" />Сеть вейпшопов</p>
+        <h1 id="hero-title" class="hero__title">
+          <span>Твой Бункер.</span><span>Смотри глубже.</span>
+        </h1>
+        <p class="hero__intro">
+          Каталог ассортимента сети: выберите магазин, чтобы увидеть наличие и
+          цены. Бронирование — в выбранный магазин, оплата на месте.
+        </p>
+        <NuxtLink to="/catalog" class="button button--primary button--large"
+          >Смотреть каталог <span aria-hidden="true">↗</span></NuxtLink
+        >
+      </div>
+      <div id="hero-visual" class="hero__visual">
+        <img
+          class="hero__poster"
+          src="/images/hero.webp"
+          alt="Постер сети «Бункер»: фирменный персонаж с устройства в руках"
+          width="720"
+          height="960"
+          fetchpriority="high"
+        />
+        <span class="hero__stamp" aria-hidden="true">Bunker · Vape shop</span>
+      </div>
+      <div class="hero__bottom">
+        <NuxtLink to="/catalog" class="hero__bottom-link"
+          >Каталог <span class="small-mark" aria-hidden="true">↗</span></NuxtLink
+        >
+        <NuxtLink to="/stores" class="hero__bottom-link"
+          >Магазины сети
+          <span class="small-mark" aria-hidden="true">✳</span></NuxtLink
+        >
+      </div>
+    </UiContainer>
+  </section>
 </template>

@@ -39,7 +39,7 @@
 .button--primary {
   --btn-bg: var(--color-primary);
   --btn-border: var(--color-primary);
-  --btn-color: var(--color-text-inverse);
+  --btn-color: var(--color-on-primary);
 }
 .button--primary {
   clip-path: polygon(0.45rem 0, 100% 0, calc(100% - 0.45rem) 100%, 0 100%);
@@ -273,7 +273,7 @@
 .badge--accent {
   border-color: var(--color-primary);
   background: var(--color-primary-subtle);
-  color: var(--color-primary);
+  color: var(--color-link);
 }
 .badge--success {
   border-color: color-mix(in srgb, var(--color-success) 55%, transparent);
@@ -289,7 +289,7 @@
 .chip[aria-pressed="true"] {
   border-color: var(--color-primary);
   background: var(--color-primary);
-  color: var(--color-text-inverse);
+  color: var(--color-on-primary);
 }
 
 /* Navigation */
@@ -354,6 +354,11 @@
   list-style: none;
   color: var(--color-text-muted);
   font-size: var(--font-size-body-sm);
+}
+.breadcrumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
 }
 .breadcrumbs li:not(:last-child)::after {
   content: "/";
@@ -772,7 +777,7 @@
 .pagination a[aria-current="page"] {
   border-color: var(--color-primary);
   background: var(--color-primary);
-  color: var(--color-text-inverse);
+  color: var(--color-on-primary);
   font-weight: 700;
 }
 

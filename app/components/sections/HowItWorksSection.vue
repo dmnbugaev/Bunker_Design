@@ -33,9 +33,13 @@ const steps = [
         <p>{{ step.text }}</p>
       </li>
     </ol>
-    <div class="inline-actions section-footnote">
-      <NuxtLink to="/stores" class="text-link">Выбрать магазин ↗</NuxtLink>
-      <NuxtLink to="/catalog" class="text-link">Перейти в каталог ↗</NuxtLink>
+    <div class="inline-actions steps-actions">
+      <NuxtLink to="/catalog" class="button button--primary"
+        >Перейти в каталог <span aria-hidden="true">↗</span></NuxtLink
+      >
+      <NuxtLink to="/stores" class="button button--outline"
+        >Выбрать магазин <span aria-hidden="true">↗</span></NuxtLink
+      >
     </div>
   </UiContainer>
 </template>

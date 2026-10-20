@@ -24,7 +24,7 @@ usePageSeo(
       ]"
     />
     <div class="page-heading">
-      <h1>Политика обработки<br />персональных данных</h1>
+      <h1>Политика обработки персональных данных</h1>
     </div>
     <article class="reading-content">
       <h2>1. Общие положения</h2>

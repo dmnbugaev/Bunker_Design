@@ -20,6 +20,7 @@ const id = useId();
     <textarea
       v-if="multiline"
       :id="id"
+      class="textarea"
       v-model="model"
       v-bind="$attrs"
       rows="3"
@@ -29,6 +30,7 @@ const id = useId();
     <input
       v-else
       :id="id"
+      class="input"
       v-model="model"
       v-bind="$attrs"
       :type="type"

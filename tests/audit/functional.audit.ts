@@ -53,7 +53,9 @@ test.describe("mobile interaction audit", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openPage(page, "/catalog");
     const field = page.getByLabel("Поиск по каталогу", { exact: true });
-    await field.fill("Блок");
+    // Фикстура fx-*: общедоступная позиция «Чай „Эрл Грей“» находится
+    // по слову «Чай» даже без cookie возраста.
+    await field.fill("Чай");
     const suggest = page.getByRole("listbox", { name: "Подсказки поиска" });
     await suggest.getByRole("option").first().click();
     await expect(page).toHaveURL(/\/product\//);
@@ -79,8 +81,11 @@ test.describe("mobile interaction audit", () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.context().clearCookies();
     await page.goto("/catalog", { waitUntil: "load" });
-    await expect(page.getByRole("dialog")).toBeVisible();
-    await page.getByRole("button", { name: "Мне 18 лет или больше" }).click();
+    // Каталогные маршруты не показывают модальный гейт (решение владельца
+    // 13.10.2026): вместо выдачи — inline-блок AgeNotice с той же кнопкой.
+    const notice = page.locator(".age-notice");
+    await expect(notice).toBeVisible();
+    await notice.getByRole("button", { name: "Мне 18 лет или больше" }).click();
     await expect(page.locator(".product-card").first()).toBeVisible();
   });
 
@@ -117,11 +122,16 @@ test.describe("mobile interaction audit", () => {
     await openPage(page, "/product/fx-vmate-pro-2");
     await page.getByRole("button", { name: "Изменить магазин" }).click();
     const picker = page.getByRole("dialog", { name: "Ваш город и магазин" });
-    await picker.getByRole("radio", { name: /Студия · Север/ }).check();
+    // Фикстура: fx-vmate-pro-2 в store-b1 (Центральный, Саратов) — plenty,
+    // в store-b3 (Энгельс) — available: после переключения метка меняется.
+    // Пикер открывается с городом текущего магазина: сначала Саратов,
+    // чипом переключаемся на Энгельс.
+    await picker.getByRole("button", { name: "Энгельс", exact: true }).click();
+    await picker.getByRole("radio", { name: /Тельмана/ }).check();
     await expect(picker).not.toBeVisible();
     await expect(
       page.locator(".product-detail__info .availability"),
-    ).toContainText("Много в наличии");
+    ).toContainText("В наличии");
   });
 
   test("keyboard: tab order reaches main controls, focus is visible", async ({

@@ -67,17 +67,26 @@
   --color-primary-hover: var(--coral-400);
   --color-primary-active: var(--coral-600);
   --color-primary-subtle: color-mix(in srgb, var(--coral-500) 14%, transparent);
+  /* Текстовые ссылки: светлый тинт коралла — coral-500 на тёмных
+     поверхностях не добирает WCAG AA 4.5:1 для мелкого текста. */
+  --color-link: var(--coral-300);
+  --color-link-hover: var(--coral-200);
+  /* Текст на коралловой заливке: тёмный (AA ≥4.5 для 15px bold),
+     белый давал бы 3.03:1. */
+  --color-on-primary: #111111;
   --color-bg-primary: var(--neutral-900);
   --color-bg-secondary: var(--neutral-950);
   --color-bg-elevated: var(--neutral-850);
-  --color-surface-primary: var(--neutral-850);
+  --color-surface-primary: var(--neutral-800);
   --color-surface-secondary: var(--neutral-800);
   --color-surface-hover: #383836;
   --color-border-default: #3d3d3a;
   --color-border-strong: #60605d;
   --color-text-primary: var(--neutral-50);
-  --color-text-secondary: var(--color-brand-text);
-  --color-text-muted: #858583;
+  /* Приглушённые ступени подняты для контраста на surfaces (#30302f):
+     muted #858583 давал 3.57:1, secondary #a8a8a8 — впритык. */
+  --color-text-secondary: #b5b5b1;
+  --color-text-muted: #a4a4a1;
   --color-text-inverse: var(--neutral-1000);
   --color-disabled: #5f5f5c;
   --color-focus: #ffbcbc;

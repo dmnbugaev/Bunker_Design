@@ -11,16 +11,27 @@ const {
   dismissPicker,
 } = useStoreSelection();
 const cityId = ref("");
-const stores = computed(
-  () => meta.value?.stores.filter((item) => item.cityId === cityId.value) ?? [],
+const cityById = computed(
+  () => new Map((meta.value?.cities ?? []).map((city) => [city.id, city])),
 );
-const cityOptions = computed(() => [
-  { value: "", label: "Выберите город" },
-  ...(meta.value?.cities.map((city) => ({
-    value: city.id,
-    label: city.name,
-  })) ?? []),
-]);
+// Без выбранного города показываем все точки сразу, сгруппированные по
+// городам, — магазин можно выбрать в один клик, не открывая список.
+const storeGroups = computed(() => {
+  const all = meta.value?.stores ?? [];
+  const grouped = (meta.value?.cities ?? [])
+    .map((city) => ({
+      city,
+      stores: all.filter((item) => item.cityId === city.id),
+    }))
+    .filter((group) => group.stores.length > 0);
+  return cityId.value
+    ? grouped.filter((group) => group.city.id === cityId.value)
+    : grouped;
+});
+function pickCity(id: string) {
+  // Повторное нажатие снимает фильтр — снова видны все магазины сети.
+  cityId.value = cityId.value === id ? "" : id;
+}
 watch(
   pickerOpen,
   (open) => {
@@ -94,29 +105,50 @@ const errorTexts: Record<GeoErrorCode, string> = {
       >
         {{ errorTexts[detectError] }}
       </p>
-      <UiSelect v-model="cityId" label="Город" :options="cityOptions" />
-      <fieldset v-if="cityId" class="store-options">
-        <legend>Магазин</legend>
-        <label
-          v-for="item in stores"
-          :key="item.id"
-          class="store-option"
-          :class="{ 'store-option--selected': store?.id === item.id }"
+      <!-- Города — чипы со срезом угла: один клик вместо раскрытия
+           выпадающего списка, повторный клик снимает фильтр. -->
+      <div
+        v-if="cityById.size > 1"
+        class="store-cities"
+        role="group"
+        aria-label="Город"
+      >
+        <button
+          v-for="city in cityById.values()"
+          :key="city.id"
+          type="button"
+          class="city-chip"
+          :aria-pressed="cityId === city.id"
+          @click="pickCity(city.id)"
         >
-          <input
-            type="radio"
-            name="store"
-            :value="item.id"
-            :checked="store?.id === item.id"
-            @change="choose(item.id)"
-          />
-          <span
-            ><strong>{{ item.name }}</strong
-            ><span class="caption">{{
-              item.address || item.description
-            }}</span></span
+          {{ city.name }}
+        </button>
+      </div>
+      <fieldset class="store-options">
+        <legend>Магазин</legend>
+        <template v-for="group in storeGroups" :key="group.city.id">
+          <p v-if="!cityId" class="store-city">{{ group.city.name }}</p>
+          <label
+            v-for="item in group.stores"
+            :key="item.id"
+            class="store-option"
+            :class="{ 'store-option--selected': store?.id === item.id }"
           >
-        </label>
+            <input
+              type="radio"
+              name="store"
+              :value="item.id"
+              :checked="store?.id === item.id"
+              @change="choose(item.id)"
+            />
+            <span
+              ><strong>{{ item.name }}</strong
+              ><span class="caption">{{
+                item.address || item.description
+              }}</span></span
+            >
+          </label>
+        </template>
       </fieldset>
       <p class="caption store-picker__hint">
         Окно можно закрыть и выбрать магазин позже — тогда цены покажутся
