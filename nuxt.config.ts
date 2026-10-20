@@ -129,7 +129,18 @@ export default defineNuxtConfig({
             "Бункер — сеть вейпшопов: адреса магазинов, режим работы и справочный каталог ассортимента для лиц старше 18 лет.",
         },
       ],
-      link: [{ rel: "icon", type: "image/png", href: "/brand/favicon.png" }],
+      // Единый фавикон для всех страниц: SVG-мастер (Chrome/Firefox/
+      // Edge), PNG 32 для Safari и apple-touch-icon для iOS/закладок.
+      // Набор регенерируется: node design-kit/tools/generate-favicon.mjs
+      link: [
+        { rel: "icon", type: "image/svg+xml", href: "/brand/favicon.svg" },
+        { rel: "icon", type: "image/png", sizes: "32x32", href: "/brand/favicon-32.png" },
+        {
+          rel: "apple-touch-icon",
+          sizes: "180x180",
+          href: "/brand/apple-touch-icon.png",
+        },
+      ],
     },
   },
 });

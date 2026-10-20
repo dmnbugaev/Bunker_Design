@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<linearGradient id="plate" x1="0" y1="0" x2="0.25" y2="1">
+<stop offset="0" stop-color="#ff7474"/>
+<stop offset="1" stop-color="#e94747"/>
+</linearGradient>
+<mask id="cut">
+<rect width="512" height="512" fill="white"/>
+<g transform="translate(80,96)">
+<path d="M0,0 L260,0 L260,54 L54,54 L54,98 L260,98 L260,266 L224,320 L0,320 Z M54,152 L206,152 L206,266 L54,266 Z" fill="black" fill-rule="evenodd"/>
+</g>
+</mask>
+</defs>
+<polygon points="48,32 464,32 355.8,480 48,480" fill="url(#plate)" mask="url(#cut)"/>
+</svg>
