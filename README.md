@@ -53,8 +53,8 @@ npm run lint           # eslint
 npm run typecheck      # vue-tsc
 ```
 
-Демо дизайн-системы доступно на `/design-system/` (статика из `design-system/`,
-копируется скриптом `prepare-public.mjs`).
+Демо дизайн-кита — локально: `npm run design-kit` (страница живёт в
+`design-kit/demo/`, в деплой не попадает; см. `design-kit/README.md`).
 
 ## Подключение «МойСклад»
 
@@ -68,7 +68,27 @@ npm run typecheck      # vue-tsc
 Токен используется только сервером; картинки отдаются через серверный
 прокси (`/api/products/:id/images/:n`), в браузер секрет не попадает.
 
-## Деплой на VPS
+## Деплой
+
+### Vercel (автоматический)
+
+Репозиторий готов к импорту в Vercel без настройки: Nuxt определяется по
+`vercel.json` (`framework: nuxtjs`), сборка — `npm run build`. Лишнее
+(дизайн-кит 24 МБ, тесты, docs, CI-скрипты) не загружается — см.
+`.vercelignore`.
+
+Переменные окружения — в настройках проекта Vercel (список и назначение —
+`.env.example`). Минимум для запуска: `NUXT_PUBLIC_SITE_URL`. Для
+preview-деплоев с демо-каталогом добавьте
+`MOYSKLAD_SNAPSHOT_PATH=./tests/fixtures/catalog.json`; для боевого
+режима задайте `NUXT_MOYSKLAD_TOKEN` и не задавайте snapshot.
+
+Ограничение serverless: файловые хранилища (аккаунты, брони, заявки) по
+умолчанию уходят в `/tmp` и живут до холодного старта функции — регистрации
+и резервы на Vercel эфемерны. Постоянство данных и Telegram-уведомления —
+на VPS-деплое ниже или при подключении внешнего хранилища.
+
+### VPS (с постоянством данных)
 
 По образцу ProHook: node ≥ 24, сборка на сервере (или перенос `.output/`),
 systemd-юнит на `node .output/server/index.mjs`, nginx как реверс-прокси на
@@ -78,14 +98,16 @@ systemd-юнит на `node .output/server/index.mjs`, nginx как реверс
 
 ## Структура
 
-- `app/` — страницы, компоненты, композиции, стили (`app/assets/css/`:
-  tokens → base → components → pages);
+- `app/` — страницы, компоненты (UI-кит — `app/components/ui/`), композиции,
+  стили (`app/assets/css/`: tokens → base → components → pages);
 - `server/` — API-эндпоинты, сервисы «МойСклад» (каталог, контрагенты,
   бонусы), файловые хранилища, сессии;
 - `shared/` — общий код клиента и сервера (типы, валидация, юридический
   слой, SEO, контактные данные);
-- `design-system/`, `referens/`, `assets/` — источники дизайн-системы
-  (копируются в `public/` при `postinstall`);
+- `public/` — только то, что отдаёт сайт: `brand/`, `images/` (WebP),
+  верификация Яндекса; шрифты `fonts/` кладутся вручную (NEEDS-DATA);
+- `design-kit/` — дизайн-кит: демо дизайн-системы, библиотека референсов,
+  генератор `public/images/` (в деплой не попадает — `.vercelignore`);
 - `tests/` — unit (`*.test.mjs`) и e2e (`*.spec.ts`) + фикстура каталога.
 
 ## Чего не хватает до продакшена

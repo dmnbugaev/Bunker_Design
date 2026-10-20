@@ -11,13 +11,9 @@ export default [
       "test-results/**",
       "playwright-report/**",
       ".agents/**",
-      // Статика дизайн-системы (браузерные скрипты демо, копируются в
-      // public/assets скриптом prepare-public.mjs) — не код приложения.
-      "assets/**",
-      "design-system/**",
-      "public/assets/**",
-      "public/referens/**",
-      "public/design-system/**",
+      // Дизайн-кит (демо-страница и её браузерные скрипты) — не код
+      // приложения; в деплой не попадает (исключён .vercelignore).
+      "design-kit/**",
     ],
   },
   js.configs.recommended,

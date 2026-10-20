@@ -7,9 +7,9 @@
  *  - локальная разработка без токена: `cp .env.example .env` уже включает
  *    MOYSKLAD_SNAPSHOT_PATH=./tests/fixtures/catalog.json.
  *
- * Изображения ссылаются на референсные постеры сети из public/referens
- * (копируются туда скриптом prepare-public.mjs); у позиций без фото поле
- * images пустое — карточка показывает заглушку.
+ * Изображения ссылаются на постеры из public/images/ (сжатые WebP,
+ * сгенерированы из дизайн-кита: node design-kit/tools/optimize-images.mjs);
+ * у позиций без фото поле images пустое — карточка показывает заглушку.
  */
 import { writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -77,19 +77,15 @@ const categories = [
 }));
 
 const IMG = {
-  vmate:
-    "/referens/bj8RTwsd6fvYS6l7uVJkVX0eRwSpdJELH_FGHCsoJ_S27TfkwuHfMAW3ks0bzJKFKstTGx7ks7dYIE1fWEGom9E6cNgJpA.jpg",
-  mook: "/referens/UJrm6iFVuUF8GTYgTCi9JEKDy9bDj7i5-7aKHK-WytBeJKduGsnlfoNlIfep8qdWsBtCbMEpjq7aIpjy3lVQtIkQUKL0dA.jpg",
-  kaos: "/referens/M4Jp7OjTwAmEAwPAaSvjzQbIIaP-YXUz4s8DlZ4uaqQQOxaSb5mZBJ3uIYcepPVamAWAtLvzlOepQejcapQQjSCz.jpg",
-  pod: "/referens/_KY_sRns6H3lJ2nzvPlQ73i2z-f3n7mg11Ggd9kAleT2NaWRmiLzBdKFeRAc3J6rxsHyksvCCRc18x3xbeReSQYI.jpg",
-  stels:
-    "/referens/0_tzCLV4Z08ZFwYH_txpFFuvyu6uM_FBeudDGE1FOk_tebn5jPr5KBxzvml5jek-RWu-VYMzqX7WeyEBbJLvpYyTJVxbpw.jpg",
-  arqa: "/referens/V-R5cB34rXOs-N1mHgDAY6GfWnXgXToa9Gbyjrvt25tHrKYI7rNJANwShNNY1P3g7b77gg32nT0hZ7A8sm_ZllzeCeQINg.jpg",
-  liquid1:
-    "/referens/n3VVPkKv9pmDyE-dbvgWVxJNgchEUJFvhTxdCSRu09qHfVLRBc1BjsNuORzvx9IojsJaA97wx41XWL8sUGxhAgIL.jpg",
-  liquid2:
-    "/referens/su3QYdviRX4pXeHdbg85QrfaPq5QhLuDx_6dNBKDNVPtaXAgPTqAgAJwFn3Qrn_IxQd0NLk0H8qEwjkLXzjR-6fi.jpg",
-  tea: "/referens/gjq65pQuEH7UkgeDtDHTTHRdx1tGQkxANfS6RPFwLUN3V41Pc7krgw8ukQQYTUJixvTWielNHRErZgzw44PJOTYTF15kzg.jpg",
+  vmate: "/images/fx-vmate.webp",
+  mook: "/images/fx-mook.webp",
+  kaos: "/images/fx-kaos.webp",
+  pod: "/images/fx-pod.webp",
+  stels: "/images/fx-stels.webp",
+  arqa: "/images/fx-arqa.webp",
+  liquid1: "/images/fx-liquid-1.webp",
+  liquid2: "/images/fx-liquid-2.webp",
+  tea: "/images/fx-tea.webp",
 };
 
 /**

@@ -1,6 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
+import { resolveDataDir } from "../utils/data-dir";
 import type { ReservationStatus } from "../../shared/types/reservation";
 
 /**
@@ -49,10 +50,7 @@ interface ReservationFile {
   requests: StoredReservation[];
 }
 
-const DATA_DIR = resolve(
-  process.cwd(),
-  process.env.RESERVATION_DATA_DIR || ".data/reservations",
-);
+const DATA_DIR = resolveDataDir("RESERVATION_DATA_DIR", "reservations");
 const FILE = resolve(DATA_DIR, "reservations.json");
 
 /** Сколько времени запрос ждёт обработки магазином. */

@@ -1,6 +1,6 @@
 {
-  "updatedAt": 1792455852771,
-  "stockUpdatedAt": 1792455852771,
+  "updatedAt": 1792495996492,
+  "stockUpdatedAt": 1792495996492,
   "meta": {
     "cities": [
       {
@@ -120,7 +120,7 @@
       "images": [
         {
           "id": "fx-vmate-pro-2-0",
-          "src": "/referens/bj8RTwsd6fvYS6l7uVJkVX0eRwSpdJELH_FGHCsoJ_S27TfkwuHfMAW3ks0bzJKFKstTGx7ks7dYIE1fWEGom9E6cNgJpA.jpg",
+          "src": "/images/fx-vmate.webp",
           "alt": "VooPoo VMATE Pro 2 — изображение 1"
         }
       ],
@@ -170,7 +170,7 @@
       "images": [
         {
           "id": "fx-mook-fwrd-0",
-          "src": "/referens/UJrm6iFVuUF8GTYgTCi9JEKDy9bDj7i5-7aKHK-WytBeJKduGsnlfoNlIfep8qdWsBtCbMEpjq7aIpjy3lVQtIkQUKL0dA.jpg",
+          "src": "/images/fx-mook.webp",
           "alt": "MOOK FWRD — изображение 1"
         }
       ],
@@ -220,7 +220,7 @@
       "images": [
         {
           "id": "fx-kaos-eclipse-0",
-          "src": "/referens/M4Jp7OjTwAmEAwPAaSvjzQbIIaP-YXUz4s8DlZ4uaqQQOxaSb5mZBJ3uIYcepPVamAWAtLvzlOepQejcapQQjSCz.jpg",
+          "src": "/images/fx-kaos.webp",
           "alt": "KAOS Eclipse — изображение 1"
         }
       ],
@@ -265,7 +265,7 @@
       "images": [
         {
           "id": "fx-pod-classic-0",
-          "src": "/referens/_KY_sRns6H3lJ2nzvPlQ73i2z-f3n7mg11Ggd9kAleT2NaWRmiLzBdKFeRAc3J6rxsHyksvCCRc18x3xbeReSQYI.jpg",
+          "src": "/images/fx-pod.webp",
           "alt": "Pod-система Bunker Classic — изображение 1"
         }
       ],
@@ -315,7 +315,7 @@
       "images": [
         {
           "id": "fx-stels-6000-0",
-          "src": "/referens/0_tzCLV4Z08ZFwYH_txpFFuvyu6uM_FBeudDGE1FOk_tebn5jPr5KBxzvml5jek-RWu-VYMzqX7WeyEBbJLvpYyTJVxbpw.jpg",
+          "src": "/images/fx-stels.webp",
           "alt": "STELS 6000 — изображение 1"
         }
       ],
@@ -365,7 +365,7 @@
       "images": [
         {
           "id": "fx-arqa-premium-0",
-          "src": "/referens/V-R5cB34rXOs-N1mHgDAY6GfWnXgXToa9Gbyjrvt25tHrKYI7rNJANwShNNY1P3g7b77gg32nT0hZ7A8sm_ZllzeCeQINg.jpg",
+          "src": "/images/fx-arqa.webp",
           "alt": "ARQA Premium — изображение 1"
         }
       ],
@@ -410,7 +410,7 @@
       "images": [
         {
           "id": "fx-liquid-classic-0",
-          "src": "/referens/n3VVPkKv9pmDyE-dbvgWVxJNgchEUJFvhTxdCSRu09qHfVLRBc1BjsNuORzvx9IojsJaA97wx41XWL8sUGxhAgIL.jpg",
+          "src": "/images/fx-liquid-1.webp",
           "alt": "Жидкость Bunker Classic, 30 мл — изображение 1"
         }
       ],
@@ -460,7 +460,7 @@
       "images": [
         {
           "id": "fx-liquid-night-0",
-          "src": "/referens/su3QYdviRX4pXeHdbg85QrfaPq5QhLuDx_6dNBKDNVPtaXAgPTqAgAJwFn3Qrn_IxQd0NLk0H8qEwjkLXzjR-6fi.jpg",
+          "src": "/images/fx-liquid-2.webp",
           "alt": "Жидкость Night Shift, 30 мл — изображение 1"
         }
       ],
@@ -642,7 +642,7 @@
       "images": [
         {
           "id": "fx-tea-oolong-0",
-          "src": "/referens/gjq65pQuEH7UkgeDtDHTTHRdx1tGQkxANfS6RPFwLUN3V41Pc7krgw8ukQQYTUJixvTWielNHRErZgzw44PJOTYTF15kzg.jpg",
+          "src": "/images/fx-tea.webp",
           "alt": "Китайский чай «Молочный улун», 50 г — изображение 1"
         }
       ],

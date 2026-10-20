@@ -1749,13 +1749,13 @@
   inset: -12% -8%;
   z-index: -1;
   pointer-events: none;
-  background: url("/referens/дымы/pngwing.com-10.png") center / cover no-repeat;
+  background: url("/images/smoke-hero.webp") center / cover no-repeat;
   mix-blend-mode: screen;
   opacity: 0.5;
   animation: hero-smoke 14s var(--easing-standard) infinite alternate;
 }
 .hero__smoke--two {
-  background-image: url("/referens/дымы/pngwing.com-2.png");
+  background-image: url("/images/smoke-hero-2.webp");
   animation-duration: 19s;
   animation-direction: alternate-reverse;
   opacity: 0.35;
@@ -2106,8 +2106,7 @@
   inset: auto -10% -45% auto;
   width: 60%;
   height: 80%;
-  background: url("/referens/дымы/pngwing.com-9.png") right center / contain
-    no-repeat;
+  background: url("/images/smoke-bonus.webp") right center / contain no-repeat;
   mix-blend-mode: screen;
   opacity: 0.12;
   pointer-events: none;

@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
       <span class="hero__smoke hero__smoke--two" aria-hidden="true" />
       <img
         class="hero__poster"
-        src="/referens/pfzFwYWQRYIdNIHkIK6mIRl2DpooiwxYwIsJEOIhQZXFgosfPCQ7ZfpDM04TLDUkAIejcuUBvTt03lsxqVKy7kqQ.jpg"
+        src="/images/hero.webp"
         alt="Постер сети «Бункер»: фирменный персонаж с устройства в руках"
         width="720"
         height="960"

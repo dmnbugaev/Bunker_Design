@@ -25,7 +25,7 @@ usePageSeo(
       </div>
       <div class="about-editorial">
         <img
-          src="/referens/izXs90gk5s97wMyS_xLFyCzYMEgZLmTxaKG05MC0K--_VA3i7UahgS4pQSRzBccoQo8RIqzFvhZvUq2B1QKPpLji.jpg"
+          src="/images/storefront.webp"
           alt="Бункер"
           width="360"
           height="360"

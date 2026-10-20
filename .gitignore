@@ -15,5 +15,3 @@ playwright-report/
 .tmp/
 skills-lock.json
 test-artifacts/
-public/assets/
-public/referens/

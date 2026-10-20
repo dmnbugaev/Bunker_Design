@@ -1,6 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { resolve } from "node:path";
+import { resolveDataDir } from "../utils/data-dir";
 import type { Partnership } from "../../shared/utils/partnership";
 
 /**
@@ -34,10 +35,7 @@ interface PartnershipFile {
   applications: StoredPartnership[];
 }
 
-const DATA_DIR = resolve(
-  process.cwd(),
-  process.env.PARTNERSHIP_DATA_DIR || ".data/partnership",
-);
+const DATA_DIR = resolveDataDir("PARTNERSHIP_DATA_DIR", "partnership");
 const FILE = resolve(DATA_DIR, "applications.json");
 
 /** Срок хранения персональных данных заявки (минимизация, 152-ФЗ). */

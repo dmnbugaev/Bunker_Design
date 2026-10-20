@@ -1,6 +1,7 @@
 import { hash, verify } from "@node-rs/argon2";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { randomUUID, randomBytes } from "node:crypto";
+import { resolveDataDir } from "../utils/data-dir";
 import { resolve } from "node:path";
 
 /**
@@ -29,10 +30,7 @@ interface UserFile {
   users: StoredUser[];
 }
 
-const DATA_DIR = resolve(
-  process.cwd(),
-  process.env.ACCOUNT_DATA_DIR || ".data/account",
-);
+const DATA_DIR = resolveDataDir("ACCOUNT_DATA_DIR", "account");
 const USERS_FILE = resolve(DATA_DIR, "users.json");
 
 // Argon2id с параметрами уровня OWASP (19 MiB, t=2, p=1).

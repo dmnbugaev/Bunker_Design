@@ -20,7 +20,6 @@ Disallow: /login
 Disallow: /register
 Disallow: /reserve
 Disallow: /search
-Disallow: /design-system
 Disallow: /api/
 # Карточки товаров: контент скрыт до подтверждения 18+ — для робота это
 # пустая страница, расход обхода; meta noindex и так исключает их из выдачи.

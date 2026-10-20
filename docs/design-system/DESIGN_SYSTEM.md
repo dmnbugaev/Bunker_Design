@@ -11,18 +11,19 @@
 ## Архитектура
 
 ```text
-assets/
-  js/components.js        DOM-first поведение компонентов
-  js/design-system.js     данные и сборка демо
-  styles/tokens.css       primitive → semantic → component tokens
-  styles/base.css         reset, типографика, общие примитивы
-  styles/components.css   UI-компоненты
-  styles/design-system.css только композиция showcase-страницы
-design-system/index.html  закрытая от индексации витрина
-docs/design-system/       правила и исследования
+app/components/ui/      UI-кит сайта (Ui*): единственная каноническая реализация
+app/assets/css/         tokens → base → components → pages
+design-kit/demo/
+  index.html            витрина кита (локально: npm run design-kit)
+  assets/js/            DOM-first поведение компонентов демо
+  assets/styles/        снапшот стилей: tokens/base/components + композиция витрины
+design-kit/referens/    библиотека исходных изображений бренда
+docs/design-system/     правила и исследования
 ```
 
-Нативный стек выбран потому, что исходная директория не содержала приложения или фреймворка. Система не зависит от UI-библиотек и допускает перенос классов и токенов в Vue/Nuxt после появления основного приложения.
+Исходно система сверсталась нативно (без фреймворка) — снапшот остался в
+`design-kit/demo/`. Продакшен-сайт (Nuxt) использует те же токены и
+соглашения об именах; канонические компоненты — в `app/components/ui/`.
 
 ## Принципы
 
@@ -38,10 +39,14 @@ docs/design-system/       правила и исследования
 
 ## Подключение
 
+В демо-витрине (относительные пути, работает под `npm run design-kit`):
+
 ```html
-<link rel="stylesheet" href="/assets/styles/tokens.css">
-<link rel="stylesheet" href="/assets/styles/base.css">
-<link rel="stylesheet" href="/assets/styles/components.css">
+<link rel="stylesheet" href="./assets/styles/tokens.css">
+<link rel="stylesheet" href="./assets/styles/base.css">
+<link rel="stylesheet" href="./assets/styles/components.css">
 ```
 
+В сайт эти стили не подключаются: продакшен использует ту же систему
+токенов из `app/assets/css/` (tokens → base → components → pages).
 Композиционные стили showcase-страницы не должны подключаться в продуктовые страницы.

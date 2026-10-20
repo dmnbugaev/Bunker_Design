@@ -34,7 +34,6 @@ export const AUDIT_PAGES: PageDef[] = [
   // списком отбора показывает пустое состояние — оба состояния проверяем.
   { path: "/account", name: "account" },
   { path: "/reserve", name: "reserve" },
-  { path: "/design-system", name: "design-system" },
 ];
 
 // Cookie готового пользователя: возраст подтверждён, магазин выбран —

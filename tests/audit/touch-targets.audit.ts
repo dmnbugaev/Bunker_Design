@@ -22,9 +22,6 @@ test.describe("touch target audit", () => {
     const small: unknown[] = [];
     const all: unknown[] = [];
     for (const def of AUDIT_PAGES) {
-      // /design-system — внутренний стайлгайд (noindex), не пользовательский
-      // маршрут: плотность там задана демонстрационно.
-      if (def.name === "design-system") continue;
       for (const width of MOBILE_WIDTHS) {
         await page.setViewportSize({ width, height: 800 });
         await openPage(page, def.path);

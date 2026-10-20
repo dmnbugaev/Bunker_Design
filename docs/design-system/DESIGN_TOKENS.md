@@ -1,6 +1,6 @@
 # Design tokens
 
-Источник истины: `assets/styles/tokens.css`.
+Источник истины: `app/assets/css/tokens.css` (сайт) и `design-kit/demo/assets/styles/tokens.css` (снапшот демо-витрины).
 
 ## Слои
 

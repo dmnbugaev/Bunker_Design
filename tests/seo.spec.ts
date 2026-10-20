@@ -51,7 +51,6 @@ test("robots.txt: гранулярные правила и Sitemap", async ({ re
     "/register",
     "/reserve",
     "/search",
-    "/design-system",
     "/api/",
     "/product/",
   ])

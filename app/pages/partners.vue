@@ -239,7 +239,7 @@ async function submit() {
       <aside class="partner-visual" aria-label="Партнёрство с Бункер">
         <span class="partner-wordmark">БУНКЕР</span>
         <img
-          src="/referens/izXs90gk5s97wMyS_xLFyCzYMEgZLmTxaKG05MC0K--_VA3i7UahgS4pQSRzBccoQo8RIqzFvhZvUq2B1QKPpLji.jpg"
+          src="/images/storefront.webp"
           alt="Постер сети «Бункер»"
           width="600"
           height="600"

@@ -1,6 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { resolve } from "node:path";
+import { resolveDataDir } from "../utils/data-dir";
 
 /**
  * Файловое хранилище сессий. В cookie уходит случайный токен; на диске
@@ -20,10 +21,7 @@ interface SessionFile {
   sessions: StoredSession[];
 }
 
-const DATA_DIR = resolve(
-  process.cwd(),
-  process.env.ACCOUNT_DATA_DIR || ".data/account",
-);
+const DATA_DIR = resolveDataDir("ACCOUNT_DATA_DIR", "account");
 const SESSIONS_FILE = resolve(DATA_DIR, "sessions.json");
 export const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 export const SESSION_COOKIE = "bunker-session";
