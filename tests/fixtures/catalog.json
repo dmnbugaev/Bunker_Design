@@ -1,0 +1,1043 @@
+{
+  "updatedAt": 1792455852771,
+  "stockUpdatedAt": 1792455852771,
+  "meta": {
+    "cities": [
+      {
+        "id": "saratov",
+        "name": "Саратов"
+      },
+      {
+        "id": "engels",
+        "name": "Энгельс"
+      }
+    ],
+    "stores": [
+      {
+        "id": "store-b1",
+        "cityId": "saratov",
+        "name": "Центральный",
+        "description": "Демо-точка фикстуры",
+        "address": "ул. Примерная, 1",
+        "hours": "Ежедневно, 10:00–22:00",
+        "coordinates": [46.0326, 51.5336]
+      },
+      {
+        "id": "store-b2",
+        "cityId": "saratov",
+        "name": "Северный",
+        "description": "Демо-точка фикстуры",
+        "address": "пр. Примерный, 10",
+        "hours": "Ежедневно, 10:00–22:00",
+        "coordinates": [46.0059, 51.5905]
+      },
+      {
+        "id": "store-b3",
+        "cityId": "engels",
+        "name": "Энгельс",
+        "description": "Демо-точка фикстуры",
+        "address": "ул. Тельмана, 29",
+        "hours": "Ежедневно, 10:00–21:00",
+        "coordinates": [46.125, 51.478]
+      }
+    ],
+    "categories": [
+      {
+        "id": "cat-devices",
+        "name": "Устройства",
+        "parentId": null,
+        "slug": "cat-devices",
+        "description": "Товары категории «Устройства»."
+      },
+      {
+        "id": "cat-disposables",
+        "name": "Одноразовые ЭС",
+        "parentId": null,
+        "slug": "cat-disposables",
+        "description": "Товары категории «Одноразовые ЭС»."
+      },
+      {
+        "id": "cat-liquids",
+        "name": "Жидкости",
+        "parentId": null,
+        "slug": "cat-liquids",
+        "description": "Товары категории «Жидкости»."
+      },
+      {
+        "id": "cat-drinks",
+        "name": "Напитки",
+        "parentId": null,
+        "slug": "cat-drinks",
+        "description": "Товары категории «Напитки»."
+      },
+      {
+        "id": "cat-tea",
+        "name": "Чай",
+        "parentId": "cat-drinks",
+        "slug": "cat-tea",
+        "description": "Товары категории «Чай»."
+      },
+      {
+        "id": "cat-snacks",
+        "name": "Снеки",
+        "parentId": null,
+        "slug": "cat-snacks",
+        "description": "Товары категории «Снеки»."
+      },
+      {
+        "id": "cat-flavors",
+        "name": "Ароматизаторы",
+        "parentId": null,
+        "slug": "cat-flavors",
+        "description": "Товары категории «Ароматизаторы»."
+      },
+      {
+        "id": "cat-pouches",
+        "name": "Жевательный табак",
+        "parentId": null,
+        "slug": "cat-pouches",
+        "description": "Товары категории «Жевательный табак»."
+      },
+      {
+        "id": "cat-nbs",
+        "name": "НБС",
+        "parentId": null,
+        "slug": "cat-nbs",
+        "description": "Товары категории «НБС»."
+      }
+    ],
+    "brands": [],
+    "materials": []
+  },
+  "products": [
+    {
+      "id": "fx-vmate-pro-2",
+      "slug": "fx-vmate-pro-2",
+      "sku": "DEV-001",
+      "name": "VooPoo VMATE Pro 2",
+      "categoryId": "cat-devices",
+      "categoryName": "Устройства",
+      "images": [
+        {
+          "id": "fx-vmate-pro-2-0",
+          "src": "/referens/bj8RTwsd6fvYS6l7uVJkVX0eRwSpdJELH_FGHCsoJ_S27TfkwuHfMAW3ks0bzJKFKstTGx7ks7dYIE1fWEGom9E6cNgJpA.jpg",
+          "alt": "VooPoo VMATE Pro 2 — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Компактное устройство со сменными картриджами, регулировкой затяжки и зарядкой Type-C.\n\nСовместимость: картриджи VMATE серии Pro.",
+      "attributes": [
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Стартовый набор"
+        },
+        {
+          "code": "attr-battery",
+          "name": "Аккумулятор",
+          "value": "1200 мА·ч"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 359000,
+          "currency": "RUB",
+          "availability": "available"
+        }
+      ],
+      "publishedAt": "2026-10-19T09:00:00Z"
+    },
+    {
+      "id": "fx-mook-fwrd",
+      "slug": "fx-mook-fwrd",
+      "sku": "DEV-002",
+      "name": "MOOK FWRD",
+      "categoryId": "cat-devices",
+      "categoryName": "Устройства",
+      "images": [
+        {
+          "id": "fx-mook-fwrd-0",
+          "src": "/referens/UJrm6iFVuUF8GTYgTCi9JEKDy9bDj7i5-7aKHK-WytBeJKduGsnlfoNlIfep8qdWsBtCbMEpjq7aIpjy3lVQtIkQUKL0dA.jpg",
+          "alt": "MOOK FWRD — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Набор с стиками и устройством нагревания из стартовой серии.",
+      "attributes": [
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Набор"
+        },
+        {
+          "code": "attr-color",
+          "name": "Цвет",
+          "value": "Чёрный"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "low"
+        }
+      ],
+      "publishedAt": "2026-10-18T09:00:00Z"
+    },
+    {
+      "id": "fx-kaos-eclipse",
+      "slug": "fx-kaos-eclipse",
+      "sku": "DEV-003",
+      "name": "KAOS Eclipse",
+      "categoryId": "cat-devices",
+      "categoryName": "Устройства",
+      "images": [
+        {
+          "id": "fx-kaos-eclipse-0",
+          "src": "/referens/M4Jp7OjTwAmEAwPAaSvjzQbIIaP-YXUz4s8DlZ4uaqQQOxaSb5mZBJ3uIYcepPVamAWAtLvzlOepQejcapQQjSCz.jpg",
+          "alt": "KAOS Eclipse — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Устройство с защитой от перегрева и индикацией заряда.",
+      "attributes": [
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Устройство"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-10-12T09:00:00Z"
+    },
+    {
+      "id": "fx-pod-classic",
+      "slug": "fx-pod-classic",
+      "sku": "DEV-004",
+      "name": "Pod-система Bunker Classic",
+      "categoryId": "cat-devices",
+      "categoryName": "Устройства",
+      "images": [
+        {
+          "id": "fx-pod-classic-0",
+          "src": "/referens/_KY_sRns6H3lJ2nzvPlQ73i2z-f3n7mg11Ggd9kAleT2NaWRmiLzBdKFeRAc3J6rxsHyksvCCRc18x3xbeReSQYI.jpg",
+          "alt": "Pod-система Bunker Classic — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Базовая pod-система сети: активация затяжкой, картридж 2 мл.",
+      "attributes": [
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Pod-система"
+        },
+        {
+          "code": "attr-color",
+          "name": "Цвет",
+          "value": "Графит"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "low"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "plenty"
+        }
+      ],
+      "publishedAt": "2026-10-11T09:00:00Z"
+    },
+    {
+      "id": "fx-stels-6000",
+      "slug": "fx-stels-6000",
+      "sku": "ODN-014",
+      "name": "STELS 6000",
+      "categoryId": "cat-disposables",
+      "categoryName": "Одноразовые ЭС",
+      "images": [
+        {
+          "id": "fx-stels-6000-0",
+          "src": "/referens/0_tzCLV4Z08ZFwYH_txpFFuvyu6uM_FBeudDGE1FOk_tebn5jPr5KBxzvml5jek-RWu-VYMzqX7WeyEBbJLvpYyTJVxbpw.jpg",
+          "alt": "STELS 6000 — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Одноразовое устройство, 6000 затяжек.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Ягодный микс"
+        },
+        {
+          "code": "attr-power",
+          "name": "Крепость",
+          "value": "20 мг/мл"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-10-10T09:00:00Z"
+    },
+    {
+      "id": "fx-arqa-premium",
+      "slug": "fx-arqa-premium",
+      "sku": "ODN-021",
+      "name": "ARQA Premium",
+      "categoryId": "cat-disposables",
+      "categoryName": "Одноразовые ЭС",
+      "images": [
+        {
+          "id": "fx-arqa-premium-0",
+          "src": "/referens/V-R5cB34rXOs-N1mHgDAY6GfWnXgXToa9Gbyjrvt25tHrKYI7rNJANwShNNY1P3g7b77gg32nT0hZ7A8sm_ZllzeCeQINg.jpg",
+          "alt": "ARQA Premium — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Одноразовое устройство премиальной серии.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Манго"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-10-09T09:00:00Z"
+    },
+    {
+      "id": "fx-liquid-classic",
+      "slug": "fx-liquid-classic",
+      "sku": "LIQ-101",
+      "name": "Жидкость Bunker Classic, 30 мл",
+      "categoryId": "cat-liquids",
+      "categoryName": "Жидкости",
+      "images": [
+        {
+          "id": "fx-liquid-classic-0",
+          "src": "/referens/n3VVPkKv9pmDyE-dbvgWVxJNgchEUJFvhTxdCSRu09qHfVLRBc1BjsNuORzvx9IojsJaA97wx41XWL8sUGxhAgIL.jpg",
+          "alt": "Жидкость Bunker Classic, 30 мл — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Жидкость для заправки устройств, соотношение 50/50.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Классический табак"
+        },
+        {
+          "code": "attr-power",
+          "name": "Крепость",
+          "value": "3 мг/мл"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "plenty"
+        }
+      ],
+      "publishedAt": "2026-10-08T09:00:00Z"
+    },
+    {
+      "id": "fx-liquid-night",
+      "slug": "fx-liquid-night",
+      "sku": "LIQ-102",
+      "name": "Жидкость Night Shift, 30 мл",
+      "categoryId": "cat-liquids",
+      "categoryName": "Жидкости",
+      "images": [
+        {
+          "id": "fx-liquid-night-0",
+          "src": "/referens/su3QYdviRX4pXeHdbg85QrfaPq5QhLuDx_6dNBKDNVPtaXAgPTqAgAJwFn3Qrn_IxQd0NLk0H8qEwjkLXzjR-6fi.jpg",
+          "alt": "Жидкость Night Shift, 30 мл — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Жидкость для заправки устройств, соотношение 70/30.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Лесные ягоды"
+        },
+        {
+          "code": "attr-power",
+          "name": "Крепость",
+          "value": "6 мг/мл"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "available"
+        }
+      ],
+      "publishedAt": "2026-10-07T09:00:00Z"
+    },
+    {
+      "id": "fx-liquid-mango",
+      "slug": "fx-liquid-mango",
+      "sku": "LIQ-103",
+      "name": "Жидкость Mango Chill, 30 мл",
+      "categoryId": "cat-liquids",
+      "categoryName": "Жидкости",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Жидкость для заправки устройств, вкус манго.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Манго"
+        },
+        {
+          "code": "attr-power",
+          "name": "Крепость",
+          "value": "3 мг/мл"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "available"
+        }
+      ],
+      "publishedAt": "2026-10-06T09:00:00Z"
+    },
+    {
+      "id": "fx-liquid-forest",
+      "slug": "fx-liquid-forest",
+      "sku": "LIQ-104",
+      "name": "Жидкость Forest Mix, 30 мл",
+      "categoryId": "cat-liquids",
+      "categoryName": "Жидкости",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Жидкость для заправки устройств, лесной микс.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Лесные ягоды"
+        },
+        {
+          "code": "attr-power",
+          "name": "Крепость",
+          "value": "6 мг/мл"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-10-05T09:00:00Z"
+    },
+    {
+      "id": "fx-liquid-berry",
+      "slug": "fx-liquid-berry",
+      "sku": "LIQ-105",
+      "name": "Жидкость Berry Blast, 30 мл",
+      "categoryId": "cat-liquids",
+      "categoryName": "Жидкости",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Жидкость для заправки устройств, ягодный микс.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Ягодный микс"
+        },
+        {
+          "code": "attr-power",
+          "name": "Крепость",
+          "value": "6 мг/мл"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "available"
+        }
+      ],
+      "publishedAt": "2026-10-04T09:00:00Z"
+    },
+    {
+      "id": "fx-tea-oolong",
+      "slug": "fx-tea-oolong",
+      "sku": "TEA-001",
+      "name": "Китайский чай «Молочный улун», 50 г",
+      "categoryId": "cat-tea",
+      "categoryName": "Чай",
+      "images": [
+        {
+          "id": "fx-tea-oolong-0",
+          "src": "/referens/gjq65pQuEH7UkgeDtDHTTHRdx1tGQkxANfS6RPFwLUN3V41Pc7krgw8ukQQYTUJixvTWielNHRErZgzw44PJOTYTF15kzg.jpg",
+          "alt": "Китайский чай «Молочный улун», 50 г — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Классический молочный улун, фасовка 50 г.",
+      "attributes": [
+        {
+          "code": "attr-weight",
+          "name": "Фасовка",
+          "value": "50 г"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "plenty"
+        }
+      ],
+      "publishedAt": "2026-10-14T09:00:00Z"
+    },
+    {
+      "id": "fx-tea-earl",
+      "slug": "fx-tea-earl",
+      "sku": "TEA-002",
+      "name": "Чай «Эрл Грей», 50 г",
+      "categoryId": "cat-tea",
+      "categoryName": "Чай",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Чай Эрл Грей, фасовка 50 г.",
+      "attributes": [
+        {
+          "code": "attr-weight",
+          "name": "Фасовка",
+          "value": "50 г"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "available"
+        }
+      ],
+      "publishedAt": "2026-10-13T09:00:00Z"
+    },
+    {
+      "id": "fx-lemonade",
+      "slug": "fx-lemonade",
+      "sku": "DRK-002",
+      "name": "Лимонад «Груша-мята», 0,5 л",
+      "categoryId": "cat-drinks",
+      "categoryName": "Напитки",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Безалкогольный лимонад собственного ассортимента сети.",
+      "attributes": [
+        {
+          "code": "attr-volume",
+          "name": "Объём",
+          "value": "0,5 л"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "plenty"
+        }
+      ],
+      "publishedAt": "2026-10-03T09:00:00Z"
+    },
+    {
+      "id": "fx-snack-nuts",
+      "slug": "fx-snack-nuts",
+      "sku": "SNK-001",
+      "name": "Снек «Орешки солёные», 40 г",
+      "categoryId": "cat-snacks",
+      "categoryName": "Снеки",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Солёный арахис, фасовка 40 г.",
+      "attributes": [
+        {
+          "code": "attr-weight",
+          "name": "Фасовка",
+          "value": "40 г"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "plenty"
+        }
+      ],
+      "publishedAt": "2026-10-02T09:00:00Z"
+    },
+    {
+      "id": "fx-snack-noodles",
+      "slug": "fx-snack-noodles",
+      "sku": "SNK-002",
+      "name": "Лапша быстрого приготовления «Стрим», 60 г",
+      "categoryId": "cat-snacks",
+      "categoryName": "Снеки",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Лапша быстрого приготовления с вкусовыми добавками.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Куриный"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "plenty"
+        }
+      ],
+      "publishedAt": "2026-10-01T09:00:00Z"
+    },
+    {
+      "id": "aroma-01",
+      "slug": "aroma-01",
+      "sku": "ARO-001",
+      "name": "Ароматизатор «Ваниль», 10 мл",
+      "categoryId": "cat-flavors",
+      "categoryName": "Ароматизаторы",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Пищевой ароматизатор для самозамеса, флакон 10 мл.",
+      "attributes": [
+        {
+          "code": "attr-volume",
+          "name": "Объём",
+          "value": "10 мл"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-10-15T09:00:00Z"
+    },
+    {
+      "id": "chew-01",
+      "slug": "chew-01",
+      "sku": "CHEW-001",
+      "name": "Паучи «Бункер Мята»",
+      "categoryId": "cat-pouches",
+      "categoryName": "Жевательный табак",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Не публикуется для регулируемого класса.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Мята"
+        },
+        {
+          "code": "attr-power",
+          "name": "Крепость",
+          "value": "6 мг/порция"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "plenty"
+        }
+      ],
+      "publishedAt": "2026-10-10T09:00:00Z"
+    },
+    {
+      "id": "nbc-01",
+      "slug": "nbc-01",
+      "sku": "NBC-001",
+      "name": "НБС тестовая позиция",
+      "categoryId": "cat-nbs",
+      "categoryName": "НБС",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Позиция неклассифицированного корня — не публикуется.",
+      "attributes": [],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-10-01T09:00:00Z"
+    }
+  ],
+  "stockDetail": {
+    "fx-vmate-pro-2": {
+      "store-b1": 5,
+      "store-b2": 0,
+      "store-b3": 2
+    },
+    "fx-mook-fwrd": {
+      "store-b1": 0,
+      "store-b2": 4,
+      "store-b3": 1
+    },
+    "fx-kaos-eclipse": {
+      "store-b1": 2,
+      "store-b2": 2,
+      "store-b3": 0
+    },
+    "fx-pod-classic": {
+      "store-b1": 1,
+      "store-b2": 0,
+      "store-b3": 6
+    },
+    "fx-stels-6000": {
+      "store-b1": 10,
+      "store-b2": 3,
+      "store-b3": 0
+    },
+    "fx-arqa-premium": {
+      "store-b1": 0,
+      "store-b2": 0,
+      "store-b3": 0
+    },
+    "fx-liquid-classic": {
+      "store-b1": 8,
+      "store-b2": 8,
+      "store-b3": 8
+    },
+    "fx-liquid-night": {
+      "store-b1": 4,
+      "store-b2": 0,
+      "store-b3": 3
+    },
+    "fx-liquid-mango": {
+      "store-b1": 6,
+      "store-b2": 2,
+      "store-b3": 2
+    },
+    "fx-liquid-forest": {
+      "store-b1": 3,
+      "store-b2": 4,
+      "store-b3": 0
+    },
+    "fx-liquid-berry": {
+      "store-b1": 2,
+      "store-b2": 2,
+      "store-b3": 2
+    },
+    "fx-tea-oolong": {
+      "store-b1": 5,
+      "store-b2": 5,
+      "store-b3": 5
+    },
+    "fx-tea-earl": {
+      "store-b1": 4,
+      "store-b3": 2
+    },
+    "fx-lemonade": {
+      "store-b1": 12,
+      "store-b2": 12,
+      "store-b3": 6
+    },
+    "fx-snack-nuts": {
+      "store-b1": 20,
+      "store-b2": 20,
+      "store-b3": 20
+    },
+    "fx-snack-noodles": {
+      "store-b1": 15,
+      "store-b2": 0,
+      "store-b3": 15
+    },
+    "aroma-01": {
+      "store-b1": 9,
+      "store-b2": 9,
+      "store-b3": 0
+    },
+    "chew-01": {
+      "store-b1": 3,
+      "store-b2": 0,
+      "store-b3": 4
+    },
+    "nbc-01": {
+      "store-b1": 7,
+      "store-b2": 0,
+      "store-b3": 0
+    }
+  }
+}

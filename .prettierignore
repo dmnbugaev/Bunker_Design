@@ -1,0 +1,13 @@
+node_modules
+.nuxt
+.output
+test-results
+playwright-report
+package-lock.json
+.agents
+.idea
+public
+docs/screenshots
+scripts/mass-rename/*.json
+scripts/mass-rename/batches
+scripts/mass-rename/out

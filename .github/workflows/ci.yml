@@ -1,0 +1,105 @@
+# CI/CD «Бункер».
+# quality: формат → линт → типы → unit-тесты → production build
+# deploy:  после зелёных проверок на main — деплой на VPS по SSH
+#          (образец ProHook). Пока сервер/домен сети не предоставлены,
+#          джоб включается переменной репозитория DEPLOY_ENABLED=true и
+#          настраивается секретами:
+#            BUNKER_DEPLOY_KEY   — приватный SSH-ключ (только форсированная
+#                                  команда deploy, sudoers NOPASSWD)
+#            BUNKER_DEPLOY_HOST  — адрес VPS
+#            BUNKER_DEPLOY_PORT  — SSH-порт (по умолчанию 22)
+#            BUNKER_DEPLOY_USER  — пользователь (по умолчанию admin)
+#            BUNKER_KNOWN_HOSTS  — строка known_hosts для закрепления ключа
+#            SITE_URL            — публичный URL для проверки здоровья
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Проверки (format, lint, types, unit, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: quality-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # 24.x — как в локальной разработке; часть unit-тестов
+          # тайминг-зависима и на Node 22 даёт ложные
+          # «Promise resolution is still pending». Прод-сервер тоже на 24.x.
+          node-version: 24
+          cache: npm
+
+      - name: Установка зависимостей
+        run: npm ci
+
+      - name: Форматирование (prettier)
+        run: npm run format:check
+
+      - name: Линт (eslint)
+        run: npm run lint
+
+      - name: Типы (vue-tsc)
+        run: npm run typecheck
+
+      - name: Unit-тесты
+        run: npm run test:unit
+
+      - name: Production build
+        run: npm run build
+
+  deploy:
+    name: Деплой на VPS
+    # только push/manual на main, после зелёных проверок, и только когда
+    # владелец явно включил деплой переменной репозитория DEPLOY_ENABLED.
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.ref == 'refs/heads/main' &&
+      vars.DEPLOY_ENABLED == 'true'
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: production
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      - name: Подготовка SSH-ключа и host key
+        env:
+          DEPLOY_KEY: ${{ secrets.BUNKER_DEPLOY_KEY }}
+          KNOWN_HOSTS: ${{ secrets.BUNKER_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          install -m 600 /dev/null ~/.ssh/bunker_deploy_key
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/bunker_deploy_key
+          # host key закреплён (TOFU исключён)
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Деплой (форсированная команда deploy на сервере)
+        env:
+          DEPLOY_HOST: ${{ secrets.BUNKER_DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.BUNKER_DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.BUNKER_DEPLOY_USER }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          ssh -p "${DEPLOY_PORT:-22}" -i ~/.ssh/bunker_deploy_key \
+            -o IdentitiesOnly=yes -o BatchMode=yes \
+            -o UserKnownHostsFile=~/.ssh/known_hosts \
+            "${DEPLOY_USER:-admin}@$DEPLOY_HOST" deploy
+
+          echo "Проверка продакшена..."
+          sleep 3
+          curl -sf --max-time 20 -o /dev/null \
+            -w "${SITE_URL:-https://bunker.example} → HTTP %{http_code}\n" \
+            "${SITE_URL:-https://bunker.example}/"

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Внутренняя демонстрация дизайн-системы сети вейпшопов Бункер">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Бункер — дизайн-система</title>
+    <link rel="stylesheet" href="/assets/styles/tokens.css">
+    <link rel="stylesheet" href="/assets/styles/base.css">
+    <link rel="stylesheet" href="/assets/styles/components.css">
+    <link rel="stylesheet" href="/assets/styles/design-system.css">
+    <script type="module" src="/assets/js/design-system.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Перейти к содержимому</a>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="wordmark" href="#top" aria-label="Бункер, начало страницы">
+          <span class="wordmark__mark" aria-hidden="true"></span>
+          БУНКЕР
+        </a>
+        <nav class="nav" id="main-nav" aria-label="Разделы дизайн-системы">
+          <a href="#foundation">Основа</a>
+          <a href="#components">Компоненты</a>
+          <a href="#catalog">Каталог</a>
+          <a href="#responsive">Адаптивность</a>
+        </nav>
+        <button class="button button--ghost button--icon mobile-menu-button" type="button" aria-label="Открыть меню" aria-controls="main-nav" aria-expanded="false" data-menu-toggle>
+          <span aria-hidden="true">☰</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title" data-hero>
+        <div class="hero__atmosphere" aria-hidden="true">
+          <span class="smoke smoke--one"></span>
+          <span class="smoke smoke--two"></span>
+          <span class="smoke smoke--three"></span>
+          <span class="hero__spark hero__spark--one"></span>
+        </div>
+        <div class="container hero__layout">
+          <div class="hero__content">
+            <div class="hero__kicker">Сеть вейпшопов</div>
+            <h1 class="display" id="hero-title">Твой Бункер</h1>
+            <p class="hero__lead">Устройства, табак и аксессуары. Проверяй ассортимент и наличие в магазине рядом.</p>
+            <div class="hero__actions">
+              <a class="button button--primary button--lg" href="#catalog">Смотреть каталог</a>
+              <a class="button button--outline button--lg" href="#foundation">О системе</a>
+            </div>
+          </div>
+          <div class="hero__visual" aria-hidden="true">
+            <div class="hero__poster"></div>
+            <div class="hero__stamp">Bunker<br>Vape shop</div>
+          </div>
+          <div class="hero__status"><span></span> Design system / 01</div>
+        </div>
+      </section>
+
+      <div class="signal-strip" aria-hidden="true">
+        <div class="signal-strip__track">
+          <span>Бункер</span><i></i><span>Смотри глубже</span><i></i><span>Найди свой магазин</span><i></i><span>Бункер</span>
+        </div>
+      </div>
+
+      <section class="section" id="foundation">
+        <div class="container">
+          <div class="section-heading">
+            <div><span class="section-index">01 / Основа</span><h2>Один характер на всех уровнях</h2></div>
+            <p>Строгая геометрия, контрастная типографика и один акцентный цвет связывают бренд, навигацию и каталог.</p>
+          </div>
+          <div class="principles">
+            <article class="principle"><h3>Сдержанная сила</h3><p>Большая типографика работает как главный визуальный жест. Декор не конкурирует с содержанием.</p></article>
+            <article class="principle"><h3>Акцент значит действие</h3><p>Коралловый используется для выбора, фокуса и ключевого статуса, а не для заполнения каждого блока.</p></article>
+            <article class="principle"><h3>Магазин рядом</h3><p>Интерфейс помогает изучить ассортимент и проверить наличие, не создавая дистанционную продажу.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="colors">
+        <div class="container">
+          <div class="section-heading">
+            <div><span class="section-index">02 / Цвет</span><h2>Брендовые константы и рабочие роли</h2></div>
+            <p>Три исходных цвета сохранены буквально. Светлый нейтральный добавлен для читаемости основного текста.</p>
+          </div>
+          <div class="color-groups">
+            <div><h3>Brand</h3><div class="swatches">
+              <div class="swatch" style="--swatch:#FF5C5C;--swatch-text:#111"><strong>Primary</strong><code>#FF5C5C</code></div>
+              <div class="swatch" style="--swatch:#1B1B1B"><strong>Background</strong><code>#1B1B1B</code></div>
+              <div class="swatch" style="--swatch:#A8A8A8;--swatch-text:#111"><strong>Brand text</strong><code>#A8A8A8</code></div>
+              <div class="swatch" style="--swatch:#F5F5F3;--swatch-text:#111"><strong>Text primary</strong><code>#F5F5F3</code></div>
+            </div></div>
+            <div><h3>Semantic</h3><div class="swatches">
+              <div class="swatch" style="--swatch:#262625"><strong>Elevated</strong><code>#262625</code></div>
+              <div class="swatch" style="--swatch:#3D3D3A"><strong>Border</strong><code>#3D3D3A</code></div>
+              <div class="swatch" style="--swatch:#62C58A;--swatch-text:#111"><strong>Success</strong><code>#62C58A</code></div>
+              <div class="swatch" style="--swatch:#F2BC57;--swatch-text:#111"><strong>Warning</strong><code>#F2BC57</code></div>
+              <div class="swatch" style="--swatch:#FF6B6B;--swatch-text:#111"><strong>Error</strong><code>#FF6B6B</code></div>
+              <div class="swatch" style="--swatch:#69A9FF;--swatch-text:#111"><strong>Info</strong><code>#69A9FF</code></div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="typography">
+        <div class="container">
+          <div class="section-heading">
+            <div><span class="section-index">03 / Типографика</span><h2>Голос бренда и голос интерфейса</h2></div>
+            <p>BICUBIK — для коротких выразительных сообщений. Akzentica — для навигации и длинного чтения. Локальные файлы ожидаются в WOFF2.</p>
+          </div>
+          <div class="alert alert--warning" role="note"><span aria-hidden="true">!</span><div class="alert__content"><strong>Шрифты не предоставлены.</strong> Сейчас показаны явные системные fallback. Подмена не скрывается.</div></div>
+          <div class="type-specimen" style="margin-top:var(--space-8)">
+            <div class="type-row"><div class="type-meta">display-lg<br>BICUBIK<br>clamp 52—140</div><p class="type-example display display-lg">БУНКЕР</p></div>
+            <div class="type-row"><div class="type-meta">heading-h2<br>Akzentica<br>clamp 30—56</div><p class="type-example" style="font-size:var(--font-size-h2);font-weight:700;line-height:var(--line-heading)">Выберите магазин рядом</p></div>
+            <div class="type-row"><div class="type-meta">body-lg<br>Akzentica<br>18 / 29</div><p class="type-example body-lg">Проверьте ассортимент и наличие в конкретном магазине. Кириллица: съешь ещё этих мягких французских булок.</p></div>
+            <div class="type-row"><div class="type-meta">label<br>Akzentica<br>14 / 18</div><p class="type-example" style="font-size:var(--font-size-label);font-weight:650">Наличие в магазине</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="scales">
+        <div class="container">
+          <div class="section-heading"><div><span class="section-index">04 / Геометрия</span><h2>Ритм по сетке 4 px</h2></div><p>Отступы, радиусы и контейнеры образуют предсказуемую шкалу. Скругления намеренно сдержанные.</p></div>
+          <div class="scale-grid">
+            <article><h3>Spacing</h3><div class="scale-stack">
+              <div class="space-item"><code>4</code><span class="space-bar" style="--w:4px"></span></div><div class="space-item"><code>8</code><span class="space-bar" style="--w:8px"></span></div><div class="space-item"><code>16</code><span class="space-bar" style="--w:16px"></span></div><div class="space-item"><code>24</code><span class="space-bar" style="--w:24px"></span></div><div class="space-item"><code>32</code><span class="space-bar" style="--w:32px"></span></div><div class="space-item"><code>64</code><span class="space-bar" style="--w:64px"></span></div><div class="space-item"><code>96</code><span class="space-bar" style="--w:96px"></span></div>
+            </div></article>
+            <article><h3>Radius</h3><div class="scale-grid"><div class="radius-item" style="--r:2px">xs · 2</div><div class="radius-item" style="--r:4px">sm · 4</div><div class="radius-item" style="--r:8px">md · 8</div><div class="radius-item" style="--r:12px">lg · 12</div></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="components">
+        <div class="container">
+          <div class="section-heading"><div><span class="section-index">05 / Компоненты</span><h2>Состояния видны, поведение предсказуемо</h2></div><p>Все примеры используют классы и интерактивные сценарии реальной системы, включая клавиатуру и ARIA.</p></div>
+
+          <div class="component-block"><div class="component-block__header"><h3>Buttons</h3><span class="caption muted">5 вариантов · 3 размера · loading / disabled</span></div><div class="component-canvas">
+            <button class="button button--primary" type="button">Основное действие</button><button class="button button--secondary" type="button">Вторичное</button><button class="button button--outline" type="button">Контурное</button><button class="button button--ghost" type="button">Текстовое</button><button class="button button--destructive" type="button">Удалить</button><button class="button button--primary button--sm" type="button">Small</button><button class="button button--primary button--lg" type="button">Large</button><button class="button button--primary" type="button" data-loading="true"><span class="button__spinner" aria-hidden="true"></span>Загрузка</button><button class="button button--primary" type="button" disabled>Недоступно</button>
+          </div></div>
+
+          <div class="component-block"><div class="component-block__header"><h3>Form controls</h3><span class="caption muted">labels · hints · validation · choices</span></div><form class="component-canvas component-canvas--forms" novalidate>
+            <label class="field"><span class="field__label">Название</span><input class="input" type="text" placeholder="Введите название"><span class="field__hint">До 80 символов</span></label>
+            <label class="field"><span class="field__label">Телефон</span><input class="input" type="tel" value="+7" inputmode="tel"></label>
+            <label class="field"><span class="field__label">Пароль</span><input class="input" type="password" value="password" autocomplete="current-password"></label>
+            <label class="field"><span class="field__label">Количество</span><input class="input" type="number" value="1" min="1"></label>
+            <label class="field"><span class="field__label">Магазин</span><select class="select"><option>Выберите магазин</option><option>Ближайший к вам</option></select></label>
+            <label class="field"><span class="field__label">Комментарий</span><textarea class="textarea" placeholder="Необязательное поле"></textarea></label>
+            <label class="field"><span class="field__label">Промокод</span><input class="input" aria-invalid="true" aria-describedby="promo-error" value="BUNKER"><span class="field__error" id="promo-error">Проверьте формат кода</span></label>
+            <div class="field"><span class="field__label">Выбор</span><label class="choice"><input type="checkbox" checked> Показывать только в наличии</label><label class="choice"><input type="radio" name="place" checked> В этом магазине</label><label class="switch"><input type="checkbox" checked><span class="switch__track" aria-hidden="true"></span><span>Уведомления</span></label></div>
+          </form></div>
+
+          <div class="component-block"><div class="component-block__header"><h3>Navigation & overlays</h3><span class="caption muted">tabs · dropdown · tooltip · dialog · drawer</span></div><div class="component-canvas component-canvas--stack">
+            <ol class="breadcrumbs" aria-label="Хлебные крошки"><li><a href="#components">Главная</a></li><li><a href="#components">Каталог</a></li><li aria-current="page">Устройства</li></ol>
+            <div class="tabs" role="tablist" aria-label="Пример вкладок"><button class="tab" role="tab" aria-selected="true" aria-controls="panel-overview" id="tab-overview">Обзор</button><button class="tab" role="tab" aria-selected="false" aria-controls="panel-spec" id="tab-spec" tabindex="-1">Характеристики</button><button class="tab" role="tab" aria-selected="false" aria-controls="panel-shops" id="tab-shops" tabindex="-1">Магазины</button></div>
+            <div class="tab-panel" role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">Содержание вкладки переключается стрелками и кликом.</div><div class="tab-panel" role="tabpanel" id="panel-spec" aria-labelledby="tab-spec" hidden>Ёмкость, материал, формат.</div><div class="tab-panel" role="tabpanel" id="panel-shops" aria-labelledby="tab-shops" hidden>Наличие по адресам.</div>
+            <div style="display:flex;flex-wrap:wrap;gap:var(--space-3)"><div class="dropdown" data-dropdown><button class="button button--outline" type="button" aria-expanded="false">Открыть меню</button><div class="dropdown__menu"><button type="button">Редактировать</button><button type="button">Дублировать</button></div></div><span class="tooltip-wrap"><button class="button button--icon button--ghost" type="button" aria-describedby="tip-help">?</button><span class="tooltip" role="tooltip" id="tip-help">Короткая полезная подсказка</span></span><button class="button button--primary" type="button" data-open-dialog>Открыть диалог</button><button class="button" type="button" data-open-drawer>Открыть панель</button></div>
+          </div></div>
+
+          <div class="component-block"><div class="component-block__header"><h3>Feedback</h3><span class="caption muted">alerts · toast · loading · empty · error</span></div><div class="component-canvas component-canvas--feedback">
+            <div class="alert alert--success" role="status"><span aria-hidden="true">●</span><div class="alert__content"><strong>Данные сохранены</strong><br>Изменения уже применены.</div></div><div class="alert alert--error" role="alert"><span aria-hidden="true">!</span><div class="alert__content"><strong>Не удалось загрузить</strong><br>Проверьте подключение и повторите.</div></div><div style="display:flex;align-items:center;gap:var(--space-6)"><div class="spinner" role="status"><span class="visually-hidden">Загрузка</span></div><div class="skeleton-demo" aria-label="Загрузка содержимого"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span></div></div><button class="button button--outline" type="button" data-show-toast>Показать toast</button><div class="empty-state"><h4>Здесь пока пусто</h4><p>Измените фильтры или вернитесь ко всем позициям.</p><button class="button button--primary" type="button">Сбросить фильтры</button></div>
+          </div></div>
+
+          <div class="component-block"><div class="component-block__header"><h3>Accordion & pagination</h3><span class="caption muted">native disclosure · navigable pages</span></div><div class="component-canvas component-canvas--stack">
+            <div class="accordion"><details open><summary>Для чего нужна дизайн-система?</summary><p>Она связывает решения бренда с повторяемыми правилами интерфейса.</p></details><details><summary>Где меняются токены?</summary><p>В едином файле <code>assets/styles/tokens.css</code>.</p></details></div>
+            <nav class="pagination" aria-label="Страницы каталога"><a href="#components" aria-label="Предыдущая страница">‹</a><a href="#components" aria-current="page">1</a><a href="#components">2</a><a href="#components">3</a><a href="#components" aria-label="Следующая страница">›</a></nav>
+          </div></div>
+        </div>
+      </section>
+
+      <section class="section" id="catalog">
+        <div class="container">
+          <div class="section-heading"><div><span class="section-index">06 / Каталог</span><h2>Просмотр ассортимента без дистанционной продажи</h2></div><p>Демо показывает поиск, фильтрацию, сортировку, цену и наличие. Покупательского checkout-сценария нет.</p></div>
+          <p class="catalog-note"><strong>Демонстрационные данные:</strong> названия основаны на локальных брендовых референсах. Наличие и цены условны и отмечены как информация магазина.</p>
+          <div class="catalog-layout">
+            <aside class="catalog-filters" id="catalog-filters" aria-label="Фильтры каталога">
+              <fieldset><legend>Категория</legend><label class="choice"><input type="checkbox" value="devices" data-filter checked> Устройства</label><label class="choice"><input type="checkbox" value="tobacco" data-filter checked> Табак</label></fieldset><hr class="divider"><fieldset><legend>Наличие</legend><label class="choice"><input type="checkbox" data-available> Только в наличии</label></fieldset>
+            </aside>
+            <div>
+              <div class="catalog-toolbar"><div class="search"><span class="search__icon" aria-hidden="true">⌕</span><label class="visually-hidden" for="catalog-search">Поиск</label><input class="input" id="catalog-search" type="search" placeholder="Поиск по каталогу" autocomplete="off"><ul class="search__suggestions" aria-label="Подсказки поиска"></ul></div><div style="display:flex;gap:var(--space-2)"><button class="button button--outline" type="button" aria-controls="catalog-filters" data-filter-toggle>Фильтры</button><label><span class="visually-hidden">Сортировка</span><select class="select" data-sort><option value="name">По названию</option><option value="available">Сначала в наличии</option></select></label></div></div>
+              <div class="product-grid" data-product-grid aria-live="polite"></div>
+            </div>
+          </div>
+          <div class="component-block"><div class="component-block__header"><h3>Product characteristics</h3><span class="caption muted">структурированные свойства</span></div><div class="component-canvas component-canvas--stack"><table class="characteristics"><tbody><tr><th scope="row">Формат</th><td>Компактное устройство</td></tr><tr><th scope="row">Материал</th><td>Металл / полимер</td></tr><tr><th scope="row">Цвет</th><td>Графитовый</td></tr></tbody></table></div></div>
+        </div>
+      </section>
+
+      <section class="section" id="responsive">
+        <div class="container">
+          <div class="section-heading"><div><span class="section-index">07 / Адаптивность</span><h2>Система меняет структуру, не характер</h2></div><p>Потяните правый край блока. Контент перестраивается на основе ширины контейнера; сенсорные цели не меньше 44 px.</p></div>
+          <div class="responsive-frame"><div class="responsive-frame__content"><div class="responsive-frame__item"><strong>Навигация</strong><p class="body-sm">Свернутое меню на mobile.</p></div><div class="responsive-frame__item"><strong>Сетка</strong><p class="body-sm">1 → 2 → 3 колонки.</p></div><div class="responsive-frame__item"><strong>Типографика</strong><p class="body-sm">Плавная шкала через clamp.</p></div></div></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><div class="container site-footer__inner"><p>Бункер Design System · внутренняя документация</p><p class="muted">v1.0 · 2026</p></div></footer>
+
+    <dialog class="dialog" id="demo-dialog" aria-labelledby="dialog-title"><div class="dialog__header"><h3 id="dialog-title">Подтвердить действие</h3><button class="button button--icon button--ghost" type="button" aria-label="Закрыть" data-close-dialog>×</button></div><div class="dialog__body"><p>Диалог удерживает фокус и закрывается клавишей Escape.</p></div><div class="dialog__footer"><button class="button" type="button" data-close-dialog>Отмена</button><button class="button button--primary" type="button" data-close-dialog>Продолжить</button></div></dialog>
+    <div class="overlay" data-overlay></div><aside class="drawer" data-drawer aria-hidden="true" aria-labelledby="drawer-title"><div style="display:flex;align-items:center;justify-content:space-between"><h3 id="drawer-title">Боковая панель</h3><button class="button button--icon button--ghost" type="button" aria-label="Закрыть" data-close-drawer>×</button></div><p>Используется для мобильной фильтрации и вторичных задач.</p></aside>
+    <div class="toast-region" aria-live="polite" aria-atomic="true" data-toast-region></div>
+  </body>
+</html>

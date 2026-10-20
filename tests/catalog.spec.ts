@@ -1,0 +1,305 @@
+import { test, expect, type Page } from "@playwright/test";
+
+// Подтверждение 18+ сохраняется в cookie на год. Для детерминизма тестов
+// выставляем cookie напрямую: на /catalog нет модального гейта (общедоступный
+// ассортимент открыт анонимно), а клик по кнопке AgeNotice до гидрации Vue
+// теряется. Само подтверждение кнопкой покрыто в legal.spec.
+async function waitForHydration(page: Page) {
+  // Полный каталог гидратируется дольше load-события: взаимодействия
+  // (ввод в фильтры цены) до гидрации затираются v-model.
+  await page.waitForFunction(
+    () =>
+      (
+        document.getElementById("__nuxt") as HTMLElement & {
+          __vue_app__?: { $nuxt?: { isHydrating: boolean } };
+        }
+      )?.__vue_app__?.$nuxt?.isHydrating === false,
+    undefined,
+    { timeout: 10_000 },
+  );
+}
+async function open(page: Page, path = "/catalog") {
+  await page.context().clearCookies({ name: "bunker-age-confirmed" });
+  await page.context().addCookies([
+    {
+      name: "bunker-age-confirmed",
+      value: "true",
+      domain: "127.0.0.1",
+      path: "/",
+    },
+  ]);
+  await page.goto(path);
+  await waitForHydration(page);
+}
+
+test.beforeEach(async ({ context }) => {
+  await context.addCookies([
+    { name: "bunker-store", value: "store-b1", domain: "127.0.0.1", path: "/" },
+  ]);
+});
+
+test("first visit chooses a real city and store", async ({ page, context }) => {
+  await context.clearCookies();
+  await open(page, "/");
+  // Пикер магазина не открывается поверх нерешённого cookie-баннера:
+  // сначала отвечаем на него.
+  await page.getByRole("button", { name: "Принять" }).click();
+  const picker = page.getByRole("dialog", { name: "Ваш город и магазин" });
+  await expect(picker).toBeVisible();
+  await picker.getByLabel("Город", { exact: true }).selectOption("engels");
+  // Магазин применяется сразу при выборе — отдельной кнопки больше нет.
+  await picker.getByRole("radio", { name: /Энгельс/ }).check();
+  await expect(picker).not.toBeVisible();
+  await expect(page.locator(".store-trigger")).toContainText("Энгельс");
+  const cookies = await context.cookies();
+  expect(cookies.find((cookie) => cookie.name === "bunker-store")?.value).toBe(
+    "store-b3",
+  );
+});
+
+test("filters and sorting use the selected store price", async ({ page }) => {
+  await open(page);
+  const filters = page.locator(".catalog-sidebar");
+  await expect(filters.getByText("Бренд")).toHaveCount(0);
+  await expect(filters.getByText("Материал")).toHaveCount(0);
+  // «Только в наличии» включён с открытия страницы: в Центральном
+  // (store-b1) нет MOOK FWRD и ARQA Premium — из 16 доступных на первой
+  // странице лимит выдачи (12).
+  await expect(filters.getByLabel("Только в наличии")).toBeChecked();
+  await expect(page.locator(".product-card")).toHaveCount(12);
+  await filters.getByLabel("От", { exact: true }).fill("1500");
+  await filters.getByLabel("До", { exact: true }).fill("2000");
+  // Цена применяется сама после паузы ввода — кнопки «Применить» нет.
+  await expect(page.locator(".product-card")).toHaveCount(1);
+  await expect(page).toHaveURL(/minPrice=1500/);
+  await expect(page.locator(".filter-chips")).toContainText("Цена:");
+  await page.getByLabel("Сортировка").selectOption("price-asc");
+  await expect(page.locator(".product-card h3").first()).toHaveText(
+    "Pod-система Bunker Classic",
+  );
+  await filters.getByRole("button", { name: "Сбросить фильтры" }).click();
+  await expect(page.locator(".product-card")).toHaveCount(12);
+});
+
+test("store changes availability and city price without losing the product", async ({
+  page,
+}) => {
+  await open(page, "/product/fx-vmate-pro-2");
+  const info = page.locator(".product-detail__info");
+  await expect(info.locator(".product-price strong")).toContainText(/3\s?490/);
+  await expect(info.locator(".availability")).toHaveText("Много в наличии");
+  // Аноним без подтверждённой даты рождения не видит изображения: сервер
+  // отдаёт пустой images, галерея показывает заглушку 18+.
+  await expect(
+    page.locator(".product-gallery").getByRole("img", {
+      name: "Изображение доступно только совершеннолетним пользователям",
+    }),
+  ).toBeVisible();
+  await expect(page.locator(".gallery-thumbnails")).toHaveCount(0);
+  await info.getByRole("button", { name: "Изменить магазин" }).click();
+  const picker = page.getByRole("dialog", { name: "Ваш город и магазин" });
+  await picker.getByRole("radio", { name: /Северный/ }).check();
+  await expect(picker).not.toBeVisible();
+  // В Северном остаток 0 — оптимистичная метка «Скоро в наличии».
+  await expect(info.locator(".availability")).toHaveText("Скоро в наличии");
+  await info.getByRole("button", { name: "Изменить магазин" }).click();
+  await picker.getByLabel("Город", { exact: true }).selectOption("engels");
+  await picker.getByRole("radio", { name: /Энгельс/ }).check();
+  // Цена Энгельса выше московской… саратовской: 3 590 ₽ против 3 490 ₽.
+  await expect(info.locator(".product-price strong")).toContainText(/3\s?590/);
+  await expect(info.locator(".availability")).toHaveText("В наличии");
+});
+
+test("product page separates compatibility from the description", async ({
+  page,
+}) => {
+  await open(page, "/product/fx-vmate-pro-2");
+  const section = page.locator(".product-description");
+  await expect(section.locator("p").first()).toHaveText(
+    "Компактное устройство со сменными картриджами, регулировкой затяжки и зарядкой Type-C.",
+  );
+  // Совместимость приходит из МойСклад дописанной в описание — страница
+  // показывает её отдельным блоком с новой строки.
+  const compat = section.locator(".product-description__compat");
+  await expect(compat).toHaveText("Совместимость: картриджи VMATE серии Pro.");
+  // Совместимость начинается с новой строки — ниже абзаца описания.
+  const paragraph = await section.locator("p").first().boundingBox();
+  const compatBox = await compat.boundingBox();
+  expect(compatBox.y).toBeGreaterThanOrEqual(paragraph.y + paragraph.height);
+});
+
+test("instant filters: availability is on by default, photo filter removed", async ({
+  page,
+}) => {
+  await open(page);
+  const sidebar = page.locator(".catalog-sidebar");
+  // Фильтр наличия включён с открытия сайта: каталог показывает только
+  // товары в выбранном магазине, чип фильтра уже активен.
+  const available = sidebar.getByLabel("Только в наличии");
+  await expect(available).toBeChecked();
+  await expect(page.locator(".filter-chips li")).toHaveCount(2);
+  // Фильтра «только с фотографиями» больше нет (убран по решению владельца
+  // 10.10.2026) — в сайдбаре единственный чекбокс наличия.
+  await expect(sidebar.getByRole("checkbox")).toHaveCount(1);
+  await expect(sidebar.getByLabel("Только с фотографией")).toHaveCount(0);
+  await available.uncheck();
+  await expect(page).toHaveURL(/available=0/);
+  // Позиции с нулевым остатком возвращаются в выдачу с меткой: MOOK FWRD
+  // и ARQA Premium (обе с фото — высокий ранг витрины) на первой странице.
+  await expect(page.locator(".product-card")).toHaveCount(12);
+  await expect(page.locator(".product-card__soon")).toHaveCount(2);
+  await expect(page.locator(".filter-chips")).toHaveCount(0);
+  await sidebar.getByLabel("Только в наличии").check();
+  await expect(page).toHaveURL(/available=1/);
+  await expect(page.locator(".product-card")).toHaveCount(12);
+  await expect(page.locator(".filter-chips li")).toHaveCount(2);
+  await page
+    .locator(".filter-chips")
+    .getByRole("button", { name: "В наличии" })
+    .click();
+  await expect(page).not.toHaveURL(/available=1/);
+  await expect(page.locator(".filter-chips")).toHaveCount(0);
+});
+
+test("search field in catalog shows live suggestions", async ({ page }) => {
+  await open(page);
+  // Поле поиска доступно прямо в каталоге, без перехода на /search.
+  const field = page.getByLabel("Поиск по каталогу", { exact: true });
+  await expect(field).toBeVisible();
+  await field.fill("улун");
+  const suggest = page.getByRole("listbox", { name: "Подсказки поиска" });
+  await expect(suggest.getByRole("option").first()).toContainText("улун", {
+    ignoreCase: true,
+  });
+  // Клик по подсказке ведёт на страницу товара.
+  await suggest.getByRole("option").first().click();
+  await expect(page).toHaveURL(/\/product\//);
+});
+
+test("category descendants, search, missing image and API pagination", async ({
+  page,
+  request,
+}) => {
+  await open(page, "/catalog/cat-drinks");
+  // Фильтр наличия по умолчанию: все три позиции ветки «Напитки»
+  // (включая подкатегорию «Чай») в Центральном в наличии.
+  await expect(page.locator(".product-card")).toHaveCount(3);
+  await page
+    .getByRole("navigation", { name: "Подкатегории" })
+    .getByRole("link", { name: "Чай" })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Чай", exact: true }),
+  ).toBeVisible();
+  await open(page, "/search?q=%D1%83%D0%BB%D1%83%D0%BD");
+  await expect(page.locator(".product-card")).toHaveCount(1);
+  await open(page, "/product/fx-mook-fwrd");
+  // Без подтверждённого 18+ заглушка возраста приоритетнее «нет изображения».
+  await expect(
+    page.locator(".product-gallery").getByRole("img", {
+      name: "Изображение доступно только совершеннолетним пользователям",
+    }),
+  ).toBeVisible();
+  // Полный состав каталога (18 позиций фикстуры; 19-я в корне «НБС» не
+  // публикуется) — только с подтверждением 18+; анонимный запрос вернул
+  // бы общедоступные 6.
+  const response = await request.get("/api/products?limit=2&page=2", {
+    headers: { cookie: "bunker-age-confirmed=true" },
+  });
+  expect(response.ok()).toBe(true);
+  expect(await response.json()).toMatchObject({
+    total: 18,
+    page: 2,
+    pageCount: 9,
+  });
+});
+
+test("suggest API matches names and slugs", async ({ request }) => {
+  const response = await request.get(
+    "/api/products/suggest?q=%D1%83%D0%BB%D1%83%D0%BD",
+  );
+  expect(response.ok()).toBe(true);
+  const payload = await response.json();
+  expect(payload.items.length).toBeGreaterThan(0);
+  expect(payload.items[0]).toMatchObject({
+    name: expect.stringContaining("улун"),
+  });
+  expect(payload.items[0]).not.toHaveProperty("images");
+});
+
+test("page in URL survives the price-filter sync (pagination regression)", async ({
+  page,
+}) => {
+  // Регрессия: вотчер черновика цены реагировал на любую смену query
+  // (в том числе ?page=) и через дебаунс эмитил «apply», который стирал
+  // page и возвращал пользователя на первую страницу каталога.
+  await open(page, "/catalog?page=2");
+  await expect(page.locator(".product-card")).toHaveCount(4);
+  await page.waitForTimeout(900);
+  await expect(page).toHaveURL(/page=2/);
+});
+
+test("adjacent API returns category neighbours", async ({ request }) => {
+  // Соседи регулируемого товара до подтверждения 18+ не отдаются (403).
+  const headers = { cookie: "bunker-age-confirmed=true" };
+  const response = await request.get("/api/products/fx-vmate-pro-2/adjacent", {
+    headers,
+  });
+  expect(response.ok()).toBe(true);
+  const { prev, next } = await response.json();
+  expect(prev).toBeNull();
+  expect(next).toMatchObject({ slug: "fx-mook-fwrd", name: "MOOK FWRD" });
+  expect((await request.get("/api/products/missing/adjacent")).status()).toBe(
+    404,
+  );
+});
+
+test("product page switches to the neighbouring product", async ({ page }) => {
+  await open(page, "/product/fx-vmate-pro-2");
+  const nav = page.locator("nav.product-adjacent");
+  await expect(nav).toBeVisible();
+  // Подпись «Следующий →» скрыта от скринридеров (aria-hidden), поэтому
+  // ищем ссылку по тексту, а не по доступному имени.
+  const next = nav.getByRole("link").filter({ hasText: "Следующий" });
+  await expect(next).toContainText("MOOK FWRD");
+  await next.click();
+  await expect(page).toHaveURL(/fx-mook-fwrd/);
+  await expect(
+    nav.getByRole("link").filter({ hasText: "Предыдущий" }),
+  ).toContainText("VooPoo VMATE Pro 2");
+});
+
+test("invalid category, product, store and price range return HTTP errors", async ({
+  request,
+}) => {
+  // 404-статусы проверяем прямым запросом с подтверждением возраста:
+  // до подтверждения контент страниц не рендерится и маршрут отвечает
+  // 200 с гейтом. Браузерные переходы не используются — WebKit гоняет
+  // навигации на страницах ошибок.
+  const headers = { cookie: "bunker-age-confirmed=true" };
+  for (const path of ["/catalog/missing", "/product/missing"]) {
+    expect((await request.get(path, { headers })).status()).toBe(404);
+  }
+  expect((await request.get("/api/products?storeId=missing")).status()).toBe(
+    400,
+  );
+  expect(
+    (await request.get("/api/products?minPrice=200&maxPrice=100")).status(),
+  ).toBe(400);
+});
+
+test("API failure is retryable", async ({ page }) => {
+  await open(page);
+  let fail = true;
+  await page.route("**/api/products?**", async (route) => {
+    if (fail) await route.fulfill({ status: 503, body: "Unavailable" });
+    else route.fallback();
+  });
+  await page.getByLabel("Сортировка").selectOption("newest");
+  await expect(
+    page.getByRole("heading", { name: "Не удалось загрузить товары" }),
+  ).toBeVisible();
+  fail = false;
+  await page.getByRole("button", { name: "Повторить" }).click();
+  await expect(page.locator(".product-card").first()).toBeVisible();
+});

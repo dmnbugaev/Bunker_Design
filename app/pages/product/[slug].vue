@@ -1,0 +1,230 @@
+<script setup lang="ts">
+import {
+  availabilityLabels,
+  formatPrice,
+  splitProductDescription,
+} from "~~/shared/utils/product";
+// Валидация до рендера и независимо от age gate: несуществующий товар
+// отвечает 404 всем, включая ботов (см. комментарий в catalog/[category].vue).
+definePageMeta({
+  key: (route) => route.path,
+  async validate(route) {
+    const slug = String(route.params.slug);
+    try {
+      await useRequestFetch()(`/api/products/${encodeURIComponent(slug)}`);
+      return true;
+    } catch (error) {
+      // 403 — регулируемый товар до подтверждения 18+: маршрут
+      // рендерится, страница показывает блок подтверждения возраста.
+      // 404 — товара нет, и бот, и посетитель получают настоящий 404.
+      if ((error as { statusCode?: number }).statusCode === 403) return true;
+      return createError({ statusCode: 404, message: "Товар не найден" });
+    }
+  },
+});
+const route = useRoute();
+const {
+  data: product,
+  error,
+  refresh,
+  status,
+} = await useProduct(() => String(route.params.slug));
+if (error.value?.statusCode === 404)
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Not Found",
+    message: "Товар не найден",
+  });
+const ageConfirmed = useAgeConfirmed();
+// Регулируемый товар до подтверждения 18+: API отвечает 403, карточку
+// заменяет блок подтверждения (общедоступные товары открываются всем).
+const gated = computed(
+  () => !ageConfirmed.value && error.value?.statusCode === 403,
+);
+const { data: meta } = await useCatalogMeta();
+const { store, pickerOpen } = useStoreSelection();
+const { add, remove, quantityOf } = useSelectionList();
+const inList = computed(
+  () => product.value && quantityOf(product.value.id) > 0,
+);
+const category = computed(() =>
+  meta.value?.categories.find((item) => item.id === product.value?.categoryId),
+);
+// Совместимость приходит из МойСклад дописанной в конец описания —
+// показываем её отдельным блоком под текстом «О товаре».
+const about = computed(() =>
+  splitProductDescription(product.value?.description ?? ""),
+);
+const { data: related } = await useProducts(() => ({
+  category: category.value?.slug,
+  excludeId: product.value?.id,
+  storeId: store.value?.id,
+  limit: 3,
+}));
+// «Предыдущий / Следующий товар» — по выдаче категории в том же порядке,
+// в котором пользователь видел её в каталоге.
+const { data: adjacent, refresh: refreshAdjacent } = await useFetch<{
+  prev: { slug: string; name: string } | null;
+  next: { slug: string; name: string } | null;
+}>(
+  () =>
+    `/api/products/${encodeURIComponent(String(route.params.slug))}/adjacent`,
+);
+// Подтверждение возраста по кнопке на странице: cookie пишет layout,
+// здесь дозагружаем товар и навигацию без перезагрузки.
+watch(ageConfirmed, (value) => {
+  if (!value) return;
+  void refresh();
+  void refreshAdjacent();
+});
+const breadcrumbs = computed(() => [
+  { label: "Главная", to: "/" },
+  { label: "Каталог", to: "/catalog" },
+  ...(category.value
+    ? [{ label: category.value.name, to: `/catalog/${category.value.slug}` }]
+    : []),
+  { label: product.value?.name ?? "Товар" },
+]);
+usePageSeo(
+  () => product.value?.name ?? "Товар",
+  () => product.value?.description || "Товар из каталога Бункер.",
+  () => product.value?.images[0]?.src ?? "",
+);
+const storeName = (storeId: string) =>
+  meta.value?.stores.find((item) => item.id === storeId)?.name ?? "Магазин";
+</script>
+<template>
+  <UiContainer class="page-shell">
+    <UiBreadcrumbs :items="breadcrumbs" />
+    <UiSkeleton v-if="status === 'pending'" />
+    <AgeNotice
+      v-else-if="gated"
+      title="Товар для лиц 18+"
+      text="Карточка доступна после подтверждения совершеннолетнего возраста."
+    />
+    <UiEmptyState
+      v-else-if="error || !product"
+      title="Не удалось загрузить товар"
+      >Попробуйте снова.<template #action
+        ><UiButton @click="refresh()">Повторить</UiButton></template
+      ></UiEmptyState
+    >
+    <template v-else>
+      <div class="product-detail">
+        <ProductGallery
+          :images="product.images"
+          :restricted="product.imagesRestricted"
+        />
+        <div class="product-detail__info">
+          <p class="eyebrow">
+            {{ product.categoryName ?? "Каталог" }} / {{ product.sku }}
+          </p>
+          <h1>{{ product.name }}</h1>
+          <ProductPrice :product="product" /><ProductAvailability
+            :product="product"
+          />
+          <div class="product-store">
+            <p class="caption">
+              {{ store?.name ?? "Выберите магазин для проверки наличия" }}
+            </p>
+            <button type="button" class="text-link" @click="pickerOpen = true">
+              {{ store ? "Изменить магазин" : "Выбрать магазин" }}
+            </button>
+          </div>
+          <div class="product-select">
+            <template v-if="inList">
+              <div class="product-select__actions">
+                <UiButton
+                  variant="secondary"
+                  @click="product && remove(product.id)"
+                  >Убрать из списка</UiButton
+                >
+                <NuxtLink to="/reserve" class="text-link"
+                  >К списку выбранных ↗</NuxtLink
+                >
+              </div>
+            </template>
+            <div v-else class="product-select__actions">
+              <UiButton
+                variant="primary"
+                size="large"
+                @click="product && add(product.id)"
+                >Добавить в список</UiButton
+              >
+            </div>
+            <p class="caption">
+              Список используется для запроса на резерв в магазине; покупка —
+              только в магазине.
+            </p>
+          </div>
+          <ProductSpecifications :attributes="product.attributes" />
+        </div>
+      </div>
+      <nav
+        v-if="adjacent && (adjacent.prev || adjacent.next)"
+        class="product-adjacent"
+        aria-label="Соседние товары категории"
+      >
+        <NuxtLink
+          v-if="adjacent.prev"
+          :to="`/product/${adjacent.prev.slug}`"
+          class="product-adjacent__link"
+        >
+          <span class="caption" aria-hidden="true">← Предыдущий</span>
+          <span class="product-adjacent__name">{{ adjacent.prev.name }}</span>
+        </NuxtLink>
+        <span v-else aria-hidden="true"></span>
+        <NuxtLink
+          v-if="adjacent.next"
+          :to="`/product/${adjacent.next.slug}`"
+          class="product-adjacent__link product-adjacent__link--next"
+        >
+          <span class="caption" aria-hidden="true">Следующий →</span>
+          <span class="product-adjacent__name">{{ adjacent.next.name }}</span>
+        </NuxtLink>
+      </nav>
+      <section v-if="product.description" class="product-description">
+        <h2>О товаре</h2>
+        <p v-if="about.main">{{ about.main }}</p>
+        <p v-if="about.compatibility" class="product-description__compat">
+          <span class="product-description__compat-label"
+            >Совместимость:&nbsp;</span
+          >{{ about.compatibility }}
+        </p>
+      </section>
+      <section class="product-offers">
+        <h2>По магазинам</h2>
+        <p class="caption">Цена зависит от города, наличие — от магазина.</p>
+        <ul>
+          <li
+            v-for="offer in product.offers"
+            :key="offer.storeId"
+            :class="{
+              'product-offers__row--current': store?.id === offer.storeId,
+            }"
+          >
+            <span class="product-offers__store">{{
+              storeName(offer.storeId)
+            }}</span>
+            <span
+              class="product-offers__availability"
+              :data-availability="offer.availability"
+              >{{ availabilityLabels[offer.availability] }}</span
+            ><strong>{{ formatPrice(offer.price) }}</strong>
+          </li>
+        </ul>
+      </section>
+      <section v-if="!gated && related?.items.length" class="section">
+        <div class="section-heading">
+          <h2>Рядом по характеру.</h2>
+          <NuxtLink
+            :to="`/catalog/${category?.slug ?? ''}`"
+            class="text-link section-heading__link"
+            >Вся категория ↗</NuxtLink
+          >
+        </div>
+        <ProductGrid :products="related.items" />
+      </section>
+    </template>
+  </UiContainer>
+</template>

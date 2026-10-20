@@ -1,0 +1,122 @@
+<script setup lang="ts">
+// Подтверждение 18+ сохраняется в cookie на год (локально в браузере) и
+// доступно серверу при SSR: без подтверждения контент каталога не рендерится
+// в HTML страницы. Публичные (не гейтируемые) маршруты: юридические страницы,
+// аккаунт (регистрация сама запрашивает дату рождения) и информационные
+// разделы, индексируемые поисковыми системами (/, /about, /stores,
+// /partners) — каталогозависимые секции на них скрываются на уровне самих
+// страниц (см. pages/index.vue). Страницы каталога (/catalog, /product,
+// /search) рендерятся и до подтверждения: сервер отдаёт туда только
+// общедоступный ассортимент, а полный каталог открывается блоком
+// подтверждения на самой странице (AgeNotice) — модальный гейт на них
+// не показывается (решение владельца 13.10.2026).
+const PUBLIC_ROUTES = [
+  "/",
+  "/about",
+  "/stores",
+  "/partners",
+  "/privacy",
+  "/personal-data",
+  "/information",
+  "/contacts",
+  "/login",
+  "/register",
+  "/account",
+];
+const CATALOG_ROUTES = /^\/(catalog|product|search)(?:\/|$)/;
+const ageCookie = useCookie<boolean | null>("bunker-age-confirmed", {
+  maxAge: 60 * 60 * 24 * 365,
+  sameSite: "lax",
+});
+const ageConfirmed = useAgeConfirmed();
+watch(ageConfirmed, (value) => {
+  if (value) ageCookie.value = true;
+});
+const route = useRoute();
+const publicRoute = computed(() => PUBLIC_ROUTES.includes(route.path));
+const catalogRoute = computed(() => CATALOG_ROUTES.test(route.path));
+const contentVisible = computed(
+  () => ageConfirmed.value || publicRoute.value || catalogRoute.value,
+);
+// Модальный гейт остаётся только на маршрутах вне публичных и каталогных
+// (например, /reserve): там контент по-прежнему скрыт целиком.
+const gated = computed(
+  () => !ageConfirmed.value && !publicRoute.value && !catalogRoute.value,
+);
+const { data: meta } = await useCatalogMeta();
+const { store, pickerOpen, pickerDismissed, autoDetected, detect } =
+  useStoreSelection();
+// Сначала решение по cookie-баннеру, и только потом модальный выбор
+// магазина: два поверхностных слоя одновременно не показываем.
+const { needsDecision: consentUndecided } = useConsentSettings();
+watch(
+  [ageConfirmed, meta, () => route.path, consentUndecided],
+  async () => {
+    if (
+      ageConfirmed.value &&
+      meta.value &&
+      !consentUndecided.value &&
+      route.path !== "/partners" &&
+      !store.value &&
+      // Закрытое без выбора окно не открываем заново до конца сессии.
+      !pickerDismissed.value
+    ) {
+      await nextTick();
+      // Диалог открывается сразу, а параллельно спрашиваем геолокацию:
+      // успешный ответ сам подставит ближайший магазин и закроет окно.
+      pickerOpen.value = true;
+      void detect();
+    }
+  },
+  { immediate: true },
+);
+// Плашка «магазин определён автоматически»: сама скрывается через 10 секунд.
+let noticeTimer: ReturnType<typeof setTimeout> | undefined;
+watch(autoDetected, (value) => {
+  if (noticeTimer) clearTimeout(noticeTimer);
+  if (value)
+    noticeTimer = setTimeout(() => (autoDetected.value = false), 10000);
+});
+onBeforeUnmount(() => noticeTimer && clearTimeout(noticeTimer));
+</script>
+
+<template>
+  <div>
+    <div id="top" class="app-shell" :inert="gated">
+      <a class="skip-link" href="#main">Перейти к содержимому</a>
+      <LegalNotice />
+      <AppHeader />
+      <main id="main">
+        <template v-if="contentVisible"><slot /></template>
+        <p v-else class="caption age-hint">
+          Содержимое сайта доступно после подтверждения совершеннолетнего
+          возраста.
+        </p>
+      </main>
+      <AppFooter />
+    </div>
+    <AgeGate v-if="gated" v-model="ageConfirmed" />
+    <StorePicker v-if="ageConfirmed || catalogRoute" />
+    <!-- Баннер согласия на cookie: до подтверждения 18+ не показываем,
+         чтобы не складывать два поверхностных слоя поверх гейта. -->
+    <CookieConsent v-if="contentVisible" />
+    <div v-if="autoDetected" class="geo-note" role="status">
+      <p class="caption">
+        Ближайший магазин — <strong>{{ store?.name }}</strong
+        >. Выбран автоматически по вашему местоположению.
+      </p>
+      <div class="geo-note__actions">
+        <button type="button" class="text-link" @click="pickerOpen = true">
+          Изменить
+        </button>
+        <UiIconButton label="Скрыть" @click="autoDetected = false"
+          ><span aria-hidden="true">×</span></UiIconButton
+        >
+      </div>
+    </div>
+    <noscript
+      >Для подтверждения возраста 18+ и доступа к сайту включите
+      JavaScript.</noscript
+    >
+  </div>
+</template>
