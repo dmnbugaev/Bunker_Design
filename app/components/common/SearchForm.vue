@@ -12,6 +12,8 @@ interface SuggestItem {
 const props = defineProps<{
   initial?: string;
   compact?: boolean;
+  /** Большая полоса поиска каталога (как в маркетплейсах). */
+  prominent?: boolean;
   autofocus?: boolean;
 }>();
 const query = ref(props.initial ?? "");
@@ -116,7 +118,10 @@ onBeforeUnmount(() => {
   <div
     ref="root"
     class="search-form"
-    :class="{ 'search-form--compact': compact }"
+    :class="{
+      'search-form--compact': compact,
+      'search-form--prominent': prominent,
+    }"
   >
     <form role="search" @submit.prevent="submit">
       <UiField
@@ -138,7 +143,9 @@ onBeforeUnmount(() => {
         @focus="onFocus"
         @keydown="onKeydown"
       />
-      <UiButton type="submit" variant="secondary">Найти</UiButton>
+      <UiButton type="submit" :variant="prominent ? 'primary' : 'secondary'"
+        >Найти</UiButton
+      >
     </form>
     <ul
       v-if="open && items.length"

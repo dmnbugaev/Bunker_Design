@@ -30,8 +30,8 @@ watch(
       v-else-if="image && !failed"
       :src="image.src"
       :alt="image.alt"
-      width="480"
-      height="400"
+      width="600"
+      height="800"
       :loading="eager ? 'eager' : 'lazy'"
       @error="failed = true"
     />

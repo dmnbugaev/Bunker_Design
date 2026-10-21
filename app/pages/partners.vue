@@ -84,12 +84,9 @@ async function submit() {
 
 <template>
   <UiContainer class="page-shell partner-page">
-    <UiBreadcrumbs
-      :items="[{ label: 'Главная', to: '/' }, { label: 'Стать партнёром' }]"
-    />
     <div class="partner-layout">
       <section class="partner-content" aria-labelledby="partner-title">
-        <h1 id="partner-title">Стать<br />партнёром.</h1>
+        <h1 id="partner-title" class="partner-title">Стать партнёром.</h1>
         <p class="partner-intro">
           Оставьте ваши контакты — обсудим сотрудничество с вашей компанией.
         </p>
@@ -237,16 +234,14 @@ async function submit() {
         </form>
       </section>
       <aside class="partner-visual" aria-label="Партнёрство с Бункер">
-        <span class="partner-wordmark">БУНКЕР</span>
-        <img
-          src="/images/storefront.webp"
-          alt="Постер сети «Бункер»"
-          width="600"
-          height="600"
-        />
-        <div class="partner-visual__caption">
-          <p>Давайте<br />работать вместе.</p>
-          <span>Открыты к сотрудничеству<br />с вашим бизнесом</span>
+        <div class="partner-visual__frame">
+          <img
+            class="partner-visual__photo"
+            src="/images/storefront.webp"
+            alt="Постер сети «Бункер»"
+            width="600"
+            height="600"
+          />
         </div>
       </aside>
     </div>

@@ -65,10 +65,10 @@ test("filters and sorting use the selected store price", async ({ page }) => {
   await expect(filters.getByText("Бренд")).toHaveCount(0);
   await expect(filters.getByText("Материал")).toHaveCount(0);
   // «Только в наличии» включён с открытия страницы: в Центральном
-  // (store-b1) нет MOOK FWRD и ARQA Premium — из 16 доступных на первой
-  // странице лимит выдачи (12).
+  // (store-b1) нет MOOK FWRD и ARQA Premium — из 16 доступных все
+  // помещаются на одной странице (лимит выдачи 24).
   await expect(filters.getByLabel("Только в наличии")).toBeChecked();
-  await expect(page.locator(".product-card")).toHaveCount(12);
+  await expect(page.locator(".product-card")).toHaveCount(16);
   await filters.getByLabel("От", { exact: true }).fill("1500");
   await filters.getByLabel("До", { exact: true }).fill("2000");
   // Цена применяется сама после паузы ввода — кнопки «Применить» нет.
@@ -80,7 +80,7 @@ test("filters and sorting use the selected store price", async ({ page }) => {
     "Pod-система Bunker Classic",
   );
   await filters.getByRole("button", { name: "Сбросить фильтры" }).click();
-  await expect(page.locator(".product-card")).toHaveCount(12);
+  await expect(page.locator(".product-card")).toHaveCount(16);
 });
 
 test("store changes availability and city price without losing the product", async ({
@@ -135,11 +135,12 @@ test("instant filters: availability is on by default, photo filter removed", asy
 }) => {
   await open(page);
   const sidebar = page.locator(".catalog-sidebar");
-  // Фильтр наличия включён с открытия сайта: каталог показывает только
-  // товары в выбранном магазине, чип фильтра уже активен.
+  // Фильтр наличия включён с открытия сайта, но это состояние по умолчанию:
+  // чипов активных фильтров нет — WB/Ozon подсвечивают только явно
+  // применённые фильтры.
   const available = sidebar.getByLabel("Только в наличии");
   await expect(available).toBeChecked();
-  await expect(page.locator(".filter-chips li")).toHaveCount(2);
+  await expect(page.locator(".filter-chips")).toHaveCount(0);
   // Фильтра «только с фотографиями» больше нет (убран по решению владельца
   // 10.10.2026) — в сайдбаре единственный чекбокс наличия.
   await expect(sidebar.getByRole("checkbox")).toHaveCount(1);
@@ -147,13 +148,14 @@ test("instant filters: availability is on by default, photo filter removed", asy
   await available.uncheck();
   await expect(page).toHaveURL(/available=0/);
   // Позиции с нулевым остатком возвращаются в выдачу с меткой: MOOK FWRD
-  // и ARQA Premium (обе с фото — высокий ранг витрины) на первой странице.
-  await expect(page.locator(".product-card")).toHaveCount(12);
+  // и ARQA Premium — все 18 опубликованных товаров на одной странице.
+  await expect(page.locator(".product-card")).toHaveCount(18);
   await expect(page.locator(".product-card__soon")).toHaveCount(2);
   await expect(page.locator(".filter-chips")).toHaveCount(0);
   await sidebar.getByLabel("Только в наличии").check();
   await expect(page).toHaveURL(/available=1/);
-  await expect(page.locator(".product-card")).toHaveCount(12);
+  await expect(page.locator(".product-card")).toHaveCount(16);
+  // Явно включённый фильтр получает чип: «В наличии» + «Сбросить всё».
   await expect(page.locator(".filter-chips li")).toHaveCount(2);
   await page
     .locator(".filter-chips")
@@ -186,10 +188,9 @@ test("category descendants, search, missing image and API pagination", async ({
   // Фильтр наличия по умолчанию: все три позиции ветки «Напитки»
   // (включая подкатегорию «Чай») в Центральном в наличии.
   await expect(page.locator(".product-card")).toHaveCount(3);
-  await page
-    .getByRole("navigation", { name: "Подкатегории" })
-    .getByRole("link", { name: "Чай" })
-    .click();
+  // Подкатегории на десктопе живут в дереве сайдбара, а не в отдельной
+  // горизонтальной навигации (она осталась для мобильного/планшета).
+  await page.locator(".catalog-nav").getByRole("link", { name: "Чай" }).click();
   await expect(
     page.getByRole("heading", { name: "Чай", exact: true }),
   ).toBeVisible();
@@ -202,9 +203,9 @@ test("category descendants, search, missing image and API pagination", async ({
       name: "Изображение доступно только совершеннолетним пользователям",
     }),
   ).toBeVisible();
-  // Полный состав каталога (18 позиций фикстуры; 19-я в корне «НБС» не
-  // публикуется) — только с подтверждением 18+; анонимный запрос вернул
-  // бы общедоступные 6.
+  // Полный состав каталога (18 позиций фикстуры; 19-я в корне «Новая
+  // папка» не публикуется) — только с подтверждением 18+; анонимный запрос
+  // вернул бы общедоступные 6.
   const response = await request.get("/api/products?limit=2&page=2", {
     headers: { cookie: "bunker-age-confirmed=true" },
   });
@@ -235,8 +236,10 @@ test("page in URL survives the price-filter sync (pagination regression)", async
   // Регрессия: вотчер черновика цены реагировал на любую смену query
   // (в том числе ?page=) и через дебаунс эмитил «apply», который стирал
   // page и возвращал пользователя на первую страницу каталога.
+  // 16 доступных позиций входят в лимит 24: page=2 клампится в 1,
+  // но параметр в URL должен пережить синхронизацию черновика цены.
   await open(page, "/catalog?page=2");
-  await expect(page.locator(".product-card")).toHaveCount(4);
+  await expect(page.locator(".product-card")).toHaveCount(16);
   await page.waitForTimeout(900);
   await expect(page).toHaveURL(/page=2/);
 });

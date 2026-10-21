@@ -42,7 +42,8 @@ export default defineEventHandler(async (event) => {
       );
     }
     return Buffer.from(await response.arrayBuffer());
-  } catch {
+  } catch (error) {
+    console.error("[image-proxy] fetchProductImage failed:", error);
     throw createError({ statusCode: 502, statusMessage: "Image unavailable" });
   }
 });

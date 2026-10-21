@@ -67,8 +67,15 @@ export default defineConfig({
       AUTH_RATE_LIMIT_REGISTER: "1000",
       AUTH_RATE_LIMIT_LOGIN: "1000",
       RESERVATION_RATE_LIMIT_MAX: "1000",
-      // Капча и Telegram-уведомления в e2e отключены (нет ключей);
-      // их логика покрыта unit-тестами (tests/reservation.test.mjs).
+      // Капча и Telegram-уведомления в e2e отключены; их логика покрыта
+      // unit-тестами (tests/reservation.test.mjs). Telegram-ключи теперь
+      // живут в .env (в dev уведомления реальные) — пустые строки в env
+      // веб-сервера маскируют их: dotenv не переопределяет существующие
+      // переменные, и e2e остаётся герметичным (1 чекбокс согласия).
+      TELEGRAM_BOT_TOKEN: "",
+      TELEGRAM_RESERVATION_CHAT_IDS: "",
+      NUXT_TELEGRAM_BOT_TOKEN: "",
+      NUXT_TELEGRAM_CHAT_ID: "",
     },
     reuseExistingServer: !process.env.CI && !process.env.PLAYWRIGHT_BASE_URL,
     timeout: 120000,

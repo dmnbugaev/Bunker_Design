@@ -1,3 +1,8 @@
+<script setup lang="ts">
+// На самой странице «О проекте» ссылка «О Бункер» вела сама на себя —
+// там она скрывается (show-link="false"), на главной остаётся.
+withDefaults(defineProps<{ showLink?: boolean }>(), { showLink: true });
+</script>
 <template>
   <UiContainer as="section" class="section"
     ><div class="about-intro">
@@ -11,7 +16,9 @@
           устройства, расходные материалы, аксессуары, напитки и снеки. Сведения
           о наличии доступны по выбранной точке.
         </p>
-        <NuxtLink to="/about" class="text-link">О Бункер ↗</NuxtLink>
+        <NuxtLink v-if="showLink" to="/about" class="text-link"
+          >О Бункер ↗</NuxtLink
+        >
       </div>
     </div>
     <div class="advantages">

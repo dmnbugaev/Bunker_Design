@@ -164,7 +164,7 @@ test("server re-validates store, products, stock and consents", async ({
   expect(((await unknownStore.json()).data?.errors ?? {}).storeId).toBeTruthy();
 
   // Подменённый productId: товар скрыт юридической политикой (корень
-  // «НБС» не публикуется).
+  // «Новая папка» не публикуется).
   const bannedProduct = await post({
     ...payload,
     items: [{ productId: "nbc-01", quantity: 1 }],

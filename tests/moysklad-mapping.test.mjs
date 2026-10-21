@@ -24,7 +24,7 @@ const collection = (rows) => ({ meta: { size: rows.length }, rows });
 const liquidFolder = { id: "folder-liq", name: "Жидкости" };
 const deviceFolder = { id: "folder-devices", name: "Устройства" };
 const drinksFolder = { id: "folder-drinks", name: "Напитки" };
-const nbcFolder = { id: "folder-nbc", name: "НБС" };
+const unknownFolder = { id: "folder-unknown", name: "Новая папка" };
 const reference = (id) => ({
   meta: {
     href: `https://api.moysklad.ru/api/remap/1.2/entity/productfolder/${id}`,
@@ -97,9 +97,9 @@ const products = [
   },
   {
     id: "product-6",
-    name: "НБС тестовый",
+    name: "Товар неклассифицированный",
     archived: false,
-    productFolder: reference("folder-nbc"),
+    productFolder: reference("folder-unknown"),
     salePrices: [price("Розничная", 30000)],
     attributes: [{ name: "Показать на сайте", value: true }],
   },
@@ -110,7 +110,7 @@ globalThis.fetch = async (input) => {
   const rows = path.endsWith("/entity/store")
     ? stores
     : path.endsWith("/entity/productfolder")
-      ? [liquidFolder, deviceFolder, drinksFolder, nbcFolder]
+      ? [liquidFolder, deviceFolder, drinksFolder, unknownFolder]
       : path.endsWith("/entity/product")
         ? products
         : path.endsWith("/entity/product/metadata/attributes")
@@ -231,9 +231,11 @@ test("publish/site-name fields, price types, city groups and legal policy", asyn
     snapshot.meta.stores.find((store) => store.id === "store-1")?.address,
     "ул. Примерная, 1",
   );
-  // Неклассифицированный корень (НБС) скрыт вместе с товарами.
+  // Неклассифицированный корень скрыт вместе с товарами.
   assert.ok(
-    !snapshot.meta.categories.some((category) => category.name === "НБС"),
+    !snapshot.meta.categories.some(
+      (category) => category.name === "Новая папка",
+    ),
   );
   assert.ok(!snapshot.products.some((product) => product.id === "product-6"));
 });

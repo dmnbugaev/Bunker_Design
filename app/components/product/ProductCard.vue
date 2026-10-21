@@ -61,7 +61,7 @@ const soldOut = computed(() => {
       <button
         v-else
         type="button"
-        class="product-card__select text-link"
+        class="product-card__select"
         @click="add(product.id)"
       >
         + В список

@@ -187,6 +187,9 @@
   --control-border: var(--color-border-default);
   --card-bg: var(--color-surface-primary);
   --card-border: var(--color-border-default);
+  /* Светлая плашка под фото товара в карточке: тёмные постеры и белые
+     фото МойСклад читаются одинаково контрастно. */
+  --product-plate: #ecece8;
   --header-height: 4.5rem;
 }
 

@@ -72,12 +72,17 @@ test("root category classification", () => {
   assert.equal(classifyRootCategory("Устройства"), "REGULATED_DEVICE");
   assert.equal(classifyRootCategory("КАЛЬЯНЫ"), "REGULATED_HOOKAH");
   // Безтабачные паучи (класс предполагает отсутствие снюса) — оборот
-  // разрешён; снюс и НБС не маппятся и блокируются как PENDING_REVIEW.
+  // разрешён; снюс («сосательный табак») не маппится и блокируется как
+  // PENDING_REVIEW.
   assert.equal(classifyRootCategory("жевательный табак"), "REGULATED_POUCH");
+  // Учётные имена аккаунта «Бункера» (сверка 21.10.2026): «шайбы» и
+  // «пластинки» — никотиновые паучи, «НБС» — никотиносодержащие смеси.
+  assert.equal(classifyRootCategory("Шайбы"), "REGULATED_POUCH");
+  assert.equal(classifyRootCategory("Пластинки"), "REGULATED_POUCH");
+  assert.equal(classifyRootCategory("нбс"), "REGULATED_NICOTINE");
   assert.equal(classifyRootCategory("СИГАРЕТЫ"), "REGULATED_TOBACCO");
   // Снеки публикуются и входят в общедоступный ассортимент.
   assert.equal(classifyRootCategory("Снеки"), "UNREGULATED");
-  assert.equal(classifyRootCategory("нбс"), "PENDING_REVIEW");
   // Пищевые ароматизаторы — публичная категория.
   assert.equal(classifyRootCategory("Ароматизаторы"), "UNREGULATED");
   // Неизвестные и отсутствующие категории не публикуются.
@@ -223,8 +228,10 @@ test("age-public assortment is exactly the owner list of 13.10.2026", () => {
   // Решение владельца 13.10.2026: лапша, китайский чай, ароматизаторы,
   // глицерин, снеки и напитки (без энергетиков — те скрыты папками)
   // видны до подтверждения 18+. Состав множества проверяем явно:
-  // случайное расширение списка — юридически чувствительно.
+  // случайное расширение списка — юридически чувствительно. «Cнеки» с
+  // латинской C — дубликат корня аккаунта «Бункера» (сверка 21.10.2026).
   assert.deepEqual([...AGE_PUBLIC_ROOT_CATEGORIES].sort(), [
+    "cнеки",
     "ароматизаторы",
     "глицерин",
     "китайский чай",

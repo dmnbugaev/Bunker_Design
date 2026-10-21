@@ -65,6 +65,18 @@ const children = computed(() =>
 const parent = computed(() =>
   meta.value?.categories.find((item) => item.id === category.value?.parentId),
 );
+// Дети активного корня для дерева в сайдбаре: внутри подкатегории
+// показываем её соседей, а не внуков.
+const activeRootId = computed(() =>
+  category.value ? (category.value.parentId ?? category.value.id) : undefined,
+);
+const sidebarChildren = computed(() =>
+  visibleCategories(
+    meta.value?.categories.filter(
+      (item) => item.parentId === activeRootId.value,
+    ) ?? [],
+  ),
+);
 const breadcrumbs = computed(() => [
   { label: "Главная", to: "/" },
   ...(category.value || props.search
@@ -75,7 +87,8 @@ const breadcrumbs = computed(() => [
     : []),
   { label: props.search ? "Поиск" : title.value },
 ]);
-// Чипы активных фильтров: каждый снимается по одному, «Сбросить всё» — целиком.
+// Чипы активных фильтров: только явно применённые пользователем —
+// фильтр наличия, включённый по умолчанию, чипом не подсвечивается.
 type ChipKey = "price" | "available";
 const chips = computed<{ key: ChipKey; label: string }[]>(() => {
   const list: { key: ChipKey; label: string }[] = [];
@@ -84,7 +97,7 @@ const chips = computed<{ key: ChipKey; label: string }[]>(() => {
       key: "price",
       label: `Цена: ${values.value.minPrice || "0"}–${values.value.maxPrice || "∞"}`,
     });
-  if (values.value.available)
+  if (parsed.value.available)
     list.push({ key: "available", label: "В наличии" });
   return list;
 });
@@ -159,20 +172,29 @@ onMounted(() => {
     <!-- Общедоступная часть каталога: подсказка, что выдача неполная. -->
     <AgeNotice v-else />
     <template v-if="!gatedCategory">
-      <SearchForm :initial="parsed.q" :autofocus="search" />
-      <CatalogCategories :categories="parents" :selected="category?.slug" />
-      <nav
-        v-if="children.length"
-        class="subcategory-links"
-        aria-label="Подкатегории"
-      >
-        <NuxtLink
-          v-for="child in children"
-          :key="child.id"
-          :to="`/catalog/${child.slug}`"
-          >{{ child.name }}</NuxtLink
+      <SearchForm
+        class="catalog-search"
+        :initial="parsed.q"
+        :autofocus="search"
+        prominent
+      />
+      <!-- Горизонтальная навигация по категориям: планшет и мобильный,
+           на десктопе её заменяет дерево в сайдбаре. -->
+      <div class="catalog-strips">
+        <CatalogCategories :categories="parents" :selected="category?.slug" />
+        <nav
+          v-if="children.length"
+          class="subcategory-links"
+          aria-label="Подкатегории"
         >
-      </nav>
+          <NuxtLink
+            v-for="child in children"
+            :key="child.id"
+            :to="`/catalog/${child.slug}`"
+            >{{ child.name }}</NuxtLink
+          >
+        </nav>
+      </div>
       <UiEmptyState v-if="metaError" title="Не удалось загрузить каталог"
         >Попробуйте обновить данные.<template #action
           ><UiButton @click="refreshMeta()">Повторить</UiButton></template
@@ -180,14 +202,59 @@ onMounted(() => {
       >
       <div v-else class="catalog-layout">
         <aside class="catalog-sidebar" aria-label="Фильтры каталога">
-          <p class="catalog-sidebar__title">Фильтры</p>
-          <CatalogFilters
-            :values="values"
-            @apply="applyFilters"
-            @reset="resetFilters"
-          />
+          <div>
+            <p class="catalog-sidebar__title">Категории</p>
+            <nav class="catalog-nav" aria-label="Категории каталога">
+              <NuxtLink
+                to="/catalog"
+                :aria-current="!category ? 'page' : undefined"
+                >Все товары</NuxtLink
+              >
+              <template v-for="root in parents" :key="root.id">
+                <NuxtLink
+                  :to="`/catalog/${root.slug}`"
+                  :aria-current="
+                    category &&
+                    [category.id, category.parentId].includes(root.id)
+                      ? 'page'
+                      : undefined
+                  "
+                  >{{ root.name }}</NuxtLink
+                >
+                <div
+                  v-if="root.id === activeRootId && sidebarChildren.length"
+                  class="catalog-nav__children"
+                >
+                  <NuxtLink
+                    v-for="child in sidebarChildren"
+                    :key="child.id"
+                    :to="`/catalog/${child.slug}`"
+                    :aria-current="
+                      category?.id === child.id ? 'page' : undefined
+                    "
+                    >{{ child.name }}</NuxtLink
+                  >
+                </div>
+              </template>
+            </nav>
+          </div>
+          <div>
+            <p class="catalog-sidebar__title">Фильтры</p>
+            <CatalogFilters
+              :values="values"
+              @apply="applyFilters"
+              @reset="resetFilters"
+            />
+          </div>
         </aside>
         <div class="catalog-results" :aria-busy="status === 'pending'">
+          <CatalogToolbar
+            :total="data?.total ?? 0"
+            :sort="parsed.sort"
+            :active-count="activeCount"
+            @sort="sort"
+            @filters="filtersOpen = true"
+          />
           <ul
             v-if="chips.length"
             class="filter-chips"
@@ -208,15 +275,8 @@ onMounted(() => {
               </button>
             </li>
           </ul>
-          <CatalogToolbar
-            :total="data?.total ?? 0"
-            :sort="parsed.sort"
-            :active-count="activeCount"
-            @sort="sort"
-            @filters="filtersOpen = true"
-          />
           <div v-if="status === 'pending'" class="catalog-loading">
-            <UiSkeleton v-for="n in 3" :key="n" />
+            <UiSkeleton v-for="n in 8" :key="n" />
           </div>
           <UiEmptyState v-else-if="error" title="Не удалось загрузить товары"
             >Проверьте соединение и повторите попытку.<template #action

@@ -4,11 +4,6 @@ export interface FilterValues {
   maxPrice: string;
   available: boolean;
 }
-export const EMPTY_FILTERS: FilterValues = {
-  minPrice: "",
-  maxPrice: "",
-  available: true,
-};
 export function useCatalogQuery(category: MaybeRefOrGetter<string> = "") {
   const route = useRoute();
   const router = useRouter();
@@ -25,7 +20,8 @@ export function useCatalogQuery(category: MaybeRefOrGetter<string> = "") {
     ...(route.query as Record<string, string | string[] | undefined>),
     category: toValue(category) || undefined,
     storeId: store.value?.id,
-    limit: 12,
+    // 24 позиции на страницу — три-четыре ряда плотной товарной сетки.
+    limit: 24,
     available: availableDefault.value
       ? "1"
       : String(route.query.available ?? ""),
@@ -35,10 +31,12 @@ export function useCatalogQuery(category: MaybeRefOrGetter<string> = "") {
     maxPrice: parsed.value.maxPrice?.toString() ?? "",
     available: availableDefault.value ? true : parsed.value.available,
   }));
+  // Явно применённые фильтры (для чипов и счётчика на кнопке «Фильтры»):
+  // наличие, включённое по умолчанию без параметра в URL, не считается.
   const activeCount = computed(
     () =>
       Number(!!values.value.minPrice || !!values.value.maxPrice) +
-      Number(values.value.available),
+      Number(parsed.value.available),
   );
   function apply(filters: Partial<FilterValues>) {
     const next = { ...values.value, ...filters };
@@ -54,8 +52,22 @@ export function useCatalogQuery(category: MaybeRefOrGetter<string> = "") {
       },
     });
   }
+  // Сброс возвращает каталог к состоянию по умолчанию: параметры фильтров
+  // исчезают из URL целиком (в том числе неявное available), а не
+  // превращаются в явный available=1.
   function reset() {
-    return apply(EMPTY_FILTERS);
+    const omitted = [
+      "page",
+      "minPrice",
+      "maxPrice",
+      "available",
+      "material",
+      "brand",
+    ];
+    const rest = Object.fromEntries(
+      Object.entries(route.query).filter(([key]) => !omitted.includes(key)),
+    );
+    return router.push({ query: rest });
   }
   function sort(value: string) {
     return router.push({

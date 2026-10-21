@@ -57,7 +57,7 @@ const stores = [
 
 // Корневые категории: имена должны совпадать с ключами легальной
 // классификации (shared/legal/classification.ts, регистр не важен).
-// «НБС» не входит в классификацию — такие корни не публикуются
+// «Новая папка» не входит в классификацию — такие корни не публикуются
 // (PENDING_REVIEW): позиция nbc-01 служит проверкой этого инварианта.
 // «Чай» — подкатегория «Напитков» (проверка навигации по подкатегориям).
 const categories = [
@@ -69,7 +69,7 @@ const categories = [
   { id: "cat-snacks", name: "Снеки", parentId: null },
   { id: "cat-flavors", name: "Ароматизаторы", parentId: null },
   { id: "cat-pouches", name: "Жевательный табак", parentId: null },
-  { id: "cat-nbs", name: "НБС", parentId: null },
+  { id: "cat-nbs", name: "Новая папка", parentId: null },
 ].map((category) => ({
   ...category,
   slug: category.id,
@@ -350,7 +350,7 @@ const products = [
   },
   {
     id: "nbc-01",
-    name: "НБС тестовая позиция",
+    name: "Неклассифицированная тестовая позиция",
     categoryId: "cat-nbs",
     sku: "NBC-001",
     price: 100000,

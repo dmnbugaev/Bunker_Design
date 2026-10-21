@@ -62,7 +62,7 @@ test("banned and unclassified categories are never published; pouches are publis
   const names = meta.categories.map(
     (category: { name: string }) => category.name,
   );
-  expect(names).not.toContain("НБС");
+  expect(names).not.toContain("Новая папка");
   // Ароматизаторы (пищевые, для самозамеса) публикуются по подтверждению
   // владельца от 10.10.2026 как нерегулируемый ассортимент.
   expect(names).toContain("Ароматизаторы");
@@ -71,7 +71,7 @@ test("banned and unclassified categories are never published; pouches are publis
   const list = await (
     await request.get("/api/products?limit=24&available=0", { headers })
   ).json();
-  // 19 позиций фикстуры минус непубликуемая nbc-01 из корня «НБС».
+  // 19 позиций фикстуры минус непубликуемая nbc-01 из корня «Новая папка».
   expect(list.total).toBe(18);
   const pouch = list.items.find(
     (item: { slug: string }) => item.slug === "chew-01",

@@ -22,7 +22,11 @@ const { data, error, status, refresh } = await useProducts(() => ({
         ><UiButton @click="refresh()">Повторить</UiButton></template
       ></UiEmptyState
     >
-    <ProductGrid v-else-if="data?.items.length" :products="data.items" />
+    <ProductGrid
+      v-else-if="data?.items.length"
+      :products="data.items"
+      featured
+    />
     <UiEmptyState v-else title="Коллекция пополняется"
       >Товары появятся здесь после обновления каталога.</UiEmptyState
     >
