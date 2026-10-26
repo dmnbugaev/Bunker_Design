@@ -4,6 +4,7 @@ import { organizationSchema } from "~~/shared/seo/schema";
 import {
   METRIKA_COUNTER_ID,
   resolveMetrika,
+  resolveMetrikaCounterId,
 } from "~~/shared/analytics/metrika";
 
 // Organization — на всех страницах (проверяемые сведения о продавце).
@@ -27,12 +28,14 @@ const metrikaActive = resolveMetrika({
   prod: process.env.NODE_ENV === "production",
   hostname: useRequestURL().hostname,
 });
+const metrikaCounterId =
+  resolveMetrikaCounterId(config.public.metrikaCounterId) || METRIKA_COUNTER_ID;
 const { analyticsAllowed } = useConsentSettings();
-if (metrikaActive && analyticsAllowed.value) {
+if (metrikaActive && analyticsAllowed.value && metrikaCounterId) {
   useHead({
     noscript: [
       {
-        innerHTML: `<div><img src="https://mc.yandex.ru/watch/${METRIKA_COUNTER_ID}" style="position:absolute; left:-9999px;" alt="" /></div>`,
+        innerHTML: `<div><img src="https://mc.yandex.ru/watch/${metrikaCounterId}" style="position:absolute; left:-9999px;" alt="" /></div>`,
       },
     ],
   });

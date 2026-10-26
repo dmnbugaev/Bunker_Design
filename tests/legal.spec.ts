@@ -37,8 +37,11 @@ test("catalog content is absent from server HTML until age is confirmed", async 
     headers: { cookie: "bunker-age-confirmed=true" },
   });
   const allowedHtml = await allowed.text();
-  // «Недавно обновлено» на главной: две самые свежие позиции фикстуры.
-  expect(allowedHtml).toContain("MOOK FWRD");
+  // После 18+ на главной показывается витрина направлений каталога
+  // (товарная витрина «Недавно обновлено» убрана 25.10.2026 — карточки
+  // товаров живут только в /catalog и карточке товара).
+  expect(allowedHtml).toContain("category-tile");
+  expect(allowedHtml).toContain("Жидкости");
   await page.context().addCookies([
     {
       name: "bunker-age-confirmed",
@@ -48,7 +51,8 @@ test("catalog content is absent from server HTML until age is confirmed", async 
     },
   ]);
   await page.goto("/");
-  await expect(page.locator(".product-card").first()).toBeVisible();
+  await expect(page.locator(".category-tile").first()).toBeVisible();
+  await expect(page.locator(".product-card")).toHaveCount(0);
 });
 
 test("banned and unclassified categories are never published; pouches are published as regulated", async ({

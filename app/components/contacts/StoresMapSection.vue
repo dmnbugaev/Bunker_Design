@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Store } from "~~/shared/types/store";
-
 // Магазины сети всегда приходят из «МойСклад» (мета каталога): локальный
 // справочник shared/content/stores.ts лишь обогащает их координатами и
 // адресами на стороне репозитория.
@@ -25,13 +23,20 @@ const storeCountLabel = (count: number) => {
   return `${count} ${word}`;
 };
 
-const optionCaption = (store: Store) => {
-  const city = storeCities.value.find((item) => item.id === store.cityId);
-  if (!store.address || store.name === store.address) {
-    return city?.name ?? null;
-  }
-  return [city?.name, store.address].filter(Boolean).join(", ");
-};
+// Сквозная нумерация точек по городам меты — та же нумерация, что в пикере
+// шапки и на странице «Магазины»: три оглавления сети читаются одинаково.
+const numberedGroups = computed(() => {
+  let counter = 0;
+  return storeCities.value
+    .map((city) => ({
+      city,
+      rows: storesByCity(city.id).map((store) => ({
+        store,
+        number: ++counter,
+      })),
+    }))
+    .filter((group) => group.rows.length > 0);
+});
 
 const toggleSelection = (id: string) => {
   selectedId.value = selectedId.value === id ? null : id;
@@ -64,31 +69,42 @@ const selectFromMap = (id: string) => {
           @select="selectFromMap"
         />
       </div>
+      <!-- Ведомость точек на hairline-разделителях — тот же мотив, что в
+           пикере шапки и на странице «Магазины»: номер, название, улица и
+           фирменная метка-параллелограмм вместо стены одинаковых карточек. -->
       <aside class="stores-map-list" aria-label="Список магазинов сети">
         <section
-          v-for="city in storeCities"
-          :key="city.id"
+          v-for="group in numberedGroups"
+          :key="group.city.id"
           class="stores-map-city"
         >
           <h3>
-            {{ city.name }}
+            {{ group.city.name }}
             <span class="caption">{{
-              storeCountLabel(storesByCity(city.id).length)
+              storeCountLabel(group.rows.length)
             }}</span>
           </h3>
           <ul>
-            <li v-for="store in storesByCity(city.id)" :key="store.id">
+            <li v-for="row in group.rows" :key="row.store.id">
               <button
                 type="button"
                 class="store-map-option"
                 :class="{
-                  'store-map-option--selected': selectedId === store.id,
+                  'store-map-option--selected': selectedId === row.store.id,
                 }"
-                :aria-pressed="selectedId === store.id"
-                @click="toggleSelection(store.id)"
+                :aria-pressed="selectedId === row.store.id"
+                @click="toggleSelection(row.store.id)"
               >
-                <strong>{{ store.name }}</strong>
-                <span class="caption">{{ optionCaption(store) }}</span>
+                <span class="store-map-option__number caption">{{
+                  String(row.number).padStart(2, "0")
+                }}</span>
+                <span class="store-map-option__body">
+                  <strong>{{ row.store.name }}</strong>
+                  <span v-if="row.store.address" class="caption">
+                    {{ row.store.address }}
+                  </span>
+                </span>
+                <span class="store-map-option__mark" aria-hidden="true"></span>
               </button>
             </li>
           </ul>

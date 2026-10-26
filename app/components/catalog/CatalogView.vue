@@ -62,9 +62,6 @@ const children = computed(() =>
     ) ?? [],
   ),
 );
-const parent = computed(() =>
-  meta.value?.categories.find((item) => item.id === category.value?.parentId),
-);
 // Дети активного корня для дерева в сайдбаре: внутри подкатегории
 // показываем её соседей, а не внуков.
 const activeRootId = computed(() =>
@@ -77,16 +74,6 @@ const sidebarChildren = computed(() =>
     ) ?? [],
   ),
 );
-const breadcrumbs = computed(() => [
-  { label: "Главная", to: "/" },
-  ...(category.value || props.search
-    ? [{ label: "Каталог", to: "/catalog" }]
-    : []),
-  ...(parent.value
-    ? [{ label: parent.value.name, to: `/catalog/${parent.value.slug}` }]
-    : []),
-  { label: props.search ? "Поиск" : title.value },
-]);
 // Чипы активных фильтров: только явно применённые пользователем —
 // фильтр наличия, включённый по умолчанию, чипом не подсвечивается.
 type ChipKey = "price" | "available";
@@ -144,10 +131,8 @@ onMounted(() => {
 </script>
 <template>
   <UiContainer class="page-shell">
-    <UiBreadcrumbs :items="breadcrumbs" />
     <div class="catalog-head">
       <div>
-        <p class="eyebrow">Бункер / Каталог</p>
         <h1 class="catalog-title">{{ title }}</h1>
         <p class="catalog-description">{{ description }}</p>
       </div>

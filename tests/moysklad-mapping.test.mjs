@@ -221,10 +221,22 @@ test("publish/site-name fields, price types, city groups and legal policy", asyn
     "engels",
   );
   // Служебные склады (env-имена и префиксы) и архивные не публикуются.
-  assert.equal(snapshot.meta.stores.length, 3);
+  assert.equal(snapshot.meta.stores.length, 4);
   assert.ok(!snapshot.meta.stores.some((store) => store.name === "РЦ Саратов"));
   assert.ok(
     !snapshot.meta.stores.some((store) => store.name === "Склад витрины"),
+  );
+  // Точка без склада в «МойСклад» (server/data/extra-stores.ts) публикуется
+  // в списке магазинов, но без офферов: у неё нет ни цен, ни остатков.
+  const extra = snapshot.meta.stores.find(
+    (store) => store.id === "bunker-store-engels-chapaeva-45",
+  );
+  assert.equal(extra?.cityId, "engels");
+  assert.equal(extra?.address, "ул. Чапаева, 45");
+  assert.ok(
+    snapshot.products.every((product) =>
+      product.offers.every((offer) => offer.storeId !== extra?.id),
+    ),
   );
   // Адрес берётся из «МойСклад», когда локальное обогащение не заполнено.
   assert.equal(

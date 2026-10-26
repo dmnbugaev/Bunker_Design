@@ -148,7 +148,7 @@ export const ROOT_CATEGORY_CLASSES: Record<string, LegalClass> = {
   "б/у устройства (vex)": "REGULATED_DEVICE",
   // Дубликат «Снеков» с латинской «C» в имени (опечатка аккаунта; ключ
   // после нормализации регистра содержит латинскую c).
-  "cнеки": "UNREGULATED",
+  cнеки: "UNREGULATED",
 };
 
 export function classifyRootCategory(name: string | undefined): LegalClass {

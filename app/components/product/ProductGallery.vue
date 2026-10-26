@@ -4,6 +4,8 @@ const props = defineProps<{
   images: ProductImage[];
   /** Сервер скрыл изображения: нет подтверждённого 18+. */
   restricted?: boolean;
+  /** Название товара для монограммы, когда фото нет. */
+  label?: string;
 }>();
 const selected = ref(0);
 watch(
@@ -16,7 +18,12 @@ watch(
 
 <template>
   <div class="product-gallery">
-    <ProductImage :image="images[selected]" eager :restricted="restricted" />
+    <ProductImage
+      :image="images[selected]"
+      eager
+      :restricted="restricted"
+      :label="label"
+    />
     <div
       v-if="images.length > 1"
       class="gallery-thumbnails"

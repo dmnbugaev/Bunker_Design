@@ -409,8 +409,14 @@ test("anonymous catalog hides regulated product images server-side", async ({
     expect(product.imagesRestricted).toBe(true);
   }
   const meta = await (await request.get("/api/catalog/meta")).json();
-  for (const category of meta.categories)
-    expect(category.image).toBeUndefined();
+  // Обложки категорий срезаются так же, как фото товаров: общедоступные
+  // (agePublic, например «Чай») остаются, регулируемые — без изображения.
+  const categoryWithCover = meta.categories.filter(
+    (category: { image?: string }) => category.image,
+  );
+  expect(categoryWithCover.length).toBeGreaterThan(0);
+  for (const category of categoryWithCover)
+    expect(category.agePublic).toBe(true);
   // Прямой URL изображения регулируемого товара недоступен без сессии
   // совершеннолетнего (fx-vmate-pro-2 — регулируемый товар с изображениями
   // в фикстуре); общедоступного — проходит гейт (дальше МойСклад, 502

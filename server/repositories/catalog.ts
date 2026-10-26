@@ -214,6 +214,19 @@ export const catalogRepository: CatalogRepository = {
       if (plenty) return 2;
       return 3;
     };
+    // «Популярность» для порядка по умолчанию: в выгрузке «МойСклад» нет
+    // метрики спроса, поэтому внутри витринного приоритета товары идут по
+    // детерминированной перестановке (FNV-хеш id) — каталог выглядит
+    // живым и перемешанным, но порядок стабилен между страницами
+    // пагинации и перезагрузками.
+    const popularityRank = (product: Product) => {
+      let hash = 2166136261;
+      for (let i = 0; i < product.id.length; i++) {
+        hash ^= product.id.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return hash >>> 0;
+    };
     filtered.sort((a, b) => {
       if (query.sort === "price-asc")
         return price(a) - price(b) || a.id.localeCompare(b.id);
@@ -223,7 +236,7 @@ export const catalogRepository: CatalogRepository = {
         return b.publishedAt.localeCompare(a.publishedAt);
       return (
         stockRank(a) - stockRank(b) ||
-        b.publishedAt.localeCompare(a.publishedAt) ||
+        popularityRank(a) - popularityRank(b) ||
         a.name.localeCompare(b.name, "ru")
       );
     });

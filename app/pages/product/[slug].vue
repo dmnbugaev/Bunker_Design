@@ -114,6 +114,7 @@ const storeName = (storeId: string) =>
         <ProductGallery
           :images="product.images"
           :restricted="product.imagesRestricted"
+          :label="product.name"
         />
         <div class="product-detail__info">
           <p class="eyebrow">

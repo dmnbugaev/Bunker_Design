@@ -126,7 +126,10 @@ test("reachGoal: событие интерфейса уходит с безоп�
     },
     {
       name: "bunker-store",
-      value: "store-3",
+      // Валидный id из фикстуры (иначе автозапуск пикера перекрывает клик),
+      // но не первая строка ведомости (store-b1): клик по уже выбранному
+      // радио не даёт change и store_location_view не уходит.
+      value: "store-b2",
       domain: "127.0.0.1",
       path: "/",
     },
@@ -139,8 +142,8 @@ test("reachGoal: событие интерфейса уходит с безоп�
       (HTMLElement & { __vue_app__?: unknown }) | null;
     return !!root?.__vue_app__;
   });
-  // Клик «Выбрать эту точку» — store_location_view c storeId.
-  await page.getByRole("button", { name: "Выбрать эту точку" }).first().click();
+  // Клик по строке ведомости точек — store_location_view c storeId.
+  await page.getByRole("radio").first().click();
   await expect
     .poll(
       async () =>

@@ -73,7 +73,7 @@ test("hostile selection cookie is sanitized to valid entries", async ({
       { productId: "fx-liquid-classic", quantity: 2 }, // дубль — игнорируется
       { bad: true }, // мусор — отброшен
       { productId: "x!", quantity: 1 }, // недопустимый id — отброшен
-      { productId: "fx-stels-6000", quantity: 3 }, // в пределах точного остатка Северного
+      { productId: "fx-stels-6000", quantity: 3 }, // в пределах точного остатка Танкистов, 64
       { productId: 42, quantity: 1 }, // не строка — отброшен
       "мусор",
       null,
@@ -253,7 +253,7 @@ test("exact stock beats availability bucket on the server", async ({
     consent: true,
     consentTelegram: true,
   };
-  // fx-kaos-eclipse в Северном: бакет «В наличии» разрешил бы 10 шт.,
+  // fx-kaos-eclipse на Танкистов, 64: бакет «В наличии» разрешил бы 10 шт.,
   // точный остаток 2 → сервер обязан отказать в 3 шт. (точные данные
   // бьют бакет).
   const over = await request.post("/api/reservations", {
@@ -274,7 +274,7 @@ test("exact stock beats availability bucket on the server", async ({
   });
   expect(exact.status()).toBe(200);
   // Точный остаток в пределах лимита позиции не мешает
-  // (fx-liquid-classic в Северном: 8 шт.).
+  // (fx-liquid-classic на Танкистов, 64: 8 шт.).
   const fine = await request.post("/api/reservations", {
     data: {
       ...payload,
@@ -289,7 +289,7 @@ test("exact stock beats availability bucket on the server", async ({
   });
   expect(clamped.status()).toBe(200);
   // Товар без оффера в выбранном магазине (fx-tea-earl продаётся без
-  // Северного — см. skipOfferStores в генераторе фикстуры).
+  // Танкистов, 64 — см. skipOfferStores в генераторе фикстуры).
   const noOffer = await request.post("/api/reservations", {
     data: { ...payload, items: [{ productId: "fx-tea-earl", quantity: 1 }] },
   });

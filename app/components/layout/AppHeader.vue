@@ -47,7 +47,13 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
       }}</NuxtLink>
     </nav>
     <div class="header-actions">
-      <button type="button" class="store-trigger" @click="pickerOpen = true">
+      <button
+        type="button"
+        class="store-trigger"
+        :class="{ 'store-trigger--active': pickerOpen }"
+        :aria-expanded="pickerOpen"
+        @click="pickerOpen = true"
+      >
         <span class="store-trigger__pin" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path
@@ -56,15 +62,23 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
               stroke-width="2"
               stroke-linejoin="round"
             />
-            <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" />
+            <circle
+              cx="12"
+              cy="10"
+              r="3"
+              stroke="currentColor"
+              stroke-width="2"
+            />
           </svg>
         </span>
+        <!-- Точка — главный текст таблички: её имя задаёт цены и наличие,
+             город — тихая подпись под ним. -->
         <span class="store-trigger__text">
-          <span class="caption store-trigger__city">{{
-            city?.name ?? "Ваш город"
-          }}</span>
           <span class="store-trigger__store">{{
             store?.name ?? "Выбрать магазин"
+          }}</span>
+          <span class="store-trigger__city caption">{{
+            city?.name ?? "Ваш город"
           }}</span>
         </span>
         <span class="store-trigger__chevron" aria-hidden="true">
@@ -142,9 +156,11 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
           count
         }}</span></NuxtLink
       >
+      <!-- Вход в аккаунт — только иконка, как поиск и список выбранных;
+           подпись живёт в sr-only (доступное имя и мобильное меню). -->
       <NuxtLink
         :to="accountLink.to"
-        class="account-link"
+        class="account-link icon-button"
         :aria-label="accountLink.label"
       >
         <svg
@@ -160,7 +176,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
             stroke="currentColor"
             stroke-width="2"
           /></svg
-        ><span>{{ accountLink.label }}</span></NuxtLink
+        ><span class="visually-hidden">{{ accountLink.label }}</span></NuxtLink
       >
       <UiIconButton
         label="Открыть меню"

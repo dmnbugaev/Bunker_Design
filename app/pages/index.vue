@@ -35,14 +35,12 @@ useHead({
       <div class="signal-strip__track">
         <!-- Повторы добиваем до ширины вдвое больше 4K-вьюпорта: анимация
              сдвигает ленту на 50% трека, стык проходит незаметно. -->
-        <span
-          v-for="copy in 14"
-          :key="copy"
+        <span v-for="copy in 14" :key="copy"
           >Бункер<span class="signal-strip__mark"></span>Резерв — просто<span
             class="signal-strip__mark"
           ></span
-          >Каталог под рукой<span class="signal-strip__mark"></span
-          >Заходи в гости<span class="signal-strip__mark"></span
+          >Каталог под рукой<span class="signal-strip__mark"></span>Заходи в
+          гости<span class="signal-strip__mark"></span
         ></span>
       </div>
     </div>
@@ -55,8 +53,6 @@ useHead({
           ><UiButton @click="refresh()">Повторить</UiButton></template
         ></UiEmptyState
       ></UiContainer
-    ><PopularProductsSection
-      v-if="catalogVisible"
-    /><HowItWorksSection /><AboutSection /><StoresSection /><ContactsSection />
+    ><HowItWorksSection /><AboutSection /><StoresSection /><ContactsSection />
   </div>
 </template>

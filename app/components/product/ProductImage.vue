@@ -5,6 +5,8 @@ const props = defineProps<{
   eager?: boolean;
   /** Сервер скрыл изображения: нет подтверждённого 18+. */
   restricted?: boolean;
+  /** Название товара: без фото плашка получает монограмму-маркировку. */
+  label?: string;
 }>();
 const failed = ref(false);
 watch(
@@ -13,6 +15,10 @@ watch(
     failed.value = false;
   },
 );
+const glyph = computed(() => {
+  const first = props.label?.trim()?.[0];
+  return first ? first.toUpperCase() : "↗";
+});
 </script>
 
 <template>
@@ -26,22 +32,38 @@ watch(
       <span aria-hidden="true">18+</span>
       <span>Изображение доступно<br />совершеннолетним</span>
     </div>
-    <img
-      v-else-if="image && !failed"
-      :src="image.src"
-      :alt="image.alt"
-      width="600"
-      height="800"
-      :loading="eager ? 'eager' : 'lazy'"
-      @error="failed = true"
-    />
+    <template v-else-if="image && !failed">
+      <!-- Размытая копия фото заполняет окно: у любых соотношений сторон
+           МойСклад плашка выглядит заполненной, а не с пустыми полями. -->
+      <img
+        class="product-image__backdrop"
+        :src="image.src"
+        alt=""
+        aria-hidden="true"
+        :loading="eager ? 'eager' : 'lazy'"
+        decoding="async"
+      />
+      <img
+        class="product-image__front"
+        :src="image.src"
+        :alt="image.alt"
+        :loading="eager ? 'eager' : 'lazy'"
+        decoding="async"
+        @error="failed = true"
+      />
+    </template>
     <div
       v-else
       class="image-placeholder"
       role="img"
       aria-label="Изображение отсутствует"
     >
-      <span aria-hidden="true">↗</span><span>Изображение появится позже</span>
+      <!-- Монограмма названия — «складская маркировка» вместо пустой
+           заглушки: категории без фото в МойСклад остаются живыми. -->
+      <span aria-hidden="true" class="image-placeholder__glyph">{{
+        glyph
+      }}</span>
+      <span>Изображение появится позже</span>
     </div>
   </div>
 </template>

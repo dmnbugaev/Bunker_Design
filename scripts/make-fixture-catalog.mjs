@@ -22,36 +22,167 @@ const cities = [
   { id: "engels", name: "Энгельс" },
 ];
 
-// Демо-точки фикстуры: реальные адреса сети предоставит владелец
-// (docs/NEEDS-DATA.md); с живым аккаунтом каталог магазинов приходит из
-// «МойСклад» (entity/store).
+// Точки фикстуры повторяют реальную сеть Бункера: 17 адресов из списка
+// владелицы 24.10.2026 (те же имена и адреса, что в server/data/
+// store-names.ts и store-addresses.ts для живого «МойСклад»). id store-b*
+// синтетические и стабильные: на них завязаны стоки демо-ассортимента и
+// e2e-спеки. Координаты — приблизительные (район улицы, до геокодирования
+// владельцем через npm run stores:geocode), чтобы демо-карта была живой.
 const stores = [
+  // Саратов — 15 точек
   {
     id: "store-b1",
     cityId: "saratov",
-    name: "Центральный",
-    description: "Демо-точка фикстуры",
-    address: "ул. Примерная, 1",
-    hours: "Ежедневно, 10:00–22:00",
-    coordinates: [46.0326, 51.5336],
+    name: "Рахова, 64/70а",
+    description: "Магазин сети Бункер",
+    address: "ул. Рахова, 64/70а",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [46.0205, 51.532],
   },
   {
     id: "store-b2",
     cityId: "saratov",
-    name: "Северный",
-    description: "Демо-точка фикстуры",
-    address: "пр. Примерный, 10",
-    hours: "Ежедневно, 10:00–22:00",
-    coordinates: [46.0059, 51.5905],
+    name: "Танкистов, 64",
+    description: "Магазин сети Бункер",
+    address: "ул. Танкистов, 64",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [45.979, 51.548],
   },
+  {
+    id: "store-b4",
+    cityId: "saratov",
+    name: "2-я Садовая, 4",
+    description: "Магазин сети Бункер",
+    address: "2-я Садовая ул., 4",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [46.032, 51.5295],
+  },
+  {
+    id: "store-b5",
+    cityId: "saratov",
+    name: "Вавилова, 9",
+    description: "Магазин сети Бункер",
+    address: "ул. имени Н.И. Вавилова, 9",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [46.01, 51.518],
+  },
+  {
+    id: "store-b6",
+    cityId: "saratov",
+    name: "Чапаева, 60/64",
+    description: "Магазин сети Бункер",
+    address: "ул. имени В.И. Чапаева, 60/64",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [46.018, 51.523],
+  },
+  {
+    id: "store-b7",
+    cityId: "saratov",
+    name: "Огородная, 149",
+    description: "Магазин сети Бункер",
+    address: "ул. Огородная, 149",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [45.995, 51.488],
+  },
+  {
+    id: "store-b8",
+    cityId: "saratov",
+    name: "Техническая, 5",
+    description: "Магазин сети Бункер",
+    address: "ул. Техническая, 5",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [46.045, 51.549],
+  },
+  {
+    id: "store-b9",
+    cityId: "saratov",
+    name: "Тархова, 27",
+    description: "Магазин сети Бункер",
+    address: "ул. имени С.Ф. Тархова, 27",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [45.995, 51.556],
+  },
+  {
+    id: "store-b10",
+    cityId: "saratov",
+    name: "Колхозная площадь, 1А",
+    description: "Магазин сети Бункер",
+    address: "Колхозная площадь, 1А",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [46.0085, 51.5219],
+  },
+  {
+    id: "store-b11",
+    cityId: "saratov",
+    name: "Ново-Астраханское шоссе, 107Гс1",
+    description: "Магазин сети Бункер",
+    address: "Ново-Астраханское шоссе, 107Гс1",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [45.96, 51.47],
+  },
+  {
+    id: "store-b12",
+    cityId: "saratov",
+    name: "Горького, 30",
+    description: "Магазин сети Бункер",
+    address: "ул. имени А.М. Горького, 30",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [46.025, 51.53],
+  },
+  {
+    id: "store-b13",
+    cityId: "saratov",
+    name: "Вольская, 21/27",
+    description: "Магазин сети Бункер",
+    address: "ул. Вольская, 21/27",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [45.992, 51.559],
+  },
+  {
+    id: "store-b14",
+    cityId: "saratov",
+    name: "Ипподромная, 9",
+    description: "Магазин сети Бункер",
+    address: "ул. Ипподромная, 9",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [45.965, 51.537],
+  },
+  {
+    id: "store-b15",
+    cityId: "saratov",
+    name: "Вольская, 44",
+    description: "Магазин сети Бункер",
+    address: "ул. Вольская, 44",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [45.984, 51.563],
+  },
+  {
+    id: "store-b16",
+    cityId: "saratov",
+    name: "Семёнова, 9",
+    description: "Магазин сети Бункер",
+    address: "ул. имени Академика Н.Н. Семёнова, 9",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [45.974, 51.541],
+  },
+  // Энгельс — 2 точки
   {
     id: "store-b3",
     cityId: "engels",
-    name: "Энгельс",
-    description: "Демо-точка фикстуры",
-    address: "ул. Тельмана, 29",
-    hours: "Ежедневно, 10:00–21:00",
-    coordinates: [46.125, 51.478],
+    name: "Фридриха Энгельса, 4",
+    description: "Магазин сети Бункер",
+    address: "проспект Фридриха Энгельса, 4",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [46.121, 51.482],
+  },
+  {
+    id: "store-b17",
+    cityId: "engels",
+    name: "Чапаева, 45",
+    description: "Магазин сети Бункер",
+    address: "ул. Чапаева, 45",
+    hours: "Ежедневно, 8:00–01:00",
+    coordinates: [46.113, 51.489],
   },
 ];
 
@@ -91,8 +222,7 @@ const IMG = {
 /**
  * Демо-ассортимент фикстуры. availability считается из stockDetail.
  * priceByStore (копейки) моделирует разные цены по городам — как в живом
- * «МойСклад»; publishedAt задаёт порядок сортировки «Новинки» и секции
- * «Недавно обновлено» на главной.
+ * «МойСклад»; publishedAt задаёт порядок сортировки «Новинки».
  */
 const products = [
   {
@@ -400,6 +530,16 @@ const snapshotProducts = products.map((product) => {
     publishedAt: product.publishedAt,
   };
 });
+
+// Обложки категорий — первая фотография направления: живая выгрузка
+// «МойСклад» делает то же в server/services/moysklad.ts.
+for (const category of categories) {
+  if (category.image) continue;
+  const withPhoto = products.find(
+    (item) => item.categoryId === category.id && item.images?.length,
+  );
+  if (withPhoto) category.image = withPhoto.images[0];
+}
 
 const snapshot = {
   updatedAt: Date.now(),

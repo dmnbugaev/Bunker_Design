@@ -196,7 +196,7 @@ test("server re-validates store, products, stock and consents", async ({
     "доступно к резерву 2 шт.",
   );
 
-  // Нет в наличии: fx-vmate-pro-2 в Северном недоступен (фикстура).
+  // Нет в наличии: fx-vmate-pro-2 на Танкистов, 64 недоступен (фикстура).
   const unavailable = await post({ ...payload, storeId: "store-b2" });
   expect(unavailable.status()).toBe(422);
   expect(((await unavailable.json()).data?.errors ?? {}).items).toContain(

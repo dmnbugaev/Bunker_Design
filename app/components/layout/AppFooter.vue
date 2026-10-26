@@ -86,12 +86,9 @@ function footerPhoneClick() {
         </nav>
         <nav class="footer-col" aria-label="Клиентам">
           <h2>Клиентам</h2>
-          <NuxtLink
-            v-for="link in clientLinks"
-            :key="link.to"
-            :to="link.to"
-            >{{ link.label }}</NuxtLink
-          >
+          <NuxtLink v-for="link in clientLinks" :key="link.to" :to="link.to">{{
+            link.label
+          }}</NuxtLink>
         </nav>
         <div class="footer-note">
           <h2>На связи</h2>

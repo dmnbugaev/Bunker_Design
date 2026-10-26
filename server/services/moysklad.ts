@@ -6,8 +6,11 @@ import {
   type PolicyCategory,
 } from "../../shared/legal/catalog-policy";
 import { storeAddresses } from "../data/store-addresses";
+import { storeCities } from "../data/store-cities";
 import { storeHours } from "../data/store-hours";
 import { storeLicenses } from "../data/store-licenses";
+import { storeNames } from "../data/store-names";
+import { extraStores, extraStoreCities } from "../data/extra-stores";
 
 const API = "https://api.moysklad.ru/api/remap/1.2/";
 const PAGE_SIZE = 1000;
@@ -138,6 +141,11 @@ interface StoreCity {
   name: string;
 }
 function cityFor(store: MsStore): StoreCity {
+  // Город точки можно задать вручную по id склада: аккаунты без групп
+  // складов иначе сваливаются в единую группу «Магазины»
+  // (server/data/store-cities.ts).
+  const override = storeCities[store.id]?.trim();
+  if (override) return { id: slugifyCity(override), name: override };
   const groupName = store.pathName?.trim();
   if (groupName) return { id: slugifyCity(groupName), name: groupName };
   return { id: "stores", name: "Магазины" };
@@ -303,7 +311,9 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
       return {
         id: item.id,
         cityId: city.id,
-        name: item.name,
+        // Публичное название («Рахова, 64/70а») перекрывает учётное имя
+        // склада «СКЛАД РАХОВА» (server/data/store-names.ts).
+        name: storeNames[item.id]?.trim() || item.name,
         // Нейтральный фолбэк: адрес точки показывается отдельной строкой.
         description: item.description?.trim() || "Магазин сети Бункер",
         ...(storeAddresses[item.id] || item.address?.trim()
@@ -317,6 +327,9 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
       (a, b) =>
         a.cityId.localeCompare(b.cityId) || a.name.localeCompare(b.name, "ru"),
     );
+  // Города точек без склада участвуют в мете наравне с группами складов.
+  for (const [id, name] of Object.entries(extraStoreCities))
+    cities.set(id, name);
   const allowedPriceTypes = priceTypeNames();
   const visible = msProducts.filter((item) => {
     const prices = item.salePrices ?? [];
@@ -460,6 +473,13 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
   });
   const categoryById = new Map(
     classified.meta.categories.map((category) => [category.id, category]),
+  );
+  // Точки без склада в «МойСклад» (server/data/extra-stores.ts) публикуются
+  // справочно — только в списке магазинов: офферы выше построены по учётным
+  // складам, у таких точек нет ни цен, ни наличия.
+  classified.meta.stores = [...classified.meta.stores, ...extraStores].sort(
+    (a, b) =>
+      a.cityId.localeCompare(b.cityId) || a.name.localeCompare(b.name, "ru"),
   );
   const rootCounts = new Map<string, number>();
   for (const product of classified.products) {

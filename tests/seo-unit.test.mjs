@@ -210,9 +210,10 @@ test("sanitizeEventParams: allowlist отрезает лишнее (защита
 });
 
 test("события аналитики: фиксированный перечень без покупательной семантики", () => {
-  // Счётчик Метрики «Бункеру» пока не выдан: пустое значение отключает
-  // загрузку скрипта (заполняется NUXT_PUBLIC_METRIKA_COUNTER_ID).
-  assert.equal(METRIKA_COUNTER_ID, "");
+  // Счётчик Метрики выдан владельцем (26.10.2026) и вшит в код; env
+  // NUXT_PUBLIC_METRIKA_COUNTER_ID его переопределяет, пустое значение —
+  // отключает загрузку скрипта.
+  assert.equal(METRIKA_COUNTER_ID, "113582832");
   for (const name of ANALYTICS_EVENTS) {
     assert.ok(!/purchase|order|buy|checkout|cart/i.test(name), name);
     assert.ok(ANALYTICS_EVENT_PARAMS[name] !== undefined, name);

@@ -27,7 +27,7 @@ const soldOut = computed(() => {
 });
 </script>
 <template>
-  <article class="product-card">
+  <article class="product-card" :class="{ 'product-card--soon': soldOut }">
     <NuxtLink
       :to="`/product/${product.slug}`"
       class="product-card__visual"
@@ -37,6 +37,7 @@ const soldOut = computed(() => {
       <ProductImage
         :image="product.images[0]"
         :restricted="product.imagesRestricted"
+        :label="product.name"
       />
       <span v-if="soldOut" class="badge product-card__soon">
         Скоро в наличии

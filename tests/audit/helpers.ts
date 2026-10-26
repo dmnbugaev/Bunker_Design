@@ -105,12 +105,21 @@ export const LAYOUT_DEFECTS_SCRIPT = `
 
   const selector = "body *";
   for (const el of document.querySelectorAll(selector)) {
-    // Экранные читалки: sr-only клипается по определению, не дефект
-    if (el.classList.contains("sr-only") || el.closest(".sr-only")) continue;
     const cs = getComputedStyle(el);
     if (cs.display === "none" || cs.visibility === "hidden") continue;
     const r = el.getBoundingClientRect();
     if (r.width === 0 || r.height === 0) continue;
+    // Экранные читалки: sr-only/visually-hidden клипается по определению,
+    // не дефект; самодельные варианты паттерна (абсолют + ширина 1–2px,
+    // например .search-form--prominent .field__label) ловим по форме
+    if (
+      el.classList.contains("sr-only") ||
+      el.closest(".sr-only") ||
+      el.classList.contains("visually-hidden") ||
+      el.closest(".visually-hidden") ||
+      (cs.position === "absolute" && r.width <= 2)
+    )
+      continue;
 
     const overRight = r.right - vw;
     const overLeft = -r.left;

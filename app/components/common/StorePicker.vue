@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { GeoErrorCode } from "~~/app/composables/useStoreSelection";
 import type { Store } from "~~/shared/types/store";
 const { data: meta, error, refresh, status } = await useCatalogMeta();
 const {
@@ -29,6 +28,15 @@ const storeGroups = computed(() => {
     ? grouped.filter((group) => group.city.id === cityId.value)
     : grouped;
 });
+// Сквозная нумерация точек по сети — та же нумерация, что на странице
+// «Магазины»: пикер и страница читаются как одно оглавление.
+const numberedGroups = computed(() => {
+  let counter = 0;
+  return storeGroups.value.map((group) => ({
+    ...group,
+    stores: group.stores.map((item) => ({ store: item, number: ++counter })),
+  }));
+});
 const visibleCount = computed(() =>
   storeGroups.value.reduce((sum, group) => sum + group.stores.length, 0),
 );
@@ -39,26 +47,10 @@ function pluralPoints(count: number) {
   if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return "точки";
   return "точек";
 }
-// Шаблонное описание из МойСклада не помогает выбрать точку — прячем.
-const GENERIC_DESCRIPTION = /^магазин сети/i;
-// Под названием важна улица, а не почтовый боилерплейт: индекс, страна,
-// регион и «г Город» отрезаем, короткие адреса фикстуры не трогаем.
-function optionLine(item: Store) {
-  const parts = (item.address ?? "")
-    .split(",")
-    .map((part) => part.trim())
-    .filter(
-      (part) =>
-        part &&
-        !/^\d{6}$/.test(part) &&
-        !/^россия$/i.test(part) &&
-        !/(обл|республик|край|автономн)/i.test(part) &&
-        !/^(г|гор|п)\.?\s/i.test(part),
-    );
-  if (parts.length) return parts.join(", ");
-  const description = item.description.trim();
-  return GENERIC_DESCRIPTION.test(description) ? "" : description;
-}
+// Строка под названием — адрес, если он не повторяет короткое имя точки,
+// и режим работы (app/utils/store-label.ts).
+const optionLine = (item: Store) =>
+  [storeAddressLine(item), item.hours].filter(Boolean).join(" · ");
 function pickCity(id: string) {
   // Повторное нажатие снимает фильтр — снова видны все магазины сети.
   cityId.value = cityId.value === id ? "" : id;
@@ -88,16 +80,6 @@ async function detectHere() {
   const id = await detect({ force: true });
   if (id) cityId.value = store.value?.cityId ?? cityId.value;
 }
-const errorTexts: Record<GeoErrorCode, string> = {
-  denied:
-    "Браузер запретил доступ к геолокации. Разрешите её в настройках сайта (значок замка в адресной строке) и нажмите кнопку ещё раз — или выберите город из списка.",
-  timeout:
-    "Не удалось получить координаты за отведённое время. Попробуйте ещё раз или выберите город из списка.",
-  unavailable:
-    "Не удалось определить местоположение. Выберите город и магазин из списка.",
-  insecure:
-    "Геолокация работает только на защищённом соединении (HTTPS). Выберите город и магазин из списка.",
-};
 </script>
 <template>
   <UiDialog
@@ -106,9 +88,6 @@ const errorTexts: Record<GeoErrorCode, string> = {
     class="store-dialog"
   >
     <div class="store-picker">
-      <p class="caption store-picker__lead">
-        Цена зависит от города, наличие — от выбранной точки.
-      </p>
       <UiEmptyState v-if="error" title="Не удалось загрузить магазины">
         Попробуйте ещё раз.<template #action
           ><UiButton :loading="status === 'pending'" @click="refresh()"
@@ -117,6 +96,9 @@ const errorTexts: Record<GeoErrorCode, string> = {
         >
       </UiEmptyState>
       <template v-else>
+        <!-- Геолокация — единственная кнопка-подсказка над списком:
+             остальное (пояснения, ссылки) убрано, панель решает одну
+             задачу — выбор точки в два клика. -->
         <UiButton
           variant="quiet"
           class="store-picker__detect"
@@ -146,7 +128,7 @@ const errorTexts: Record<GeoErrorCode, string> = {
           role="status"
           aria-live="polite"
         >
-          {{ errorTexts[detectError] }}
+          {{ geoErrorTexts[detectError] }}
         </p>
         <!-- Города — чипы со срезом угла: один клик вместо раскрытия
              выпадающего списка, повторный клик снимает фильтр. -->
@@ -167,8 +149,9 @@ const errorTexts: Record<GeoErrorCode, string> = {
             {{ city.name }}
           </button>
         </div>
-        <!-- Точки — ведомость на hairline-разделителях: плотный список
-             читается быстрее стены одинаковых карточек. -->
+        <!-- Точки — ведомость на hairline-разделителях с фирменной
+             меткой-параллелограммом: плотный список читается быстрее
+             стены одинаковых карточек. -->
         <fieldset class="store-options">
           <legend class="visually-hidden">Магазин</legend>
           <div class="store-options__head">
@@ -177,54 +160,40 @@ const errorTexts: Record<GeoErrorCode, string> = {
               {{ visibleCount }} {{ pluralPoints(visibleCount) }}
             </span>
           </div>
-          <template v-for="group in storeGroups" :key="group.city.id">
+          <template v-for="group in numberedGroups" :key="group.city.id">
             <p v-if="!cityId && storeGroups.length > 1" class="store-city">
               {{ group.city.name }}
+              <span class="store-city__count caption">
+                {{ group.stores.length }}
+                {{ pluralPoints(group.stores.length) }}
+              </span>
             </p>
             <label
-              v-for="item in group.stores"
-              :key="item.id"
+              v-for="row in group.stores"
+              :key="row.store.id"
               class="store-option"
-              :class="{ 'store-option--selected': store?.id === item.id }"
+              :class="{ 'store-option--selected': store?.id === row.store.id }"
             >
               <input
                 type="radio"
                 name="store"
-                :value="item.id"
-                :checked="store?.id === item.id"
-                @change="choose(item.id)"
+                :value="row.store.id"
+                :checked="store?.id === row.store.id"
+                @change="choose(row.store.id)"
               />
-              <span class="store-option__mark" aria-hidden="true"></span>
+              <span class="store-option__number caption">{{
+                String(row.number).padStart(2, "0")
+              }}</span>
               <span class="store-option__body">
-                <strong>{{ item.name }}</strong>
-                <span v-if="optionLine(item)" class="store-option__line">
-                  {{ optionLine(item) }}
+                <strong>{{ row.store.name }}</strong>
+                <span v-if="optionLine(row.store)" class="store-option__line">
+                  {{ optionLine(row.store) }}
                 </span>
               </span>
-              <svg
-                v-if="store?.id === item.id"
-                class="store-option__check"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="m3.5 8.5 3 3 6-7"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              <span class="store-option__mark" aria-hidden="true"></span>
             </label>
           </template>
         </fieldset>
-        <p class="caption store-picker__hint">
-          Окно можно закрыть и выбрать магазин позже — тогда цены покажутся
-          минимальные по городам.
-        </p>
       </template>
     </div>
   </UiDialog>

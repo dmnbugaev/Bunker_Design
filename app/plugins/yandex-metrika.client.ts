@@ -20,6 +20,7 @@
 import {
   METRIKA_COUNTER_ID,
   resolveMetrika,
+  resolveMetrikaCounterId,
 } from "~~/shared/analytics/metrika";
 import {
   setAnalyticsCounter,
@@ -35,8 +36,12 @@ export default defineNuxtPlugin((nuxtApp) => {
   });
   if (!enabled) return;
 
+  // Приоритет: переменная окружения, затем счётчик по умолчанию из кода.
+  const counterId =
+    resolveMetrikaCounterId(config.metrikaCounterId) || METRIKA_COUNTER_ID;
+  if (!counterId) return;
+
   const { analyticsAllowed } = useConsentSettings();
-  const counterId = METRIKA_COUNTER_ID;
   const scriptSrc = `https://mc.yandex.ru/metrika/tag.js?id=${counterId}`;
   let loaded = false;
 

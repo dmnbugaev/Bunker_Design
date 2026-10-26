@@ -50,7 +50,7 @@ test("first visit chooses a real city and store", async ({ page, context }) => {
   // фильтр и показал все магазины сети.
   await picker.getByRole("button", { name: "Энгельс", exact: true }).click();
   // Магазин применяется сразу при выборе — отдельной кнопки больше нет.
-  await picker.getByRole("radio", { name: /Энгельс/ }).check();
+  await picker.getByRole("radio", { name: /Фридриха/ }).check();
   await expect(picker).not.toBeVisible();
   await expect(page.locator(".store-trigger")).toContainText("Энгельс");
   const cookies = await context.cookies();
@@ -64,7 +64,7 @@ test("filters and sorting use the selected store price", async ({ page }) => {
   const filters = page.locator(".catalog-sidebar");
   await expect(filters.getByText("Бренд")).toHaveCount(0);
   await expect(filters.getByText("Материал")).toHaveCount(0);
-  // «Только в наличии» включён с открытия страницы: в Центральном
+  // «Только в наличии» включён с открытия страницы: на Рахова, 64/70а
   // (store-b1) нет MOOK FWRD и ARQA Premium — из 16 доступных все
   // помещаются на одной странице (лимит выдачи 24).
   await expect(filters.getByLabel("Только в наличии")).toBeChecked();
@@ -100,13 +100,13 @@ test("store changes availability and city price without losing the product", asy
   await expect(page.locator(".gallery-thumbnails")).toHaveCount(0);
   await info.getByRole("button", { name: "Изменить магазин" }).click();
   const picker = page.getByRole("dialog", { name: "Ваш город и магазин" });
-  await picker.getByRole("radio", { name: /Северный/ }).check();
+  await picker.getByRole("radio", { name: /Танкистов/ }).check();
   await expect(picker).not.toBeVisible();
-  // В Северном остаток 0 — оптимистичная метка «Скоро в наличии».
+  // У Танкистов остаток 0 — оптимистичная метка «Скоро в наличии».
   await expect(info.locator(".availability")).toHaveText("Скоро в наличии");
   await info.getByRole("button", { name: "Изменить магазин" }).click();
   await picker.getByRole("button", { name: "Энгельс", exact: true }).click();
-  await picker.getByRole("radio", { name: /Энгельс/ }).check();
+  await picker.getByRole("radio", { name: /Фридриха/ }).check();
   // Цена Энгельса выше московской… саратовской: 3 590 ₽ против 3 490 ₽.
   await expect(info.locator(".product-price strong")).toContainText(/3\s?590/);
   await expect(info.locator(".availability")).toHaveText("В наличии");
@@ -186,7 +186,7 @@ test("category descendants, search, missing image and API pagination", async ({
 }) => {
   await open(page, "/catalog/cat-drinks");
   // Фильтр наличия по умолчанию: все три позиции ветки «Напитки»
-  // (включая подкатегорию «Чай») в Центральном в наличии.
+  // (включая подкатегорию «Чай») на Рахова, 64/70а в наличии.
   await expect(page.locator(".product-card")).toHaveCount(3);
   // Подкатегории на десктопе живут в дереве сайдбара, а не в отдельной
   // горизонтальной навигации (она осталась для мобильного/планшета).

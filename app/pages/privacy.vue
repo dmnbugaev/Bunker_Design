@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { sellerRequisites } from "~~/shared/content/legal";
+import { rknNotified, sellerRequisites } from "~~/shared/content/legal";
 import { bunkerContacts } from "~~/shared/content/bunker";
 
 usePageSeo(
@@ -41,6 +41,13 @@ usePageSeo(
         Оператором обработки персональных данных является продавец:
         {{ sellerRequisites.legalName }}, ИНН {{ sellerRequisites.inn }}, ОГРНИП
         {{ sellerRequisites.ogrnip }}.
+      </p>
+      <p>
+        {{
+          rknNotified
+            ? "Уведомление об обработке персональных данных подано в Роскомнадзор в порядке ст. 22 152-ФЗ."
+            : "Уведомление об обработке персональных данных в Роскомнадзор подаётся в порядке ст. 22 152-ФЗ; статус уведомления будет опубликован в этом разделе после подтверждения."
+        }}
       </p>
       <h2>3. Какие данные обрабатываются и зачем</h2>
       <h3>3.1. Заявка на сотрудничество (форма «Стать партнёром»)</h3>

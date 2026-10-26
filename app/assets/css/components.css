@@ -346,14 +346,19 @@
   display: none;
 }
 .breadcrumbs {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-body-sm);
+}
+/* Сброс нумерации — на <ol>: на самом nav он не действовал и в крошках
+   светились маркеры «1.» «2.». */
+.breadcrumbs ol {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-body-sm);
 }
 .breadcrumbs a {
   display: inline-flex;
@@ -408,69 +413,77 @@
   );
   border-radius: 0;
 }
-.category-card {
+/* Фото товара — двухслойное окно: передний план вписан целиком (contain,
+   без обрезки, растяжения и искажений при любых пропорциях МойСклад), а та
+   же картинка сзади, сильно размытая и увеличенная, заливает плашку —
+   окно всегда выглядит заполненным, а не с пустыми полями. Пропорции
+   окна, светлый фон и отступы задаёт контекст: карточка каталога,
+   галерея товара, список резерва. */
+.product-image {
   position: relative;
-  min-height: 12rem;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  padding: var(--space-6);
-  color: var(--color-text-primary);
-  text-decoration: none;
+  container-type: inline-size;
 }
-.category-card::after {
-  content: "";
+.product-image__backdrop {
   position: absolute;
-  right: -2rem;
-  bottom: -4rem;
-  width: 11rem;
-  height: 11rem;
-  border: 2.5rem solid var(--color-primary-subtle);
-  rotate: 18deg;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(2.25rem) saturate(1.25);
+  transform: scale(1.6);
 }
-.category-card:hover {
-  border-color: var(--color-primary);
-  color: var(--color-text-primary);
+.product-image__front {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
+/* Заглушки (нет фото / 18+) заливают окно целиком: без собственной рамки,
+   под светлую плашку — приглушённый серый текст. */
+.product-image .image-placeholder {
+  height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  background: var(--product-plate);
+  color: var(--neutral-600);
+}
+/* Товар без фото получает монограмму-маркировку: первая буква названия
+   наборным шрифтом — категории без снимков в МойСклад остаются живыми.
+   Размер — от ширины окна (container query), без — обычный текст. */
+.product-image .image-placeholder__glyph {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 38cqw, 4.5rem);
+  line-height: 1;
+  color: var(--neutral-400);
+}
+/* Карточка товара — безрамочная: светлое фото-окно само строит сетку,
+   текст ниже без коробки; коралл остаётся действию и активным строкам. */
 .product-card {
   position: relative;
   display: grid;
   grid-template-rows: auto 1fr;
   min-width: 0;
-  overflow: hidden;
-  border: var(--border-thin) solid var(--card-border);
-  border-radius: var(--radius-md);
-  background: var(--card-bg);
-  transition:
-    translate var(--duration-normal) var(--easing-emphasized),
-    border-color var(--duration-normal),
-    box-shadow var(--duration-normal);
-}
-.product-card::before {
-  content: "";
-  position: absolute;
-  inset: 0 100% auto 0;
-  z-index: 4;
-  height: 2px;
-  background: var(--color-primary);
-  box-shadow: 0 0 16px rgb(255 92 92 / 0.65);
-  transition: right var(--duration-slow) var(--easing-emphasized);
-  pointer-events: none;
 }
 .product-card__body {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  padding: var(--space-4);
-}
-.product-card__title {
-  min-height: 2.6em;
-  margin: 0;
-  font-size: 1.05rem;
-  line-height: var(--line-compact);
+  padding-top: var(--space-3);
 }
 .product-price {
   color: var(--color-text-primary);
   font-size: var(--font-size-body-lg);
   font-weight: 750;
+  font-variant-numeric: tabular-nums;
 }
 .availability {
   display: inline-flex;
@@ -486,26 +499,29 @@
   border-radius: 50%;
   background: currentColor;
 }
-/* Товарная сетка каталога — плотная, как в маркетплейсах: пара колонок
-   на телефоне, до пяти на широком экране (1 → 2 → 3 → 4 → 5). */
+/* Подсветка статуса: янтарный — «Мало в наличии», серый — нет товара
+   или нет представительства в городе. */
+.availability[data-status="low"] {
+  color: var(--color-warning);
+}
+.availability[data-status="out"],
+.availability[data-status="none"],
+.availability[data-status="any"] {
+  color: var(--color-text-muted);
+}
+/* Товарная сетка каталога: пара колонок на телефоне, три — от планшета
+   и выше. Три крупные карточки на десктопе (а не плотные 4–5
+   маркетплейса): фото-окна дышат, текст не мельчит. Колонки сдвинуты
+   плотнее строк — безрамочные текстовые блоки разделяются воздухом
+   по вертикали. */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--grid-gap);
+  gap: var(--space-8) clamp(1rem, 1.8vw, 1.75rem);
 }
 @media (min-width: 48rem) {
   .product-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-@media (min-width: 64rem) {
-  .product-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-@media (min-width: 90rem) {
-  .product-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 /* Витринная сетка (главная): крупные карточки, ряд без сирот (1 → 2 → 3). */
@@ -524,24 +540,11 @@
 }
 
 @media (hover: hover) {
-  .product-card:hover {
-    translate: 0 -0.5rem;
-    border-color: rgb(255 92 92 / 0.7);
-    box-shadow:
-      0 24px 60px rgb(0 0 0 / 0.42),
-      0 0 34px rgb(255 92 92 / 0.08);
+  .product-image__front {
+    transition: scale var(--duration-slow) var(--easing-emphasized);
   }
-  .product-card:hover::before {
-    right: 0;
-  }
-  .product-card__visual img {
-    transition:
-      scale var(--duration-slow) var(--easing-emphasized),
-      filter var(--duration-normal);
-  }
-  .product-card:hover .product-card__visual img {
-    scale: 1.035;
-    filter: saturate(1.06) contrast(1.03);
+  .product-card:hover .product-image__front {
+    scale: 1.04;
   }
 }
 
@@ -825,13 +828,19 @@
   color: var(--color-text-primary);
   font-weight: 700;
 }
+/* Тулбар прилипает под шапкой: сортировка и счётчик всегда под рукой
+   в длинной выдаче (z ниже шапки — она остаётся выше). */
 .catalog-toolbar {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 150;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3) var(--space-4);
-  padding-bottom: var(--space-4);
+  padding-block: var(--space-3) var(--space-4);
+  background: var(--color-bg-primary);
   border-bottom: var(--border-thin) solid var(--color-border-default);
 }
 .catalog-toolbar__controls {
@@ -847,6 +856,15 @@
 .catalog-toolbar .field__label {
   font-size: var(--font-size-caption);
   color: var(--color-text-muted);
+}
+.catalog-toolbar__count {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body-sm);
+}
+.catalog-toolbar__count strong {
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
 }
 .characteristics {
   width: 100%;
@@ -911,9 +929,6 @@
   }
   .mobile-menu-button {
     display: inline-flex;
-  }
-  .product-grid {
-    grid-template-columns: 1fr;
   }
   .dialog__footer {
     flex-direction: column-reverse;

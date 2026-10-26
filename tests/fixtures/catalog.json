@@ -1,6 +1,6 @@
 {
-  "updatedAt": 1792535482274,
-  "stockUpdatedAt": 1792535482274,
+  "updatedAt": 1792970471758,
+  "stockUpdatedAt": 1792970471758,
   "meta": {
     "cities": [
       {
@@ -16,38 +16,155 @@
       {
         "id": "store-b1",
         "cityId": "saratov",
-        "name": "Центральный",
-        "description": "Демо-точка фикстуры",
-        "address": "ул. Примерная, 1",
-        "hours": "Ежедневно, 10:00–22:00",
-        "coordinates": [
-          46.0326,
-          51.5336
-        ]
+        "name": "Рахова, 64/70а",
+        "description": "Магазин сети Бункер",
+        "address": "ул. Рахова, 64/70а",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [46.0205, 51.532]
       },
       {
         "id": "store-b2",
         "cityId": "saratov",
-        "name": "Северный",
-        "description": "Демо-точка фикстуры",
-        "address": "пр. Примерный, 10",
-        "hours": "Ежедневно, 10:00–22:00",
-        "coordinates": [
-          46.0059,
-          51.5905
-        ]
+        "name": "Танкистов, 64",
+        "description": "Магазин сети Бункер",
+        "address": "ул. Танкистов, 64",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [45.979, 51.548]
+      },
+      {
+        "id": "store-b4",
+        "cityId": "saratov",
+        "name": "2-я Садовая, 4",
+        "description": "Магазин сети Бункер",
+        "address": "2-я Садовая ул., 4",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [46.032, 51.5295]
+      },
+      {
+        "id": "store-b5",
+        "cityId": "saratov",
+        "name": "Вавилова, 9",
+        "description": "Магазин сети Бункер",
+        "address": "ул. имени Н.И. Вавилова, 9",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [46.01, 51.518]
+      },
+      {
+        "id": "store-b6",
+        "cityId": "saratov",
+        "name": "Чапаева, 60/64",
+        "description": "Магазин сети Бункер",
+        "address": "ул. имени В.И. Чапаева, 60/64",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [46.018, 51.523]
+      },
+      {
+        "id": "store-b7",
+        "cityId": "saratov",
+        "name": "Огородная, 149",
+        "description": "Магазин сети Бункер",
+        "address": "ул. Огородная, 149",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [45.995, 51.488]
+      },
+      {
+        "id": "store-b8",
+        "cityId": "saratov",
+        "name": "Техническая, 5",
+        "description": "Магазин сети Бункер",
+        "address": "ул. Техническая, 5",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [46.045, 51.549]
+      },
+      {
+        "id": "store-b9",
+        "cityId": "saratov",
+        "name": "Тархова, 27",
+        "description": "Магазин сети Бункер",
+        "address": "ул. имени С.Ф. Тархова, 27",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [45.995, 51.556]
+      },
+      {
+        "id": "store-b10",
+        "cityId": "saratov",
+        "name": "Колхозная площадь, 1А",
+        "description": "Магазин сети Бункер",
+        "address": "Колхозная площадь, 1А",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [46.0085, 51.5219]
+      },
+      {
+        "id": "store-b11",
+        "cityId": "saratov",
+        "name": "Ново-Астраханское шоссе, 107Гс1",
+        "description": "Магазин сети Бункер",
+        "address": "Ново-Астраханское шоссе, 107Гс1",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [45.96, 51.47]
+      },
+      {
+        "id": "store-b12",
+        "cityId": "saratov",
+        "name": "Горького, 30",
+        "description": "Магазин сети Бункер",
+        "address": "ул. имени А.М. Горького, 30",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [46.025, 51.53]
+      },
+      {
+        "id": "store-b13",
+        "cityId": "saratov",
+        "name": "Вольская, 21/27",
+        "description": "Магазин сети Бункер",
+        "address": "ул. Вольская, 21/27",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [45.992, 51.559]
+      },
+      {
+        "id": "store-b14",
+        "cityId": "saratov",
+        "name": "Ипподромная, 9",
+        "description": "Магазин сети Бункер",
+        "address": "ул. Ипподромная, 9",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [45.965, 51.537]
+      },
+      {
+        "id": "store-b15",
+        "cityId": "saratov",
+        "name": "Вольская, 44",
+        "description": "Магазин сети Бункер",
+        "address": "ул. Вольская, 44",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [45.984, 51.563]
+      },
+      {
+        "id": "store-b16",
+        "cityId": "saratov",
+        "name": "Семёнова, 9",
+        "description": "Магазин сети Бункер",
+        "address": "ул. имени Академика Н.Н. Семёнова, 9",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [45.974, 51.541]
       },
       {
         "id": "store-b3",
         "cityId": "engels",
-        "name": "Энгельс",
-        "description": "Демо-точка фикстуры",
-        "address": "ул. Тельмана, 29",
-        "hours": "Ежедневно, 10:00–21:00",
-        "coordinates": [
-          46.125,
-          51.478
-        ]
+        "name": "Фридриха Энгельса, 4",
+        "description": "Магазин сети Бункер",
+        "address": "проспект Фридриха Энгельса, 4",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [46.121, 51.482]
+      },
+      {
+        "id": "store-b17",
+        "cityId": "engels",
+        "name": "Чапаева, 45",
+        "description": "Магазин сети Бункер",
+        "address": "ул. Чапаева, 45",
+        "hours": "Ежедневно, 8:00–01:00",
+        "coordinates": [46.113, 51.489]
       }
     ],
     "categories": [
@@ -56,21 +173,24 @@
         "name": "Устройства",
         "parentId": null,
         "slug": "cat-devices",
-        "description": "Товары категории «Устройства»."
+        "description": "Товары категории «Устройства».",
+        "image": "/images/fx-vmate.webp"
       },
       {
         "id": "cat-disposables",
         "name": "Одноразовые ЭС",
         "parentId": null,
         "slug": "cat-disposables",
-        "description": "Товары категории «Одноразовые ЭС»."
+        "description": "Товары категории «Одноразовые ЭС».",
+        "image": "/images/fx-stels.webp"
       },
       {
         "id": "cat-liquids",
         "name": "Жидкости",
         "parentId": null,
         "slug": "cat-liquids",
-        "description": "Товары категории «Жидкости»."
+        "description": "Товары категории «Жидкости».",
+        "image": "/images/fx-liquid-1.webp"
       },
       {
         "id": "cat-drinks",
@@ -84,7 +204,8 @@
         "name": "Чай",
         "parentId": "cat-drinks",
         "slug": "cat-tea",
-        "description": "Товары категории «Чай»."
+        "description": "Товары категории «Чай».",
+        "image": "/images/fx-tea.webp"
       },
       {
         "id": "cat-snacks",
@@ -161,10 +282,94 @@
           "availability": "unavailable"
         },
         {
+          "storeId": "store-b4",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 359000,
           "currency": "RUB",
           "availability": "available"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 349000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-19T09:00:00Z"
@@ -211,10 +416,94 @@
           "availability": "plenty"
         },
         {
+          "storeId": "store-b4",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 299000,
           "currency": "RUB",
           "availability": "low"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 299000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-18T09:00:00Z"
@@ -256,7 +545,91 @@
           "availability": "available"
         },
         {
+          "storeId": "store-b4",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
+          "price": 259000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
           "price": 259000,
           "currency": "RUB",
           "availability": "unavailable"
@@ -306,10 +679,94 @@
           "availability": "unavailable"
         },
         {
+          "storeId": "store-b4",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 199000,
           "currency": "RUB",
           "availability": "plenty"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 199000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-11T09:00:00Z"
@@ -356,7 +813,91 @@
           "availability": "available"
         },
         {
+          "storeId": "store-b4",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
+          "price": 149000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
           "price": 149000,
           "currency": "RUB",
           "availability": "unavailable"
@@ -401,7 +942,91 @@
           "availability": "unavailable"
         },
         {
+          "storeId": "store-b4",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
+          "price": 129000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
           "price": 129000,
           "currency": "RUB",
           "availability": "unavailable"
@@ -451,10 +1076,94 @@
           "availability": "plenty"
         },
         {
+          "storeId": "store-b4",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 89000,
           "currency": "RUB",
           "availability": "plenty"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-08T09:00:00Z"
@@ -501,10 +1210,94 @@
           "availability": "unavailable"
         },
         {
+          "storeId": "store-b4",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 99000,
           "currency": "RUB",
           "availability": "available"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-07T09:00:00Z"
@@ -545,10 +1338,94 @@
           "availability": "available"
         },
         {
+          "storeId": "store-b4",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 95000,
           "currency": "RUB",
           "availability": "available"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-06T09:00:00Z"
@@ -589,7 +1466,91 @@
           "availability": "plenty"
         },
         {
+          "storeId": "store-b4",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
+          "price": 105000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
           "price": 105000,
           "currency": "RUB",
           "availability": "unavailable"
@@ -633,10 +1594,94 @@
           "availability": "available"
         },
         {
+          "storeId": "store-b4",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 115000,
           "currency": "RUB",
           "availability": "available"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 115000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-04T09:00:00Z"
@@ -678,10 +1723,94 @@
           "availability": "plenty"
         },
         {
+          "storeId": "store-b4",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 59000,
           "currency": "RUB",
           "availability": "plenty"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-14T09:00:00Z"
@@ -711,10 +1840,94 @@
           "availability": "plenty"
         },
         {
+          "storeId": "store-b4",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 62000,
           "currency": "RUB",
           "availability": "available"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 62000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-13T09:00:00Z"
@@ -750,10 +1963,94 @@
           "availability": "plenty"
         },
         {
+          "storeId": "store-b4",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 18000,
           "currency": "RUB",
           "availability": "plenty"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 18000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-03T09:00:00Z"
@@ -789,10 +2086,94 @@
           "availability": "plenty"
         },
         {
+          "storeId": "store-b4",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 12000,
           "currency": "RUB",
           "availability": "plenty"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 12000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-02T09:00:00Z"
@@ -828,10 +2209,94 @@
           "availability": "unavailable"
         },
         {
+          "storeId": "store-b4",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 9000,
           "currency": "RUB",
           "availability": "plenty"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 9000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-01T09:00:00Z"
@@ -867,7 +2332,91 @@
           "availability": "plenty"
         },
         {
+          "storeId": "store-b4",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
+          "price": 25000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
           "price": 25000,
           "currency": "RUB",
           "availability": "unavailable"
@@ -911,10 +2460,94 @@
           "availability": "unavailable"
         },
         {
+          "storeId": "store-b4",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
           "price": 210000,
           "currency": "RUB",
           "availability": "plenty"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 210000,
+          "currency": "RUB",
+          "availability": "unavailable"
         }
       ],
       "publishedAt": "2026-10-10T09:00:00Z"
@@ -944,7 +2577,91 @@
           "availability": "unavailable"
         },
         {
+          "storeId": "store-b4",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
           "storeId": "store-b3",
+          "price": 100000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
           "price": 100000,
           "currency": "RUB",
           "availability": "unavailable"

@@ -257,28 +257,31 @@ button.text-link {
   margin-left: 0;
 }
 
-/* Триггер выбора магазина — прямоугольный, как остальные контролы шапки
-   (аккаунт-кнопка), с коралловой меткой-пином и двумя строками
-   «город → точка». Наведение — обычная светлая обводка, без свечения. */
+/* Триггер выбора магазина — тихая адресная табличка в стекле шапки:
+   без рамки и фона, коралловая метка-пин и имя точки главным текстом
+   (оно задаёт цены и наличие), город — тихая подпись, шеврон обещает
+   выпадающий список. Ховер — мягкая заливка, открытая панель —
+   коралловый отлив, без неона. */
 .store-trigger {
   display: none;
   align-items: center;
   gap: var(--space-3);
   min-height: 2.75rem;
-  padding: var(--space-1) var(--space-3);
-  background: color-mix(in srgb, var(--color-surface-primary) 78%, transparent);
-  border: var(--border-thin) solid var(--control-border);
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border: 0;
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   cursor: pointer;
-  max-width: 17rem;
-  transition:
-    border-color var(--duration-fast) var(--easing-standard),
-    background var(--duration-fast) var(--easing-standard);
+  max-width: 19rem;
+  transition: background var(--duration-fast) var(--easing-standard);
 }
 .store-trigger:hover {
-  border-color: var(--color-border-strong);
-  background: var(--color-surface-hover);
+  background: color-mix(in srgb, var(--color-surface-hover) 70%, transparent);
+}
+.store-trigger--active,
+.store-trigger--active:hover {
+  background: color-mix(in srgb, var(--color-primary) 9%, transparent);
 }
 .store-trigger__pin {
   display: inline-flex;
@@ -294,31 +297,40 @@ button.text-link {
 }
 .store-trigger__text {
   display: grid;
-  gap: 1px;
+  gap: 2px;
   min-width: 0;
   text-align: left;
 }
-.store-trigger__city {
-  color: var(--color-text-muted);
-  letter-spacing: var(--tracking-overline);
-  text-transform: uppercase;
-}
 .store-trigger__store {
-  font-size: var(--font-size-body-sm);
-  font-weight: 600;
+  font-size: var(--font-size-body-md);
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
 }
+.store-trigger__city {
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-overline);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .store-trigger__chevron {
   display: inline-flex;
   flex-shrink: 0;
   color: var(--color-text-muted);
-  transition: color var(--duration-fast) var(--easing-standard);
+  transition:
+    color var(--duration-fast) var(--easing-standard),
+    rotate var(--duration-normal) var(--easing-standard);
 }
-.store-trigger:hover .store-trigger__chevron {
+.store-trigger:hover .store-trigger__chevron,
+.store-trigger--active .store-trigger__chevron {
   color: var(--color-primary);
+}
+.store-trigger--active .store-trigger__chevron {
+  rotate: 180deg;
 }
 
 .icon-button {
@@ -369,33 +381,8 @@ button.text-link {
   clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
 }
 
-.account-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0 var(--space-3);
-  min-height: 2.75rem;
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  font-size: var(--font-size-body-sm);
-  border: var(--border-thin) solid var(--control-border);
-  border-radius: var(--radius-sm);
-  background: var(--control-bg);
-  max-width: 10rem;
-  white-space: nowrap;
-  overflow: hidden;
-  transition:
-    color var(--duration-fast) var(--easing-standard),
-    border-color var(--duration-fast) var(--easing-standard);
-}
-.account-link:hover {
-  color: var(--color-text-primary);
-  border-color: var(--color-border-strong);
-}
-.account-link span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+/* Вход в аккаунт — иконка без подписи (класс icon-button), поэтому
+   отдельных стилей не нужно: подпись осталась в sr-only внутри ссылки. */
 
 .menu-toggle {
   display: inline-flex;
@@ -458,14 +445,6 @@ button.text-link {
     display: flex;
   }
   .menu-toggle {
-    display: none;
-  }
-  .account-link span {
-    display: inline;
-  }
-}
-@media (max-width: 63.99rem) {
-  .account-link span {
     display: none;
   }
 }
@@ -745,28 +724,29 @@ button.text-link {
   background: var(--color-bg-secondary);
   border-bottom: var(--border-thin) solid var(--color-border-default);
 }
-/* Текст плашки живёт в границах контейнера — на одной линии с контентом
-   страницы; крестик-кнопка прижат вправо и не разрывает абзац. */
+/* Одна строка компоновки на любой ширине: символ, текст и крестик всегда
+   в одном ряду — текст забирает всё свободное место и переносится сам,
+   плашка не рассыпается на «символ отдельно, текст отдельно». */
 .legal-notice__content {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2) var(--space-3);
+  gap: var(--space-3);
   width: min(100% - 2 * var(--space-container), var(--container-max));
   margin-inline: auto;
   padding-block: var(--space-2);
 }
 .legal-notice__content p {
-  /* Текст растягивается на всё свободное место строки (базовый кап 72ch
-     для абзацев здесь снят) — на десктопе укладывается в две строки
-     вместо четырёх. */
-  flex: 1 1 0;
-  min-width: min(100%, 18rem);
+  flex: 1;
+  min-width: 0;
+  /* Глобальная мера p (72ch из base.css) здесь вредна: на широких экранах
+     она зажимает текст в узкую колонку и отрывает крестик от края контейнера.
+     Полоса и есть «строка» — текст растягивается между символом и крестиком. */
   max-width: none;
   margin: 0;
   font-size: var(--font-size-caption);
   line-height: var(--line-compact);
   color: var(--color-text-muted);
+  text-wrap: balance;
 }
 .legal-notice__content a {
   color: var(--color-text-secondary);
@@ -791,7 +771,6 @@ button.text-link {
   width: 2.75rem;
   height: 2.75rem;
   flex-shrink: 0;
-  margin-left: auto;
   border: var(--border-thin) solid var(--color-border-default);
   border-radius: var(--radius-sm);
   background: none;
@@ -806,6 +785,25 @@ button.text-link {
   color: var(--color-text-primary);
   border-color: var(--color-border-strong);
   background: var(--color-surface-hover);
+}
+/* На телефонах символ не сообщает ничего нового — убираем, текст получает
+   полную ширину строки между краем плашки и крестиком. */
+@media (max-width: 30rem) {
+  .legal-notice__symbol {
+    display: none;
+  }
+}
+/* До десктопа крестик теряет рамку и фон: рядом с многострочным текстом
+   пустая плитка 44×44 читается мёртвым прямоугольником, тогда как «голый»
+   крест — привычный тихий аффорданс. Зона касания 44×44 не тронута. */
+@media (max-width: 47.99rem) {
+  .legal-notice__close {
+    border-color: transparent;
+  }
+  .legal-notice__close:hover {
+    border-color: transparent;
+    background: none;
+  }
 }
 
 .geo-note {
@@ -912,12 +910,41 @@ button.text-link {
 
 /* ─── Выбор магазина ─────────────────────────────────────────────────── */
 
-/* Оболочка диалога: коралловая нить по верхней кромке (как у футера)
-   связывает окно с брендом; на узких экранах пикер становится нижней
-   панелью — по образцу диалога мобильного меню. */
+/* Панель выбора магазина: на широких экранах (от лэптопа, где виден
+   триггер в шапке) — выпадающая панель под шапкой, правый край выровнен
+   с контейнером страницы; фон затемняется мягче модального. Коралловая
+   нить по верхней кромке связывает панель с брендом. На узких экранах
+   пикер становится нижним листом — по образцу диалога мобильного меню. */
 .store-dialog {
-  width: min(calc(100% - 2rem), 35rem);
+  position: fixed;
+  top: calc(var(--header-height) + var(--space-2));
+  right: max(
+    var(--space-container),
+    calc(50% - var(--container-max) / 2 + var(--space-container))
+  );
+  left: auto;
+  bottom: auto;
+  margin: 0;
+  width: min(calc(100vw - 2 * var(--space-container)), 26rem);
+  max-height: calc(100dvh - var(--header-height) - var(--space-8));
   border-top: 2px solid var(--color-primary);
+  animation: panel-drop var(--duration-normal) var(--easing-emphasized);
+}
+.store-dialog::backdrop {
+  background: rgb(9 9 9 / 0.45);
+  backdrop-filter: blur(2px);
+}
+@keyframes panel-drop {
+  from {
+    translate: 0 -0.625rem;
+    opacity: 0;
+  }
+}
+.store-dialog .dialog__content {
+  max-height: inherit;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 .store-dialog .dialog__header h2 {
   display: flex;
@@ -938,11 +965,15 @@ button.text-link {
   background: var(--color-primary);
   clip-path: polygon(26% 0, 100% 0, 74% 100%, 0 100%);
 }
-@media (max-width: 47.99rem) {
+@media (max-width: 63.99rem) {
   .store-dialog {
     margin: auto auto 0;
+    top: auto;
+    right: 0;
+    left: 0;
     width: 100%;
     max-width: none;
+    max-height: 80dvh;
     border-bottom: 0;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     animation: sheet-up var(--duration-normal) var(--easing-emphasized);
@@ -976,29 +1007,23 @@ button.text-link {
 
 .store-picker {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
   /* Тело диалога не наследует паддинги шапки — задаём их сами, шапка
      выровнена по тем же полям. */
-  padding: var(--space-4) var(--space-6) var(--space-6);
-}
-.store-picker__lead {
-  margin: 0;
-  color: var(--color-text-muted);
-}
-.store-picker__hint {
-  margin: 0;
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--color-border-default);
-  color: var(--color-text-muted);
+  padding: var(--space-4) var(--space-6) var(--space-5);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 /* Геолокация — тихая полноширинная строка над списком: коралловый пин
-   вместо белой кнопки, которая перетягивала внимание с точек. */
+   вместо белой кнопки. Коробка кнопки и всё содержимое панели (чипы,
+   заголовок ведомости, номера точек) живут на одном левом краю. */
 .store-picker__detect {
   justify-content: flex-start;
   width: 100%;
   min-height: var(--control-height);
-  padding-inline: var(--space-4);
+  padding-inline: var(--space-3);
   background: var(--control-bg);
   border-color: var(--control-border);
   color: var(--color-text-secondary);
@@ -1012,8 +1037,26 @@ button.text-link {
   color: var(--color-text-primary);
 }
 
-.store-search {
-  margin-block: var(--space-2);
+/* Панель страницы магазинов: поиск по сети и геолокация в одном ряду. */
+.stores-toolbar {
+  display: grid;
+  gap: var(--space-4);
+  margin-block: var(--space-10) var(--space-4);
+}
+@media (min-width: 48rem) {
+  .stores-toolbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+}
+.stores-toolbar__side {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+.stores-toolbar__geo svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
 }
 
 /* Чипы города в пикере: один клик фильтрует список точек, повторный —
@@ -1083,7 +1126,7 @@ button.text-link {
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-1);
+  padding: var(--space-2) 0;
   background: var(--color-bg-elevated);
 }
 .store-options__label {
@@ -1111,6 +1154,10 @@ button.text-link {
   height: 1px;
   background: var(--color-border-default);
 }
+.store-city__count {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
 .store-options .store-city:first-of-type {
   margin-top: var(--space-2);
 }
@@ -1121,7 +1168,7 @@ button.text-link {
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-1);
+  padding: var(--space-3) 0;
   cursor: pointer;
   transition: background var(--duration-fast) var(--easing-standard);
 }
@@ -1144,6 +1191,10 @@ button.text-link {
   clip-path: polygon(28% 0, 100% 0, 72% 100%, 0 100%);
   transition: background var(--duration-fast) var(--easing-standard);
 }
+.store-option__number {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
 .store-option__body {
   display: grid;
   gap: 2px;
@@ -1159,9 +1210,6 @@ button.text-link {
   color: var(--color-text-muted);
   font-size: var(--font-size-caption);
   line-height: var(--line-compact);
-}
-.store-option__check {
-  color: var(--color-primary);
 }
 .store-option:hover {
   background: color-mix(in srgb, var(--color-surface-hover) 50%, transparent);
@@ -1183,49 +1231,118 @@ button.text-link {
   outline-offset: -2px;
 }
 
-/* ─── Страница магазинов и контактов ─────────────────────────────────── */
+/* ─── Страница магазинов: ведомость сети ─────────────────────────────── */
 
-.store-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-4);
-}
-@media (min-width: 48rem) {
-  .store-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 80rem) {
-  .store-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.store-card {
+/* Город: заголовок и счётчик точек, без линии-хвоста — разделителем
+   работает сама ведомость. */
+.stores-city__head {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-5);
-  background: var(--card-bg);
-  border: var(--border-thin) solid var(--card-border);
-  border-radius: var(--radius-md);
-  transition:
-    border-color var(--duration-normal) var(--easing-standard),
-    translate var(--duration-normal) var(--easing-standard);
+  align-items: baseline;
+  gap: var(--space-4);
+  margin: var(--space-8) 0 var(--space-4);
 }
-.store-card:hover {
-  border-color: var(--color-border-strong);
-  translate: 0 -2px;
-}
-.store-card h3 {
+.stores-city__head h2 {
   margin: 0;
-  font-size: var(--font-size-body-lg);
+  font-family: var(--font-display);
+  font-size: var(--font-size-h3);
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
   color: var(--color-text-primary);
 }
-.store-card p {
+.stores-city__count {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Строка точки: номер, имя и режим — справа метка-параллелограмм;
+   кликается вся строка (скрытое радио поверх). Выбор виден по коралловой
+   метке и подсветке, отдельная подпись «Выбрать» не нужна. На широких
+   экранах ведомость делится на две колонки — длинный саратовский список
+   остаётся оглавлением, а не бесконечным столбцом. */
+.stores-ledger {
+  display: grid;
   margin: 0;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-body-sm);
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 64rem) {
+  .stores-ledger {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-12);
+  }
+}
+.store-row label {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4) var(--space-5);
+  padding-block: var(--space-5);
+  border-top: 1px solid var(--color-border-default);
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+.store-row input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.store-row__number {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.store-row__body {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.store-row__body strong {
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.0625rem, 1.9vw, 1.375rem);
+  font-weight: 400;
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--line-heading);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+.store-row__line {
+  color: var(--color-text-muted);
+  line-height: var(--line-compact);
+}
+.store-row__mark {
+  width: 0.7rem;
+  height: 1.05rem;
+  background: var(--color-border-strong);
+  clip-path: polygon(28% 0, 100% 0, 72% 100%, 0 100%);
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+.store-row label:hover {
+  background: color-mix(in srgb, var(--color-surface-hover) 50%, transparent);
+}
+.store-row label:hover .store-row__body strong {
+  color: var(--color-primary-hover);
+}
+.store-row label:hover .store-row__mark {
+  background: var(--color-text-muted);
+}
+.store-row--selected label {
+  background: color-mix(in srgb, var(--color-primary) 7%, transparent);
+}
+.store-row--selected label:hover {
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+.store-row--selected .store-row__mark {
+  background: var(--color-primary);
+}
+.store-row--selected .store-row__body strong {
+  color: var(--color-primary-hover);
+}
+.store-row label:has(input:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
 }
 
 .store-feature {
@@ -1344,43 +1461,125 @@ button.text-link {
 }
 .stores-map-list {
   display: grid;
-  gap: var(--space-3);
+  align-content: start;
+  gap: var(--space-5);
   max-height: 34rem;
   overflow-y: auto;
-}
-.store-map-option {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  width: 100%;
-  text-align: left;
-  min-height: 2.75rem;
-  padding: var(--space-3) var(--space-4);
-  background: var(--control-bg);
-  border: var(--border-thin) solid var(--control-border);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-primary);
-  cursor: pointer;
-}
-.store-map-option[aria-pressed="true"] {
-  border-color: var(--color-primary);
-  background: var(--color-primary-subtle);
-}
-.stores-map-intro {
-  margin: 0;
-  color: var(--color-text-muted);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
 }
 .stores-map-city {
-  margin: var(--space-3) 0 var(--space-1);
-  font-size: var(--font-size-label);
+  display: grid;
+  gap: var(--space-1);
+}
+.stores-map-city ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.stores-map-city h3 {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-size: var(--font-size-overline);
   letter-spacing: var(--tracking-overline);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
-.stores-map-view {
-  display: flex;
-  flex-direction: column;
+.stores-map-city h3 .caption {
+  font-variant-numeric: tabular-nums;
+}
+/* Точка — строка ведомости на hairline, как в пикере шапки и на странице
+   «Магазины»: номер, название, улица и метка-параллелограмм справа;
+   клик выбирает точку и на карте. */
+.store-map-option {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
   gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-2);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--color-border-default);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+.store-map-option:hover {
+  background: color-mix(in srgb, var(--color-surface-hover) 50%, transparent);
+}
+.store-map-option:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+.store-map-option__number {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.store-map-option__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.store-map-option__body strong {
+  font-size: var(--font-size-body-md);
+  font-weight: 700;
+  line-height: var(--line-compact);
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+.store-map-option__body .caption {
+  color: var(--color-text-muted);
+  line-height: var(--line-compact);
+}
+.store-map-option__mark {
+  width: 0.7rem;
+  height: 1.05rem;
+  background: var(--color-border-strong);
+  clip-path: polygon(28% 0, 100% 0, 72% 100%, 0 100%);
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+.store-map-option:hover .store-map-option__mark {
+  background: var(--color-text-muted);
+}
+.store-map-option--selected {
+  background: color-mix(in srgb, var(--color-primary) 7%, transparent);
+}
+.store-map-option--selected:hover {
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+.store-map-option--selected .store-map-option__mark {
+  background: var(--color-primary);
+}
+.store-map-option--selected .store-map-option__body strong {
+  color: var(--color-primary-hover);
+}
+.stores-map-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3) var(--space-4);
+  margin: 0 0 var(--space-6);
+}
+.stores-map-intro h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--font-size-h3);
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+.stores-map-intro .caption {
+  color: var(--color-text-muted);
+}
+/* Контейнер карты обязан занимать весь absolute-канвас: ymaps строит
+   тайлы под размер этого блока, flex-колонка без высоты схлопывается
+   в 0 и карта остаётся невидимой. */
+.stores-map-view {
+  width: 100%;
+  height: 100%;
 }
 .store-pin-anchor {
   display: block;
@@ -1459,40 +1658,28 @@ button.text-link {
   display: block;
 }
 
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-6);
-}
-@media (min-width: 48rem) {
-  .contact-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-.contact-section {
-  display: grid;
-  gap: var(--space-4);
-}
+/* ─── Главная: блок «Остаёмся на связи» ──────────────────────────────── */
+
+/* Плитки-каналы — равная адаптивная сетка: сколько каналов ни есть, ряд
+   всегда заполнен до края, без «повисших» кнопок разной ширины. */
 .contact-section__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  margin-top: var(--space-6);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+  gap: var(--space-3);
 }
 /* Канал связи — крупная кнопка-плитка с фирменным значком без обводки;
-   коралловый значок остаётся акцентом, сама плитка нейтральная. На узких
-   экранах плитки занимают всю ширину — ровный столбец. */
+   коралловый значок остаётся акцентом, сама плитка нейтральная. */
 .contact-button {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-5);
+  gap: var(--space-4);
   min-height: 4.5rem;
-  padding-inline: var(--space-8);
+  padding-inline: var(--space-5);
   border: var(--border-thin) solid var(--color-border-strong);
   border-radius: var(--radius-md);
   background: var(--color-surface-primary);
   color: var(--color-text-secondary);
-  font-size: var(--font-size-body-lg);
+  font-size: var(--font-size-body-md);
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
@@ -1509,47 +1696,192 @@ button.text-link {
   translate: 0 -2px;
   box-shadow: 0 14px 32px rgb(0 0 0 / 0.32);
 }
+.contact-button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
 .contact-button__icon {
   flex-shrink: 0;
   color: var(--color-primary);
 }
-/* Высоту плитки задаём с превышением специфичности: служебное правило
-   «.contact-section a { min-height: 1.5rem }» ниже по файлу иначе
-   режет крупную кнопку до высоты значка. */
-.contact-section__links .contact-button {
-  min-height: 4.5rem;
+
+/* ─── Страница контактов ─────────────────────────────────────────────── */
+
+/* Две зоны: ведомость каналов слева, сводка сети справа. */
+.contacts-layout {
+  display: grid;
+  gap: var(--space-10);
+  margin-top: var(--space-12);
 }
-.contact-button__mark {
-  color: var(--color-text-muted);
-  font-weight: 400;
-}
-@media (max-width: 47.99rem) {
-  .contact-section__links .contact-button {
-    width: 100%;
+@media (min-width: 64rem) {
+  .contacts-layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: var(--space-16);
+    align-items: start;
   }
 }
-.contact-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
+
+/* Канал связи — строка ведомости на hairline: значок в фирменном
+   параллелограмме, над названием тихая подпись, значение — главным
+   текстом. Ровный край, без стрелок; ховер — мягкая заливка и коралл. */
+.channel-list {
+  display: grid;
+  border-bottom: 1px solid var(--color-border-default);
 }
+.channel-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-5);
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--color-border-default);
+  color: inherit;
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+.channel-row:hover,
+.channel-row:focus-visible {
+  background: color-mix(in srgb, var(--color-surface-hover) 45%, transparent);
+}
+.channel-row:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+.channel-row__icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  clip-path: polygon(16% 0, 100% 0, 84% 100%, 0 100%);
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+.channel-row:hover .channel-row__icon,
+.channel-row:focus-visible .channel-row__icon {
+  background: var(--color-primary-hover);
+}
+.channel-row__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.channel-row__label {
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-overline);
+  text-transform: uppercase;
+}
+.channel-row__value {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-body-lg);
+  font-weight: 700;
+  line-height: var(--line-compact);
+  overflow-wrap: anywhere;
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+.channel-row:hover .channel-row__value,
+.channel-row:focus-visible .channel-row__value {
+  color: var(--color-primary-hover);
+}
+
+/* Сводка сети: режим работы и состав точек + переход к адресам. */
+.contacts-summary {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  background: var(--color-surface-secondary);
+  border: var(--border-thin) solid var(--color-border-default);
+  border-radius: var(--radius-md);
+}
+.contacts-summary__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--font-size-h4);
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+.contacts-summary__list {
+  display: grid;
+  margin: 0;
+}
+.contacts-summary__list > div {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-3);
+}
+.contacts-summary__list > div + div {
+  border-top: 1px solid var(--color-border-default);
+}
+.contacts-summary__list dt {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-caption);
+  letter-spacing: var(--tracking-overline);
+  text-transform: uppercase;
+}
+.contacts-summary__list dd {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-body-sm);
+}
+.contacts-summary .button {
+  justify-self: start;
+}
+
 /* Контактные строки и ссылки согласий — инлайн-ссылки с достаточной
    целью касания (WCAG 2.5.8: ≥24px). */
-.contact-section a,
-.specifications--contacts a,
 .register-consent a,
-.partner-form__consent-links a,
-.contact-links a {
+.partner-form__consent-links a {
   display: inline-flex;
   align-items: center;
   min-height: 1.5rem;
 }
-.contact-links__icon {
-  color: var(--color-primary);
-}
-.contact-stores {
+
+/* Сервисы комиссии (Vape Express) — панель с коралловым отливом:
+   заголовок, пилюли услуг и ссылка на сообщество. */
+.contact-services {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-5);
+  margin-block: var(--space-16) var(--space-12);
+  padding: var(--space-8);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-primary) 6%, transparent),
+      transparent 60%
+    ),
+    var(--color-surface-secondary);
+  border: var(--border-thin) solid var(--color-border-default);
+  border-radius: var(--radius-md);
+}
+.contact-services__head {
+  display: grid;
+  gap: var(--space-2);
+}
+.contact-services__head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--font-size-h3);
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+.contact-services__head p {
+  margin: 0;
+  max-width: 60ch;
+  color: var(--color-text-secondary);
+}
+.contact-services__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.contact-services .button {
+  justify-self: start;
 }
 
 /* ─── Каталог ────────────────────────────────────────────────────────── */
@@ -1643,44 +1975,71 @@ button.text-link {
   text-transform: uppercase;
 }
 
-/* Дерево категорий сайдбара: список корней, у активного корня раскрываются
-   подкатегории. Длинные списки (в живом каталоге 20+ корней) скроллятся
+/* Сайдбар — ведомость: разделы («Категории», «Фильтры») разделяет
+   hairline, а не карточные коробки. */
+.catalog-sidebar > div + div {
+  padding-top: var(--space-6);
+  border-top: var(--border-thin) solid var(--color-border-default);
+}
+
+/* Дерево категорий — строки-ведомость на hairline: активная строка
+   помечена маленькой коралловой плиткой со срезанным углом (мотив
+   «плиты»). Длинные списки (в живом каталоге 20+ корней) скроллятся
    внутри панели, не растягивая страницу. */
 .catalog-nav {
   display: grid;
   align-content: start;
-  gap: var(--space-1);
   max-height: min(34rem, 70vh);
   overflow-y: auto;
   scrollbar-width: thin;
-  padding-inline-end: var(--space-1);
+  border-top: var(--border-thin) solid var(--color-border-default);
 }
 .catalog-nav a {
   display: flex;
   align-items: center;
-  min-height: 2.25rem;
-  padding-inline: var(--space-3);
-  border-radius: var(--radius-sm);
+  gap: var(--space-2);
+  min-height: 2.5rem;
+  padding-block: var(--space-1);
+  border-bottom: var(--border-thin) solid var(--color-border-default);
   color: var(--color-text-secondary);
   text-decoration: none;
   font-size: var(--font-size-body-sm);
-  transition:
-    background var(--duration-fast) var(--easing-standard),
-    color var(--duration-fast) var(--easing-standard);
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+/* Плитка-маркер держит строку у всех пунктов (пустая — не прыгает
+   выравнивание), коралловой она становится у активного. */
+.catalog-nav a::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  background: transparent;
+  clip-path: polygon(
+    0.12rem 0,
+    100% 0,
+    100% calc(100% - 0.12rem),
+    calc(100% - 0.12rem) 100%,
+    0 100%
+  );
+  transition: background var(--duration-fast) var(--easing-standard);
 }
 .catalog-nav a:hover {
-  background: var(--color-surface-hover);
   color: var(--color-text-primary);
 }
+.catalog-nav a:hover::before {
+  background: var(--color-border-strong);
+}
 .catalog-nav a[aria-current="page"] {
-  background: var(--color-primary-subtle);
   color: var(--color-link);
   font-weight: 700;
 }
+.catalog-nav a[aria-current="page"]::before {
+  background: var(--color-primary);
+}
 .catalog-nav__children {
   display: grid;
-  gap: 2px;
-  margin-block: var(--space-1) var(--space-2);
+  gap: 0;
+  margin-block: 0 var(--space-2);
   padding-left: var(--space-3);
   border-left: 2px solid var(--color-border-default);
 }
@@ -1688,6 +2047,9 @@ button.text-link {
   min-height: 2rem;
   font-size: var(--font-size-caption);
   color: var(--color-text-muted);
+}
+.catalog-nav__children a::before {
+  display: none;
 }
 .catalog-nav__children a:hover {
   color: var(--color-text-primary);
@@ -1714,46 +2076,38 @@ button.text-link {
   gap: var(--space-6);
   min-width: 0;
 }
-/* Скелетоны повторяют товарную сетку: плашка 3:4 и строки-строки. */
+/* Скелетоны повторяют товарную сетку: 2 колонки на телефоне, 3 от
+   планшета (как .product-grid в components.css). */
 .catalog-loading {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--grid-gap);
+  gap: var(--space-8) clamp(1rem, 1.8vw, 1.75rem);
 }
 @media (min-width: 48rem) {
   .catalog-loading {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-@media (min-width: 64rem) {
-  .catalog-loading {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-@media (min-width: 90rem) {
-  .catalog-loading {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-}
+/* Скелетон повторяет безрамочную карточку: квадратное фото-окно
+   и строки текста без коробки. */
 .catalog-loading .skeleton-example {
   gap: var(--space-3);
-  padding: var(--space-3);
-  background: var(--card-bg);
-  border: var(--border-thin) solid var(--card-border);
-  border-radius: var(--radius-md);
+  padding-top: var(--space-3);
 }
 .catalog-loading .skeleton-box {
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1;
 }
+/* Контекст магазина — строка-ведомость на hairline (как в пикере магазина),
+   без коробки: город, точка и ссылка «Изменить». */
 .catalog-store {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
+  justify-content: flex-end;
   gap: var(--space-2) var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-surface-primary);
-  border: var(--border-thin) solid var(--color-border-default);
-  border-radius: var(--radius-md);
+  margin-left: auto;
+  padding: var(--space-2) 0;
+  border-bottom: var(--border-thin) solid var(--color-border-default);
   color: var(--color-text-secondary);
 }
 .catalog-store .caption {
@@ -1880,61 +2234,56 @@ button.text-link {
   border-color: var(--color-primary);
 }
 
-/* Полка категорий: карточки растягиваются на ряд при любом количестве —
-   5 категорий не оставляют пустых клеток трёхколоночной сетки. */
-.category-grid {
+/* Витрина направлений главной: безрамочные плитки с фото-окном 1:1 —
+   та же материальность, что у карточек каталога. Две колонки на телефоне,
+   три от планшета (указ владельца: крупные карточки). Имя — наборное,
+   коралл только по ховеру; без стрелок и рамок. */
+.category-board {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr));
-  gap: var(--space-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8) clamp(1rem, 1.8vw, 1.75rem);
 }
-
-.category-card {
-  display: flex;
-  flex-direction: column;
+@media (min-width: 48rem) {
+  .category-board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.category-tile {
+  display: grid;
   gap: var(--space-3);
-  padding: var(--space-6);
-  min-height: 11rem;
-  background: var(--card-bg);
-  border: var(--border-thin) solid var(--card-border);
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
-  transition:
-    border-color var(--duration-normal) var(--easing-standard),
-    translate var(--duration-normal) var(--easing-standard);
-}
-.category-card::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto auto 0;
-  width: 2.5rem;
-  height: 2px;
-  background: var(--color-primary);
-  box-shadow: 0 0 16px rgb(255 92 92 / 0.65);
-  opacity: 0;
-  transition:
-    width var(--duration-slow) var(--easing-emphasized),
-    opacity var(--duration-normal) var(--easing-standard);
-}
-.category-card:hover {
-  border-color: var(--color-border-strong);
-  translate: 0 -3px;
-}
-.category-card:hover::before {
-  width: 3.5rem;
-  opacity: 1;
-}
-.category-card h3 {
-  margin: auto 0 0;
+  min-width: 0;
   color: var(--color-text-primary);
-  font-family: var(--font-display);
-  font-size: var(--font-size-h4);
-  letter-spacing: var(--tracking-heading);
-  text-transform: uppercase;
+  text-decoration: none;
 }
-.category-card__number {
-  color: var(--color-text-muted);
+.category-tile:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+.category-tile__window {
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--product-plate);
+}
+.category-tile__window .product-image__front {
+  transition: scale var(--duration-normal) var(--easing-emphasized);
+}
+.category-tile:hover .product-image__front,
+.category-tile:focus-visible .product-image__front {
+  scale: 1.05;
+}
+.category-tile__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.0625rem, 1.9vw, 1.375rem);
+  font-weight: 400;
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--line-heading);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+.category-tile:hover .category-tile__name,
+.category-tile:focus-visible .category-tile__name {
+  color: var(--color-primary-hover);
 }
 
 /* ─── Карточка товара в списке ───────────────────────────────────────── */
@@ -1956,44 +2305,32 @@ button.text-link {
   margin-top: auto;
 }
 
-/* Фотоплашка — светлое «окно» на тёмной карточке: товар виден целиком
-   (portrait-постеры МойСклад 3:4, object-fit: contain без обрезки). */
+/* Фото-окно карточки — квадратная светлая плашка: фото вписывается
+   целиком (слои и заливку фона задаёт .product-image в components.css),
+   квадрат нейтрален к горизонтальным и вертикальным исходникам МойСклад. */
 .product-card__visual {
   display: block;
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1;
   background: var(--product-plate);
+  border-radius: var(--radius-sm);
   overflow: hidden;
 }
 .product-card__visual .product-image {
-  border-radius: 0;
-  background: var(--product-plate);
+  padding: clamp(0.75rem, 7%, 1.5rem);
 }
-.product-card__visual .product-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: var(--space-3);
-}
-/* Заглушки под светлую плашку: тёмный текст, без рамки и тёмной заливки. */
-.product-card__visual .image-placeholder {
-  height: 100%;
-  aspect-ratio: auto;
-  border: 0;
-  border-radius: 0;
-  background: var(--product-plate);
-  color: #6f6f6a;
-}
-.product-card__visual .image-placeholder--restricted {
-  background: var(--product-plate);
+/* Нет товара — фото честно гаснет: чёрно-белое окно плюс бейдж сверху. */
+.product-card--soon .product-image__front {
+  filter: grayscale(0.85);
 }
 .product-card__soon {
   position: absolute;
-  left: var(--space-3);
-  bottom: var(--space-3);
-  background: var(--color-bg-primary);
+  top: var(--space-2);
+  left: var(--space-2);
+  background: var(--color-bg-elevated);
   color: var(--color-text-secondary);
   border: var(--border-thin) solid var(--color-border-default);
+  border-radius: var(--radius-xs);
 }
 .product-card__category {
   color: var(--color-text-muted);
@@ -2002,7 +2339,7 @@ button.text-link {
 }
 .product-card__name {
   margin: 0;
-  font-size: var(--font-size-body-sm);
+  font-size: var(--font-size-body-md);
   font-weight: 600;
   line-height: var(--line-compact);
   min-height: 2.6em;
@@ -2016,27 +2353,29 @@ button.text-link {
   text-decoration: none;
 }
 .product-card__name a:hover {
-  color: var(--color-primary-hover);
+  color: var(--color-link);
 }
+/* Цена — якорь карточки: крупная, табличные цифры (выравнивание в сетке). */
 .product-card .product-price {
-  margin-top: var(--space-1);
-  font-size: 1.25rem;
+  margin: var(--space-1) 0 var(--space-2);
+  font-size: 1.375rem;
   font-weight: 800;
   line-height: var(--line-compact);
 }
-/* Главная кнопка карточки — коралловая плитка со срезанным углом. */
+/* Действие карточки — тёмная плитка со срезанным углом (мотив «плиты»):
+   коралловой заливкой подсвечивается только состояние «В списке», чтобы
+   сетка из пары десятков карточек не пылала десятком кнопок. */
 .product-card__select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: 2.75rem;
-  margin-top: var(--space-3);
   border: var(--border-thin) solid transparent;
   border-radius: var(--radius-xs);
   clip-path: polygon(0.45rem 0, 100% 0, calc(100% - 0.45rem) 100%, 0 100%);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--control-bg);
+  color: var(--color-link);
   font-size: var(--font-size-button);
   font-weight: 700;
   cursor: pointer;
@@ -2046,11 +2385,13 @@ button.text-link {
     color var(--duration-fast) var(--easing-standard);
 }
 .product-card__select:hover {
-  background: var(--color-primary-hover);
+  background: var(--color-surface-hover);
+  color: var(--color-link-hover);
 }
-.product-card__select--active {
-  background: var(--color-primary-subtle);
-  color: var(--color-link);
+.product-card__select--active,
+.product-card__select--active:hover {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 /* ─── Страница товара ────────────────────────────────────────────────── */
@@ -2076,6 +2417,15 @@ button.text-link {
   display: grid;
   gap: var(--space-3);
 }
+/* Главное окно галереи — та же квадратная светлая плашка, что и в
+   карточках каталога: единая система фото-окон по всему сайту. */
+.product-gallery > .product-image {
+  height: auto;
+  aspect-ratio: 1;
+  padding: var(--space-6);
+  background: var(--product-plate);
+  border-radius: var(--radius-sm);
+}
 .gallery-thumbnails {
   display: flex;
   gap: var(--space-2);
@@ -2086,13 +2436,24 @@ button.text-link {
 .gallery-thumbnails li {
   flex: 0 0 auto;
 }
-
-.product-image {
-  display: block;
+/* Миниатюры — квадратные окна с аккуратным кропом: фоновая заливка
+   не нужна, кроп компактнее и не искажает пропорции. */
+.gallery-thumbnails .product-image {
+  width: 4.5rem;
+  height: auto;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--product-plate);
+}
+.gallery-thumbnails .product-image__backdrop {
+  display: none;
+}
+.gallery-thumbnails .product-image__front {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: var(--radius-md);
+  max-width: none;
+  max-height: none;
 }
 .image-placeholder {
   display: flex;
@@ -2678,7 +3039,6 @@ button.text-link {
   justify-content: space-between;
   gap: var(--space-3);
   padding-top: var(--space-4);
-  border-top: var(--border-thin) solid var(--color-border-default);
   color: var(--color-text-muted);
   font-size: var(--font-size-caption);
   letter-spacing: var(--tracking-overline);
@@ -3348,13 +3708,6 @@ button.text-link {
   color: var(--color-text-muted);
   font-size: var(--font-size-body-sm);
 }
-.account-link {
-  color: var(--color-link);
-  text-decoration: none;
-}
-.account-link:hover {
-  color: var(--color-link-hover);
-}
 
 /* ─── Резерв (список и форма) ────────────────────────────────────────── */
 
@@ -3449,10 +3802,13 @@ button.text-link {
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: var(--radius-sm);
-  background: var(--color-surface-secondary);
+  background: var(--product-plate);
 }
+/* Фото в списке резерва — то же светлое окно с вписанным фото. */
 .reserve-item__visual .product-image {
+  padding: var(--space-2);
   border-radius: 0;
+  background: var(--product-plate);
 }
 .reserve-item__info {
   display: grid;

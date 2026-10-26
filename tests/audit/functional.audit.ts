@@ -122,12 +122,12 @@ test.describe("mobile interaction audit", () => {
     await openPage(page, "/product/fx-vmate-pro-2");
     await page.getByRole("button", { name: "Изменить магазин" }).click();
     const picker = page.getByRole("dialog", { name: "Ваш город и магазин" });
-    // Фикстура: fx-vmate-pro-2 в store-b1 (Центральный, Саратов) — plenty,
-    // в store-b3 (Энгельс) — available: после переключения метка меняется.
-    // Пикер открывается с городом текущего магазина: сначала Саратов,
-    // чипом переключаемся на Энгельс.
+    // Фикстура: fx-vmate-pro-2 в store-b1 (Рахова, 64/70а, Саратов) — plenty,
+    // в store-b3 (Фридриха Энгельса, 4, Энгельс) — available: после
+    // переключения метка меняется. Пикер открывается с городом текущего
+    // магазина: сначала Саратов, чипом переключаемся на Энгельс.
     await picker.getByRole("button", { name: "Энгельс", exact: true }).click();
-    await picker.getByRole("radio", { name: /Тельмана/ }).check();
+    await picker.getByRole("radio", { name: /Фридриха/ }).check();
     await expect(picker).not.toBeVisible();
     await expect(
       page.locator(".product-detail__info .availability"),

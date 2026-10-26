@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { bunkerContacts } from "~~/shared/content/bunker";
+import type { Store } from "~~/shared/types/store";
 import { storeSchemas } from "~~/shared/seo/schema";
 
 const { data: meta, error, refresh } = await useCatalogMeta();
-const { store, select, pickerOpen } = useStoreSelection();
+const { store, select, detect, detecting, detectError } = useStoreSelection();
 // Описание SEO строится из фактических данных каталога, а не захардкоженных
 // счётчиков — количество точек меняется с выгрузкой «МойСклад».
 const seoDescription = computed(() => {
@@ -22,8 +23,8 @@ usePageSeo("Магазины", seoDescription, undefined, {
   index: true,
   breadcrumbs: [{ label: "Главная", to: "/" }, { label: "Магазины" }],
 });
-// Поиск по городу (Саратов, Энгельс, Москва) и конкретному адресу: пустой
-// запрос показывает все точки сети по городам.
+// Поиск по городу (Саратов, Энгельс) и конкретному адресу: пустой запрос
+// показывает все точки сети по городам.
 const search = ref("");
 const searchWords = computed(() =>
   search.value
@@ -43,29 +44,63 @@ function storeMatches(
     .replace(/ё/g, "е");
   return searchWords.value.every((word) => haystack.includes(word));
 }
-const citySections = computed(() =>
-  (meta.value?.cities ?? [])
+// Секции городов со сквозной нумерацией точек — как оглавление сети.
+const citySections = computed(() => {
+  let counter = 0;
+  return (meta.value?.cities ?? [])
     .map((city) => ({
       city,
-      stores: (meta.value?.stores ?? []).filter(
-        (item) => item.cityId === city.id && storeMatches(item, city.name),
-      ),
+      rows: (meta.value?.stores ?? [])
+        .filter(
+          (item) => item.cityId === city.id && storeMatches(item, city.name),
+        )
+        .map((item) => ({ store: item, number: ++counter })),
     }))
-    .filter((section) => section.stores.length > 0),
-);
+    .filter((section) => section.rows.length > 0);
+});
 const totalMatches = computed(() =>
-  citySections.value.reduce((sum, section) => sum + section.stores.length, 0),
+  citySections.value.reduce((sum, section) => sum + section.rows.length, 0),
 );
+const allStores = computed(() => meta.value?.stores ?? []);
+function pluralPoints(count: number): string {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return "точка";
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return "точки";
+  return "точек";
+}
+const introLead = computed(() => {
+  const parts = (meta.value?.cities ?? [])
+    .map((city) => {
+      const count = allStores.value.filter(
+        (item) => item.cityId === city.id,
+      ).length;
+      return `${city.name} — ${count}`;
+    })
+    .join(", ");
+  const total = allStores.value.length;
+  return `${total} ${pluralPoints(total)} сети${parts ? `: ${parts}` : ""}. Выберите удобную — каталог покажет цены и наличие по ней.`;
+});
+// Режим точки: индивидуальный из выгрузки или общий режим сети.
+function storeHours(item: { hours?: string }): string {
+  return item.hours ?? bunkerContacts.hours;
+}
+// Строка фактов о точке: полный адрес и режим. Лицензии каждой точки
+// публикуются целиком на /information — в ведомости они повторялись
+// 21 раз и утяжеляли список.
+function storeLine(item: Store): string {
+  return [item.address, storeHours(item)].filter(Boolean).join(" · ");
+}
 // Справочная разметка точек продаж: только проверяемые факты (адрес,
 // телефон, часы работы, координаты), без Product/Offer. Источник — живые
-// склады «МойСклад» из каталога (локальный справочник storeLocations —
-// заглушка до данных владельца, см. docs/NEEDS-DATA.md).
+// склады «МойСклад» из каталога; точки без склада (например «Чапаева, 45»
+// в Энгельсе) публикуются справочно (server/data/extra-stores.ts).
 const siteUrl = useRuntimeConfig().public.siteUrl || "https://bunker.example";
 useHead({
   script: storeSchemas(
-    (meta.value?.stores ?? []).map((store) => ({
-      ...store,
-      address: store.address ?? "",
+    allStores.value.map((item) => ({
+      ...item,
+      address: item.address ?? "",
     })),
     bunkerContacts,
     siteUrl,
@@ -78,40 +113,71 @@ function chooseStore(id: string) {
   select(id);
   trackEvent("store_location_view", { storeId: id, source: "stores-page" });
 }
+// Геолокация на странице: подставляет ближайшую точку и подсвечивает её
+// строку. Сообщение об ошибке — только после ручной попытки.
+const geoAttempted = ref(false);
+async function detectHere() {
+  geoAttempted.value = true;
+  await detect({ force: true });
+}
 onMounted(() => {
   // Основное содержимое страницы — адреса и режим работы точек сети.
   trackEvent("store_hours_view");
 });
 </script>
 <template>
-  <UiContainer class="page-shell"
-    ><UiBreadcrumbs
-      :items="[{ label: 'Главная', to: '/' }, { label: 'Магазины' }]"
-    />
+  <UiContainer class="page-shell stores-page">
     <div class="page-heading">
-      <p class="eyebrow">Бункер / Пространства</p>
-      <h1>Ваш город.<br />Ваш магазин.</h1>
-      <p>
-        Выберите точку для просмотра цены и наличия. Список доступных магазинов
-        обновляется из учётной системы.
-      </p>
+      <h1>Магазины.</h1>
+      <p>{{ introLead }}</p>
     </div>
-    <div class="store-search">
+    <div class="stores-toolbar">
       <UiField
         v-model="search"
         label="Поиск по городу или адресу"
         name="store-search"
         type="search"
-        placeholder="Например: Энгельс или Мичурина"
+        placeholder="Например: Энгельс или Рахова"
         autocomplete="off"
       />
-      <p v-if="searchWords.length" class="caption" role="status">
-        Найдено точек: {{ totalMatches }}
-      </p>
+      <div class="stores-toolbar__side">
+        <UiButton
+          variant="quiet"
+          class="stores-toolbar__geo"
+          :loading="detecting"
+          @click="detectHere"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 21s-6.5-5.5-6.5-10.5a6.5 6.5 0 1 1 13 0C18.5 15.5 12 21 12 21Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+            <circle cx="12" cy="10.5" r="2.25" fill="currentColor" />
+          </svg>
+          Рядом со мной</UiButton
+        >
+        <p
+          v-if="geoAttempted && detectError"
+          class="field__help"
+          role="status"
+          aria-live="polite"
+        >
+          {{ geoErrorTexts[detectError] }}
+        </p>
+        <p v-else-if="searchWords.length" class="caption" role="status">
+          Найдено точек: {{ totalMatches }}
+        </p>
+      </div>
     </div>
-    <UiButton variant="secondary" @click="pickerOpen = true"
-      >Выбрать город и магазин</UiButton
-    ><UiEmptyState v-if="error" title="Не удалось загрузить магазины"
+    <UiEmptyState v-if="error" title="Не удалось загрузить магазины"
       >Попробуйте ещё раз.<template #action
         ><UiButton @click="refresh()">Повторить</UiButton></template
       ></UiEmptyState
@@ -120,44 +186,52 @@ onMounted(() => {
       <section
         v-for="section in citySections"
         :key="section.city.id"
-        class="store-city"
+        class="stores-city"
+        :aria-label="section.city.name"
       >
-        <h2>{{ section.city.name }}</h2>
-        <div class="store-grid">
-          <article
-            v-for="item in section.stores"
-            :key="item.id"
-            class="store-card"
-          >
-            <UiBadge>Магазин</UiBadge>
-            <h3>{{ item.name }}</h3>
-            <p>{{ item.description }}</p>
-            <p class="caption">
-              <template v-if="item.address">{{ item.address }}<br /></template>
-              {{ item.hours ?? `Общий режим сети: ${bunkerContacts.hours}` }}
-              <template v-if="item.license"
-                ><br />
-                Лицензия № {{ item.license.number }} (до
-                {{ item.license.validUntil }})</template
-              >
-            </p>
-            <UiButton
-              variant="secondary"
-              :disabled="store?.id === item.id"
-              @click="chooseStore(item.id)"
-              >{{
-                store?.id === item.id
-                  ? "Выбран этот магазин"
-                  : "Выбрать эту точку"
-              }}</UiButton
-            >
-          </article>
+        <div class="stores-city__head">
+          <h2>{{ section.city.name }}</h2>
+          <span class="caption stores-city__count">
+            {{ section.rows.length }} {{ pluralPoints(section.rows.length) }}
+          </span>
         </div>
+        <!-- Ведомость точек: строка целиком кликабельна (скрытое радио),
+             справа — фирменная метка-параллелограмм, как в пикере шапки.
+             На широких экранах — две колонки, чтобы 15 саратовских адресов
+             не вытягивались в бесконечный столбец. -->
+        <ol class="stores-ledger">
+          <li
+            v-for="row in section.rows"
+            :key="row.store.id"
+            class="store-row"
+            :class="{ 'store-row--selected': store?.id === row.store.id }"
+          >
+            <label>
+              <input
+                type="radio"
+                name="stores-page-store"
+                :value="row.store.id"
+                :checked="store?.id === row.store.id"
+                @change="chooseStore(row.store.id)"
+              />
+              <span class="store-row__number caption">{{
+                String(row.number).padStart(2, "0")
+              }}</span>
+              <span class="store-row__body">
+                <strong>{{ row.store.name }}</strong>
+                <span class="store-row__line caption">
+                  {{ storeLine(row.store) }}
+                </span>
+              </span>
+              <span class="store-row__mark" aria-hidden="true"></span>
+            </label>
+          </li>
+        </ol>
       </section>
     </template>
     <UiEmptyState v-else title="Ничего не найдено" aria-live="polite">
-      Проверьте запрос: поиск работает по городу (Саратов, Энгельс, Москва),
-      названию и адресу точки.
+      Проверьте запрос: поиск работает по городу (Саратов, Энгельс), названию и
+      адресу точки.
     </UiEmptyState></UiContainer
   >
 </template>
