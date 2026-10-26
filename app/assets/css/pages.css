@@ -375,7 +375,7 @@ button.text-link {
   justify-content: center;
   background: var(--color-primary);
   color: var(--color-on-primary);
-  font-size: 0.6875rem;
+  font-size: var(--font-size-caption);
   font-weight: 700;
   border-radius: var(--radius-pill);
   clip-path: polygon(12% 0, 100% 0, 88% 100%, 0 100%);
@@ -664,7 +664,7 @@ button.text-link {
   margin-top: var(--space-10);
   padding-top: var(--space-5);
   border-top: var(--border-thin) solid var(--color-border-default);
-  font-size: 0.6875rem;
+  font-size: var(--font-size-caption);
 }
 .footer-bottom__legal {
   margin: 0;
@@ -750,6 +750,10 @@ button.text-link {
 }
 .legal-notice__content a {
   color: var(--color-text-secondary);
+  /* Инлайн-ссылка внутри текста: расширяем цель касания вверх/вниз
+     без влияния на строки (в негативном margin высота блока не растёт). */
+  padding-block: 0.375rem;
+  margin-block: -0.375rem;
 }
 .legal-notice__symbol {
   display: inline-flex;
@@ -1998,7 +2002,8 @@ button.text-link {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 2.5rem;
+  /* 2.75rem = 44px: главная навигация каталога — тач-цель AA. */
+  min-height: 2.75rem;
   padding-block: var(--space-1);
   border-bottom: var(--border-thin) solid var(--color-border-default);
   color: var(--color-text-secondary);
@@ -2186,7 +2191,9 @@ button.text-link {
 .category-links a {
   display: inline-flex;
   align-items: center;
-  min-height: 2.5rem;
+  /* 2.75rem = 44px: горизонтальная полоса категорий — основная
+     навигация каталога на телефоне, тач-цель AA. */
+  min-height: 2.75rem;
   padding: var(--space-2) var(--space-4);
   background: var(--control-bg);
   border: var(--border-thin) solid var(--control-border);
@@ -2221,6 +2228,9 @@ button.text-link {
   -webkit-overflow-scrolling: touch;
 }
 .subcategory-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
   padding: var(--space-1) var(--space-3);
   border: var(--border-thin) solid var(--control-border);
   border-radius: var(--radius-pill);
@@ -2228,9 +2238,13 @@ button.text-link {
   text-decoration: none;
   font-size: var(--font-size-body-sm);
   white-space: nowrap;
+  transition:
+    color var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard);
 }
 .subcategory-links a.router-link-exact-active {
-  color: var(--color-primary);
+  /* link-токен: coral-500 на фоне даёт впритык 4.55:1. */
+  color: var(--color-link);
   border-color: var(--color-primary);
 }
 
@@ -2701,6 +2715,11 @@ button.text-link {
   border: var(--border-thin) solid var(--color-border-default);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-overlay);
+  /* 8 подсказок не должны вылезать за нижний край окна: на низких
+     экранах список скроллится внутри себя. */
+  max-height: min(26rem, 60vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .search-suggest li {
   margin: 0;
@@ -2953,8 +2972,13 @@ button.text-link {
   left: 50%;
   width: 1px;
   height: 8rem;
-  background: linear-gradient(to bottom, transparent, #ff5c5c, transparent);
-  box-shadow: 0 0 8px rgb(255 92 92 / 0.6);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-primary),
+    transparent
+  );
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-primary) 60%, transparent);
   opacity: 0.22;
   rotate: 58deg;
 }

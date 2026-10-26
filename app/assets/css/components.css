@@ -58,7 +58,14 @@
 }
 .button--outline {
   --btn-border: var(--color-primary);
-  --btn-color: var(--color-primary);
+  /* Текст — светлый тинт коралла: coral-500 на surfaces даёт 4.36:1
+     для 15px bold (AA требует 4.5). */
+  --btn-color: var(--color-link);
+}
+.button--outline:hover:not(:disabled) {
+  --btn-border: var(--color-link);
+  --btn-color: var(--color-link-hover);
+  --btn-bg: var(--color-primary-subtle);
 }
 .button--ghost {
   --btn-border: transparent;
@@ -593,16 +600,6 @@
   );
   background-size: 240% 100%;
   animation: skeleton 1.4s ease-in-out infinite;
-}
-.empty-state {
-  display: grid;
-  justify-items: start;
-  gap: var(--space-3);
-  border: 1px dashed var(--color-border-strong);
-  padding: var(--space-8);
-}
-.empty-state > * {
-  margin: 0;
 }
 .divider {
   height: 1px;
