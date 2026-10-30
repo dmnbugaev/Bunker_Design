@@ -72,11 +72,15 @@ test("banned and unclassified categories are never published; pouches are publis
   expect(names).toContain("Ароматизаторы");
   // Паучи (подтверждено владельцем) публикуются как регулируемая категория.
   expect(names).toContain("Жевательный табак");
+  // Сортировка по новизне: 28 позиций не входят в лимит страницы (24),
+  // chew-01 (10.10) уверенно попадает в первый лист.
   const list = await (
-    await request.get("/api/products?limit=24&available=0", { headers })
+    await request.get("/api/products?limit=24&available=0&sort=newest", {
+      headers,
+    })
   ).json();
-  // 19 позиций фикстуры минус непубликуемая nbc-01 из корня «Новая папка».
-  expect(list.total).toBe(18);
+  // 29 позиций фикстуры минус непубликуемая nbc-01 из корня «Новая папка».
+  expect(list.total).toBe(28);
   const pouch = list.items.find(
     (item: { slug: string }) => item.slug === "chew-01",
   );
@@ -138,10 +142,16 @@ test("unregulated assortment is reachable before age confirmation; regulated sta
   ).not.toBeVisible();
   await expect(page.locator(".product-card")).toHaveCount(6);
   // Навигация категорий до подтверждения — только общедоступные корни.
+  // «Устройства» ищем внутри навигации категорий: слово встречается и в
+  // постоянных ссылках шапки/подвала (раздел «Б/у устройства»).
   await expect(
     page.getByRole("navigation", { name: "Категории каталога" }),
   ).toContainText("Напитки");
-  await expect(page.getByText("Устройства")).toHaveCount(0);
+  await expect(
+    page
+      .getByRole("navigation", { name: "Категории каталога" })
+      .getByText("Устройства"),
+  ).toHaveCount(0);
   await expect(page.getByText("Жевательный табак")).toHaveCount(0);
   await expect(page.getByText("MOOK FWRD")).toHaveCount(0);
   // Подтверждение по кнопке на странице открывает полный каталог
@@ -206,15 +216,57 @@ test("legal pages are reachable without the age gate", async ({ page }) => {
   }
   await page.goto("/information");
   await expect(page.getByRole("heading", { name: /Продавец/ })).toBeVisible();
-  // Реквизиты — данные владельца (NEEDS-DATA): пока не предоставлены,
-  // страница честно сообщает об этом вместо пустых ИНН/ОГРНИП.
-  await expect(
-    page.getByText("Реквизиты продавца будут опубликованы"),
-  ).toBeVisible();
+  // Реквизиты продавца предоставлены владельцем 26.10.2026 и публикуются
+  // на информационной странице (ЗоЗПП ст. 8–10).
+  await expect(page.getByText(/ИНН 645332157743/).first()).toBeVisible();
   await expect(
     page
       .getByRole("link", { name: "Политика обработки персональных данных" })
       .first(),
+  ).toBeVisible();
+});
+
+test("used-devices section is gated and points to Vape Express communities", async ({
+  page,
+}) => {
+  // Раздел «Б/у устройства» (Vape Express) — за модальным гейтом, как
+  // /reserve: до подтверждения 18+ контент не отдаётся вовсе.
+  await page.goto("/used");
+  await expect(
+    page.getByRole("dialog", { name: "Вам уже исполнилось 18 лет?" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Б/у устройства." }),
+  ).toHaveCount(0);
+  await page.context().addCookies([
+    {
+      name: "bunker-age-confirmed",
+      value: "true",
+      domain: "127.0.0.1",
+      path: "/",
+    },
+  ]);
+  await page.goto("/used");
+  await expect(
+    page.getByRole("heading", { name: "Б/у устройства." }),
+  ).toBeVisible();
+  // Ссылки на сообщества Vape Express: ВКонтакте и Telegram, каждая —
+  // в новой вкладке без opener.
+  const vk = page.getByRole("link", { name: "Vape Express в ВКонтакте" });
+  await expect(vk).toHaveAttribute("href", "https://vk.ru/vape.express");
+  const telegram = page.getByRole("link", { name: "Vape Express в Telegram" });
+  await expect(telegram).toHaveAttribute("href", "https://t.me/VapeExpress");
+  for (const link of [vk, telegram]) {
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  }
+  // Витрина комиссии — категория «Б/у устройства (VEX)» из каталога.
+  await expect(
+    page.getByRole("link", { name: "Открыть в каталоге" }),
+  ).toHaveAttribute("href", "/catalog/cat-vex-used");
+  // Раздел доступен из основной навигации шапки.
+  await expect(
+    page.locator(".desktop-nav").getByRole("link", { name: "Б/у устройства" }),
   ).toBeVisible();
 });
 
@@ -230,8 +282,15 @@ test("catalog pages contain no remote-sale or promotion vocabulary", async ({
     },
   ]);
   // /reserve включён: список выбранных товаров и запрос на резерв не должны
-  // использовать лексику дистанционной продажи.
-  for (const path of ["/", "/catalog", "/product/fx-vmate-pro-2", "/reserve"]) {
+  // использовать лексику дистанционной продажи. /used — раздел б/у устройств
+  // (справочник по сервису Vape Express) под теми же ограничениями лексики.
+  for (const path of [
+    "/",
+    "/catalog",
+    "/product/fx-vmate-pro-2",
+    "/reserve",
+    "/used",
+  ]) {
     await page.goto(path);
     const text = await page.locator("body").innerText();
     for (const word of [
@@ -275,6 +334,7 @@ test("owner home address, adult-shop tagline and MoySklad captions are absent", 
     "/contacts",
     "/partners",
     "/reserve",
+    "/used",
     "/login",
     "/register",
   ]) {

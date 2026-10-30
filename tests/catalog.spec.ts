@@ -65,10 +65,11 @@ test("filters and sorting use the selected store price", async ({ page }) => {
   await expect(filters.getByText("Бренд")).toHaveCount(0);
   await expect(filters.getByText("Материал")).toHaveCount(0);
   // «Только в наличии» включён с открытия страницы: на Рахова, 64/70а
-  // (store-b1) нет MOOK FWRD и ARQA Premium — из 16 доступных все
-  // помещаются на одной странице (лимит выдачи 24).
+  // (store-b1) нет MOOK FWRD и ARQA Premium, а новинки «Другого»,
+  // «Зажигалок» и «Картриджи / Испарители» лежат на других точках —
+  // из 23 доступных все помещаются на одной странице (лимит выдачи 24).
   await expect(filters.getByLabel("Только в наличии")).toBeChecked();
-  await expect(page.locator(".product-card")).toHaveCount(16);
+  await expect(page.locator(".product-card")).toHaveCount(23);
   await filters.getByLabel("От", { exact: true }).fill("1500");
   await filters.getByLabel("До", { exact: true }).fill("2000");
   // Цена применяется сама после паузы ввода — кнопки «Применить» нет.
@@ -80,7 +81,7 @@ test("filters and sorting use the selected store price", async ({ page }) => {
     "Pod-система Bunker Classic",
   );
   await filters.getByRole("button", { name: "Сбросить фильтры" }).click();
-  await expect(page.locator(".product-card")).toHaveCount(16);
+  await expect(page.locator(".product-card")).toHaveCount(23);
 });
 
 test("store changes availability and city price without losing the product", async ({
@@ -147,14 +148,16 @@ test("instant filters: availability is on by default, photo filter removed", asy
   await expect(sidebar.getByLabel("Только с фотографией")).toHaveCount(0);
   await available.uncheck();
   await expect(page).toHaveURL(/available=0/);
-  // Позиции с нулевым остатком возвращаются в выдачу с меткой: MOOK FWRD
-  // и ARQA Premium — все 18 опубликованных товаров на одной странице.
-  await expect(page.locator(".product-card")).toHaveCount(18);
-  await expect(page.locator(".product-card__soon")).toHaveCount(2);
+  // Позиции с нулевым остатком возвращаются в выдачу с меткой: MOOK FWRD,
+  // ARQA Premium и три новинки других точек. 28 опубликованных товаров не
+  // помещаются на страницу (лимит 24) — все позиции «скоро в наличии»
+  // витринный порядок держит на первой странице.
+  await expect(page.locator(".product-card")).toHaveCount(24);
+  await expect(page.locator(".product-card__soon")).toHaveCount(5);
   await expect(page.locator(".filter-chips")).toHaveCount(0);
   await sidebar.getByLabel("Только в наличии").check();
   await expect(page).toHaveURL(/available=1/);
-  await expect(page.locator(".product-card")).toHaveCount(16);
+  await expect(page.locator(".product-card")).toHaveCount(23);
   // Явно включённый фильтр получает чип: «В наличии» + «Сбросить всё».
   await expect(page.locator(".filter-chips li")).toHaveCount(2);
   await page
@@ -203,7 +206,7 @@ test("category descendants, search, missing image and API pagination", async ({
       name: "Изображение доступно только совершеннолетним пользователям",
     }),
   ).toBeVisible();
-  // Полный состав каталога (18 позиций фикстуры; 19-я в корне «Новая
+  // Полный состав каталога (28 позиций фикстуры; 29-я в корне «Новая
   // папка» не публикуется) — только с подтверждением 18+; анонимный запрос
   // вернул бы общедоступные 6.
   const response = await request.get("/api/products?limit=2&page=2", {
@@ -211,9 +214,9 @@ test("category descendants, search, missing image and API pagination", async ({
   });
   expect(response.ok()).toBe(true);
   expect(await response.json()).toMatchObject({
-    total: 18,
+    total: 28,
     page: 2,
-    pageCount: 9,
+    pageCount: 14,
   });
 });
 
@@ -236,10 +239,10 @@ test("page in URL survives the price-filter sync (pagination regression)", async
   // Регрессия: вотчер черновика цены реагировал на любую смену query
   // (в том числе ?page=) и через дебаунс эмитил «apply», который стирал
   // page и возвращал пользователя на первую страницу каталога.
-  // 16 доступных позиций входят в лимит 24: page=2 клампится в 1,
+  // 23 доступных позиции входят в лимит 24: page=2 клампится в 1,
   // но параметр в URL должен пережить синхронизацию черновика цены.
   await open(page, "/catalog?page=2");
-  await expect(page.locator(".product-card")).toHaveCount(16);
+  await expect(page.locator(".product-card")).toHaveCount(23);
   await page.waitForTimeout(900);
   await expect(page).toHaveURL(/page=2/);
 });
@@ -251,9 +254,14 @@ test("adjacent API returns category neighbours", async ({ request }) => {
     headers,
   });
   expect(response.ok()).toBe(true);
+  // Порядок ветки «Устройства» — витринный (наличие, затем FNV-хеш id):
+  // MOOK FWRD → VooPoo VMATE Pro 2 → Pod-система Bunker Classic.
   const { prev, next } = await response.json();
-  expect(prev).toBeNull();
-  expect(next).toMatchObject({ slug: "fx-mook-fwrd", name: "MOOK FWRD" });
+  expect(prev).toMatchObject({ slug: "fx-mook-fwrd", name: "MOOK FWRD" });
+  expect(next).toMatchObject({
+    slug: "fx-pod-classic",
+    name: "Pod-система Bunker Classic",
+  });
   expect((await request.get("/api/products/missing/adjacent")).status()).toBe(
     404,
   );
@@ -264,11 +272,12 @@ test("product page switches to the neighbouring product", async ({ page }) => {
   const nav = page.locator("nav.product-adjacent");
   await expect(nav).toBeVisible();
   // Подпись «Следующий →» скрыта от скринридеров (aria-hidden), поэтому
-  // ищем ссылку по тексту, а не по доступному имени.
+  // ищем ссылку по тексту, а не по доступному имени. Порядок ветки —
+  // витринный (см. тест adjacent API): после VMATE Pro 2 идёт Pod-система.
   const next = nav.getByRole("link").filter({ hasText: "Следующий" });
-  await expect(next).toContainText("MOOK FWRD");
+  await expect(next).toContainText("Pod-система Bunker Classic");
   await next.click();
-  await expect(page).toHaveURL(/fx-mook-fwrd/);
+  await expect(page).toHaveURL(/fx-pod-classic/);
   await expect(
     nav.getByRole("link").filter({ hasText: "Предыдущий" }),
   ).toContainText("VooPoo VMATE Pro 2");

@@ -12,6 +12,7 @@ const accountLink = computed(() =>
 );
 const links = computed(() => [
   { to: "/catalog", label: "Каталог" },
+  { to: "/used", label: "Б/у устройства" },
   { to: "/about", label: "О проекте" },
   { to: "/stores", label: "Магазины" },
   { to: "/contacts", label: "Контакты" },

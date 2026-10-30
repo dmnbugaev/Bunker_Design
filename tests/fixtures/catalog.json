@@ -234,6 +234,76 @@
         "parentId": null,
         "slug": "cat-nbs",
         "description": "Товары категории «Новая папка»."
+      },
+      {
+        "id": "cat-hookahs",
+        "name": "Кальяны",
+        "parentId": null,
+        "slug": "cat-hookahs",
+        "description": "Товары категории «Кальяны»."
+      },
+      {
+        "id": "cat-hookah-tobacco",
+        "name": "Табак для кальяна",
+        "parentId": null,
+        "slug": "cat-hookah-tobacco",
+        "description": "Товары категории «Табак для кальяна»."
+      },
+      {
+        "id": "cat-cigarettes",
+        "name": "Сигареты",
+        "parentId": null,
+        "slug": "cat-cigarettes",
+        "description": "Товары категории «Сигареты»."
+      },
+      {
+        "id": "cat-heating",
+        "name": "Системы нагревания",
+        "parentId": null,
+        "slug": "cat-heating",
+        "description": "Товары категории «Системы нагревания»."
+      },
+      {
+        "id": "cat-cartridges",
+        "name": "Картриджи и Испарители",
+        "parentId": null,
+        "slug": "cat-cartridges",
+        "description": "Товары категории «Картриджи и Испарители»."
+      },
+      {
+        "id": "cat-prefilled",
+        "name": "Предзаправленные картриджи",
+        "parentId": null,
+        "slug": "cat-prefilled",
+        "description": "Товары категории «Предзаправленные картриджи»."
+      },
+      {
+        "id": "cat-vex-used",
+        "name": "Б/у устройства (VEX)",
+        "parentId": null,
+        "slug": "cat-vex-used",
+        "description": "Товары категории «Б/у устройства (VEX)»."
+      },
+      {
+        "id": "cat-other",
+        "name": "Другое",
+        "parentId": null,
+        "slug": "cat-other",
+        "description": "Товары категории «Другое»."
+      },
+      {
+        "id": "cat-lighters",
+        "name": "Зажигалки",
+        "parentId": null,
+        "slug": "cat-lighters",
+        "description": "Товары категории «Зажигалки»."
+      },
+      {
+        "id": "cat-cartridges-alt",
+        "name": "Картриджи / Испарители",
+        "parentId": null,
+        "slug": "cat-cartridges-alt",
+        "description": "Товары категории «Картриджи / Испарители»."
       }
     ],
     "brands": [],
@@ -2668,6 +2738,1336 @@
         }
       ],
       "publishedAt": "2026-10-01T09:00:00Z"
+    },
+    {
+      "id": "fx-hookah-matt",
+      "slug": "fx-hookah-matt",
+      "sku": "HOOK-001",
+      "name": "Кальян Matt Pearl Common",
+      "categoryId": "cat-hookahs",
+      "categoryName": "Кальяны",
+      "images": [
+        {
+          "id": "fx-hookah-matt-0",
+          "src": "/images/fx-kaos.webp",
+          "alt": "Кальян Matt Pearl Common — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Классический кальян со стеклянной колбой и металлической шахтой, комплектуется шлангом и чашкой.",
+      "attributes": [
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Классический"
+        },
+        {
+          "code": "attr-height",
+          "name": "Высота",
+          "value": "60 см"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 590000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-29T09:00:00Z"
+    },
+    {
+      "id": "fx-hookah-tobacco",
+      "slug": "fx-hookah-tobacco",
+      "sku": "TOB-001",
+      "name": "Табак для кальяна Adalyia Lemon Mint 50 г",
+      "categoryId": "cat-hookah-tobacco",
+      "categoryName": "Табак для кальяна",
+      "images": [
+        {
+          "id": "fx-hookah-tobacco-0",
+          "src": "/images/fx-arqa.webp",
+          "alt": "Табак для кальяна Adalyia Lemon Mint 50 г — изображение 1"
+        }
+      ],
+      "unit": "50 г",
+      "description": "Средняя крепость, цитрусово-мятная смесь для кальяна.",
+      "attributes": [
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Лимон-мята"
+        },
+        {
+          "code": "attr-power",
+          "name": "Крепость",
+          "value": "Средняя"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 95000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-28T09:00:00Z"
+    },
+    {
+      "id": "fx-cigarettes-winston",
+      "slug": "fx-cigarettes-winston",
+      "sku": "CIG-001",
+      "name": "Сигареты Winston Blue 20 шт",
+      "categoryId": "cat-cigarettes",
+      "categoryName": "Сигареты",
+      "images": [
+        {
+          "id": "fx-cigarettes-winston-0",
+          "src": "/images/fx-mook.webp",
+          "alt": "Сигареты Winston Blue 20 шт — изображение 1"
+        }
+      ],
+      "unit": "1 пачка",
+      "description": "Табачная продукция; продажа в магазинах сети, цена по МРЦ.",
+      "attributes": [
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Сигареты"
+        },
+        {
+          "code": "attr-count",
+          "name": "В пачке",
+          "value": "20 шт"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 32000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-27T09:00:00Z"
+    },
+    {
+      "id": "fx-heating-iluma",
+      "slug": "fx-heating-iluma",
+      "sku": "HEAT-001",
+      "name": "Система нагревания IQOS ILUMA",
+      "categoryId": "cat-heating",
+      "categoryName": "Системы нагревания",
+      "images": [
+        {
+          "id": "fx-heating-iluma-0",
+          "src": "/images/fx-mook.webp",
+          "alt": "Система нагревания IQOS ILUMA — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Система нагревания табака с индукционным принципом работы и зарядкой USB-C.",
+      "attributes": [
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Система нагревания"
+        },
+        {
+          "code": "attr-battery",
+          "name": "Питание",
+          "value": "USB-C"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 499000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-26T09:00:00Z"
+    },
+    {
+      "id": "fx-vapor-uforce",
+      "slug": "fx-vapor-uforce",
+      "sku": "CART-001",
+      "name": "Испаритель VooPoo UFORCE-L (2 шт)",
+      "categoryId": "cat-cartridges",
+      "categoryName": "Картриджи и Испарители",
+      "images": [
+        {
+          "id": "fx-vapor-uforce-0",
+          "src": "/images/fx-pod.webp",
+          "alt": "Испаритель VooPoo UFORCE-L (2 шт) — изображение 1"
+        }
+      ],
+      "unit": "2 шт",
+      "description": "Сменные испарители для атомайзеров серии UFORCE.",
+      "attributes": [
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Испаритель"
+        },
+        {
+          "code": "attr-resistance",
+          "name": "Сопротивление",
+          "value": "0.2 Ом"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 89000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-25T09:00:00Z"
+    },
+    {
+      "id": "fx-prefilled-aura",
+      "slug": "fx-prefilled-aura",
+      "sku": "PREF-001",
+      "name": "Картридж AURA Club 2 мл",
+      "categoryId": "cat-prefilled",
+      "categoryName": "Предзаправленные картриджи",
+      "images": [
+        {
+          "id": "fx-prefilled-aura-0",
+          "src": "/images/fx-liquid-2.webp",
+          "alt": "Картридж AURA Club 2 мл — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Предзаправленный картридж со вкусом манго, объём 2 мл.",
+      "attributes": [
+        {
+          "code": "attr-volume",
+          "name": "Объём",
+          "value": "2 мл"
+        },
+        {
+          "code": "attr-taste",
+          "name": "Вкус",
+          "value": "Манго"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 69000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-24T09:00:00Z"
+    },
+    {
+      "id": "fx-vex-vinci",
+      "slug": "fx-vex-vinci",
+      "sku": "VEX-001",
+      "name": "VEX: VooPoo Vinci X (б/у)",
+      "categoryId": "cat-vex-used",
+      "categoryName": "Б/у устройства (VEX)",
+      "images": [
+        {
+          "id": "fx-vex-vinci-0",
+          "src": "/images/fx-vmate.webp",
+          "alt": "VEX: VooPoo Vinci X (б/у) — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Комиссионное устройство, проверено сервисом Vape Express, гарантия 14 дней.",
+      "attributes": [
+        {
+          "code": "attr-condition",
+          "name": "Состояние",
+          "value": "Б/у"
+        },
+        {
+          "code": "attr-warranty",
+          "name": "Гарантия",
+          "value": "14 дней"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-23T09:00:00Z"
+    },
+    {
+      "id": "fx-case-silicone",
+      "slug": "fx-case-silicone",
+      "sku": "MISC-001",
+      "name": "Чехол силиконовый для устройств",
+      "categoryId": "cat-other",
+      "categoryName": "Другое",
+      "images": [
+        {
+          "id": "fx-case-silicone-0",
+          "src": "/images/fx-stels.webp",
+          "alt": "Чехол силиконовый для устройств — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Силиконовый чехол для защиты устройства от падений.",
+      "attributes": [
+        {
+          "code": "attr-material",
+          "name": "Материал",
+          "value": "Силикон"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 59000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-22T09:00:00Z"
+    },
+    {
+      "id": "fx-lighter-cricket",
+      "slug": "fx-lighter-cricket",
+      "sku": "LIGHT-001",
+      "name": "Зажигалка Cricket Original",
+      "categoryId": "cat-lighters",
+      "categoryName": "Зажигалки",
+      "images": [
+        {
+          "id": "fx-lighter-cricket-0",
+          "src": "/images/fx-stels.webp",
+          "alt": "Зажигалка Cricket Original — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Газовая зажигалка с регулируемым пламенем.",
+      "attributes": [
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Газовая"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "plenty"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 19000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-21T09:00:00Z"
+    },
+    {
+      "id": "fx-cartridge-uwell",
+      "slug": "fx-cartridge-uwell",
+      "sku": "CART-101",
+      "name": "Картридж Uwell Whirl T1 2 мл",
+      "categoryId": "cat-cartridges-alt",
+      "categoryName": "Картриджи / Испарители",
+      "images": [
+        {
+          "id": "fx-cartridge-uwell-0",
+          "src": "/images/fx-pod.webp",
+          "alt": "Картридж Uwell Whirl T1 2 мл — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Сменный картридж для устройств серии Whirl T1.",
+      "attributes": [
+        {
+          "code": "attr-volume",
+          "name": "Объём",
+          "value": "2 мл"
+        },
+        {
+          "code": "attr-type",
+          "name": "Тип",
+          "value": "Картридж"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 75000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-20T09:00:00Z"
     }
   ],
   "stockDetail": {
@@ -2764,6 +4164,56 @@
       "store-b1": 7,
       "store-b2": 0,
       "store-b3": 0
+    },
+    "fx-hookah-matt": {
+      "store-b1": 3,
+      "store-b2": 0,
+      "store-b3": 2
+    },
+    "fx-hookah-tobacco": {
+      "store-b1": 6,
+      "store-b2": 0,
+      "store-b3": 8
+    },
+    "fx-cigarettes-winston": {
+      "store-b1": 12,
+      "store-b2": 0,
+      "store-b3": 0
+    },
+    "fx-heating-iluma": {
+      "store-b1": 2,
+      "store-b2": 5,
+      "store-b3": 0
+    },
+    "fx-vapor-uforce": {
+      "store-b1": 10,
+      "store-b2": 4,
+      "store-b3": 3
+    },
+    "fx-prefilled-aura": {
+      "store-b1": 8,
+      "store-b2": 0,
+      "store-b3": 9
+    },
+    "fx-vex-vinci": {
+      "store-b1": 1,
+      "store-b2": 0,
+      "store-b3": 0
+    },
+    "fx-case-silicone": {
+      "store-b1": 0,
+      "store-b2": 5,
+      "store-b3": 0
+    },
+    "fx-lighter-cricket": {
+      "store-b1": 0,
+      "store-b2": 15,
+      "store-b3": 0
+    },
+    "fx-cartridge-uwell": {
+      "store-b1": 0,
+      "store-b2": 0,
+      "store-b3": 4
     }
   }
 }

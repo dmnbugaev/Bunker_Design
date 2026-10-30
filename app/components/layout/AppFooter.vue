@@ -27,6 +27,7 @@ const accountLink = computed(() =>
 );
 const siteLinks = [
   { to: "/catalog", label: "Каталог" },
+  { to: "/used", label: "Б/у устройства" },
   { to: "/stores", label: "Магазины" },
   { to: "/about", label: "О проекте" },
   { to: "/contacts", label: "Контакты" },

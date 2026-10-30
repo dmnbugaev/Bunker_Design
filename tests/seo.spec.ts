@@ -26,6 +26,9 @@ const NOINDEX = [
   "/register",
   "/account",
   "/reserve",
+  // Раздел «Б/у устройства» (Vape Express): продвижение устройств
+  // ограничено 38-ФЗ ст. 7 — вне индексируемого контура.
+  "/used",
 ];
 
 const SITE = "https://bunker.example";

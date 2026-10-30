@@ -1888,6 +1888,39 @@ button.text-link {
   justify-self: start;
 }
 
+/* Кнопки сообществ Vape Express (ВК/Telegram) в один ряд, перенос на узких
+   экранах — используются на «Контактах» и в разделе «Б/у устройства». */
+.contact-services__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* ─── Б/у устройства (/used) ──────────────────────────────────────────── */
+
+/* Переход к витрине «Б/у устройства (VEX)» под панелью сервиса. */
+.used-page__catalog {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 65ch;
+}
+.used-page__catalog h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--font-size-h3);
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+.used-page__catalog p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+.used-page__catalog .button {
+  justify-self: start;
+  margin-block-start: var(--space-2);
+}
+
 /* ─── Каталог ────────────────────────────────────────────────────────── */
 
 .catalog-layout {

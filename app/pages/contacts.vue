@@ -175,14 +175,24 @@ const network = computed(() => {
           {{ service }}
         </li>
       </ul>
-      <a
-        :href="vapeExpress.vk"
-        class="button button--outline"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {{ vapeExpress.name }} в ВКонтакте
-      </a>
+      <div class="contact-services__actions">
+        <a
+          :href="vapeExpress.vk"
+          class="button button--outline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ vapeExpress.name }} в ВКонтакте
+        </a>
+        <a
+          :href="vapeExpress.telegram"
+          class="button button--outline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ vapeExpress.name }} в Telegram
+        </a>
+      </div>
     </section>
     <StoresMapSection
   /></UiContainer>

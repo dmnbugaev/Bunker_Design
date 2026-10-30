@@ -75,11 +75,12 @@ test("root category classification", () => {
   // разрешён; снюс («сосательный табак») не маппится и блокируется как
   // PENDING_REVIEW.
   assert.equal(classifyRootCategory("жевательный табак"), "REGULATED_POUCH");
-  // Учётные имена аккаунта «Бункера» (сверка 21.10.2026): «шайбы» и
-  // «пластинки» — никотиновые паучи, «НБС» — никотиносодержащие смеси.
-  assert.equal(classifyRootCategory("Шайбы"), "REGULATED_POUCH");
-  assert.equal(classifyRootCategory("Пластинки"), "REGULATED_POUCH");
-  assert.equal(classifyRootCategory("нбс"), "REGULATED_NICOTINE");
+  // Учётные папки «Шайбы», «Пластинки» и «НБС» скрыты решением владельца
+  // от 31.10.2026: ключи классификации удалены, паучи представлены
+  // корнем «Жевательный табак», смеси не публикуются.
+  assert.equal(classifyRootCategory("Шайбы"), "PENDING_REVIEW");
+  assert.equal(classifyRootCategory("Пластинки"), "PENDING_REVIEW");
+  assert.equal(classifyRootCategory("нбс"), "PENDING_REVIEW");
   assert.equal(classifyRootCategory("СИГАРЕТЫ"), "REGULATED_TOBACCO");
   // Снеки публикуются и входят в общедоступный ассортимент.
   assert.equal(classifyRootCategory("Снеки"), "UNREGULATED");
