@@ -11,13 +11,13 @@
  */
 
 /**
- * Счётчик Яндекс.Метрики сети «Бункер» (выдан владельцем, интеграция
- * включена 26.10.2026). Переопределяется переменной окружения
- * NUXT_PUBLIC_METRIKA_COUNTER_ID; пустое значение в обеих точках —
- * счётчик не установлен, скрипт Метрики не загружается
+ * Счётчик Яндекс.Метрики сети «Бункер» (перевыпущен владельцем 31.10.2026;
+ * прежний счётчик 26.10.2026 — 113582832). Переопределяется переменной
+ * окружения NUXT_PUBLIC_METRIKA_COUNTER_ID; пустое значение в обеих
+ * точках — счётчик не установлен, скрипт Метрики не загружается
  * (см. plugins/yandex-metrika.client.ts).
  */
-export const METRIKA_COUNTER_ID = "113582832";
+export const METRIKA_COUNTER_ID = "113941581";
 
 export function resolveMetrikaCounterId(envValue?: string | number): string {
   // Числовой id из NUXT_PUBLIC_METRIKA_COUNTER_ID приходит как number —

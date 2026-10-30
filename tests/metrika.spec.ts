@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 
-// Проверка интеграции Яндекс Метрики 113582832 «на живом» приложении.
+// Проверка интеграции Яндекс Метрики 113941581 «на живом» приложении.
 // Спека запускается только при NUXT_PUBLIC_METRIKA_ENABLED=1
 // (пробрасывается в webServer из playwright.config.ts): dev-сервер
 // грузит счётчик, а все запросы к mc.yandex.ru перехватываются и
@@ -14,7 +14,7 @@ test.skip(
   "интеграция Метрики: запустите с NUXT_PUBLIC_METRIKA_ENABLED=1",
 );
 
-const COUNTER = 113582832;
+const COUNTER = 113941581;
 
 /** Очередь официального загрузчика: ym.a = [[id, method, ...args], ...]. */
 type YmQueueCall = [unknown, string, ...unknown[]];

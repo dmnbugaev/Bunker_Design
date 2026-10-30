@@ -32,7 +32,7 @@ const smartCaptcha = {
   img: " https://smartcaptcha.ru",
   connect: " https://smartcaptcha.ru",
 };
-// Яндекс.Метрика 113582832: скрипт tag.js и отправка данных
+// Яндекс.Метрика 113941581: скрипт tag.js и отправка данных
 // (хиты, Вебвизор, карта кликов) — только mc.yandex.ru, РФ.
 const yandexMetrika = {
   script: " https://mc.yandex.ru",
