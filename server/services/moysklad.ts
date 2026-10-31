@@ -11,6 +11,7 @@ import { storeHours } from "../data/store-hours";
 import { storeLicenses } from "../data/store-licenses";
 import { storeNames } from "../data/store-names";
 import { extraStores, extraStoreCities } from "../data/extra-stores";
+import { orderCatalogCategories } from "../utils/catalog-order";
 
 const API = "https://api.moysklad.ru/api/remap/1.2/";
 const PAGE_SIZE = 1000;
@@ -481,7 +482,7 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
     (a, b) =>
       a.cityId.localeCompare(b.cityId) || a.name.localeCompare(b.name, "ru"),
   );
-  const rootCounts = new Map<string, number>();
+  // Обложки категорий: первая картинка товара ветви, у кого своей нет.
   for (const product of classified.products) {
     let id: string | null = product.categoryId;
     const visited = new Set<string>();
@@ -491,15 +492,16 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
       if (!category) break;
       if (!category.image && product.images[0])
         category.image = product.images[0].src;
-      if (!category.parentId) rootCounts.set(id, (rootCounts.get(id) ?? 0) + 1);
       id = category.parentId;
     }
   }
-  classified.meta.categories.sort((a, b) =>
-    !a.parentId && !b.parentId
-      ? (rootCounts.get(b.id) ?? 0) - (rootCounts.get(a.id) ?? 0) ||
-        a.name.localeCompare(b.name, "ru")
-      : a.name.localeCompare(b.name, "ru"),
+  // Порядок каталога: корни — по числу товаров ветви, дети — по алфавиту.
+  // Раздельными проходами (см. server/utils/catalog-order.ts): общий sort
+  // с компаратором «корень vs ребёнок → алфавит» неконсистентен и на
+  // живом дереве перемешивал корни.
+  classified.meta.categories = orderCatalogCategories(
+    classified.meta.categories,
+    classified.products,
   );
   return classified;
 }

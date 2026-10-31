@@ -169,28 +169,20 @@
     ],
     "categories": [
       {
-        "id": "cat-devices",
-        "name": "Устройства",
-        "parentId": null,
-        "slug": "cat-devices",
-        "description": "Товары категории «Устройства».",
-        "image": "/images/fx-vmate.webp"
-      },
-      {
-        "id": "cat-disposables",
-        "name": "Одноразовые ЭС",
-        "parentId": null,
-        "slug": "cat-disposables",
-        "description": "Товары категории «Одноразовые ЭС».",
-        "image": "/images/fx-stels.webp"
-      },
-      {
         "id": "cat-liquids",
         "name": "Жидкости",
         "parentId": null,
         "slug": "cat-liquids",
         "description": "Товары категории «Жидкости».",
         "image": "/images/fx-liquid-1.webp"
+      },
+      {
+        "id": "cat-devices",
+        "name": "Устройства",
+        "parentId": null,
+        "slug": "cat-devices",
+        "description": "Товары категории «Устройства».",
+        "image": "/images/fx-vmate.webp"
       },
       {
         "id": "cat-drinks",
@@ -200,12 +192,12 @@
         "description": "Товары категории «Напитки»."
       },
       {
-        "id": "cat-tea",
-        "name": "Чай",
-        "parentId": "cat-drinks",
-        "slug": "cat-tea",
-        "description": "Товары категории «Чай».",
-        "image": "/images/fx-tea.webp"
+        "id": "cat-disposables",
+        "name": "Одноразовые ЭС",
+        "parentId": null,
+        "slug": "cat-disposables",
+        "description": "Товары категории «Одноразовые ЭС».",
+        "image": "/images/fx-stels.webp"
       },
       {
         "id": "cat-snacks",
@@ -222,6 +214,20 @@
         "description": "Товары категории «Ароматизаторы»."
       },
       {
+        "id": "cat-vex-used",
+        "name": "Б/у устройства (VEX)",
+        "parentId": null,
+        "slug": "cat-vex-used",
+        "description": "Товары категории «Б/у устройства (VEX)»."
+      },
+      {
+        "id": "cat-other",
+        "name": "Другое",
+        "parentId": null,
+        "slug": "cat-other",
+        "description": "Товары категории «Другое»."
+      },
+      {
         "id": "cat-pouches",
         "name": "Жевательный табак",
         "parentId": null,
@@ -229,11 +235,11 @@
         "description": "Товары категории «Жевательный табак»."
       },
       {
-        "id": "cat-nbs",
-        "name": "Новая папка",
+        "id": "cat-lighters",
+        "name": "Зажигалки",
         "parentId": null,
-        "slug": "cat-nbs",
-        "description": "Товары категории «Новая папка»."
+        "slug": "cat-lighters",
+        "description": "Товары категории «Зажигалки»."
       },
       {
         "id": "cat-hookahs",
@@ -243,11 +249,32 @@
         "description": "Товары категории «Кальяны»."
       },
       {
-        "id": "cat-hookah-tobacco",
-        "name": "Табак для кальяна",
+        "id": "cat-cartridges-alt",
+        "name": "Картриджи / Испарители",
         "parentId": null,
-        "slug": "cat-hookah-tobacco",
-        "description": "Товары категории «Табак для кальяна»."
+        "slug": "cat-cartridges-alt",
+        "description": "Товары категории «Картриджи / Испарители»."
+      },
+      {
+        "id": "cat-cartridges",
+        "name": "Картриджи и Испарители",
+        "parentId": null,
+        "slug": "cat-cartridges",
+        "description": "Товары категории «Картриджи и Испарители»."
+      },
+      {
+        "id": "cat-nbs",
+        "name": "Новая папка",
+        "parentId": null,
+        "slug": "cat-nbs",
+        "description": "Товары категории «Новая папка»."
+      },
+      {
+        "id": "cat-prefilled",
+        "name": "Предзаправленные картриджи",
+        "parentId": null,
+        "slug": "cat-prefilled",
+        "description": "Товары категории «Предзаправленные картриджи»."
       },
       {
         "id": "cat-cigarettes",
@@ -264,46 +291,19 @@
         "description": "Товары категории «Системы нагревания»."
       },
       {
-        "id": "cat-cartridges",
-        "name": "Картриджи и Испарители",
+        "id": "cat-hookah-tobacco",
+        "name": "Табак для кальяна",
         "parentId": null,
-        "slug": "cat-cartridges",
-        "description": "Товары категории «Картриджи и Испарители»."
+        "slug": "cat-hookah-tobacco",
+        "description": "Товары категории «Табак для кальяна»."
       },
       {
-        "id": "cat-prefilled",
-        "name": "Предзаправленные картриджи",
-        "parentId": null,
-        "slug": "cat-prefilled",
-        "description": "Товары категории «Предзаправленные картриджи»."
-      },
-      {
-        "id": "cat-vex-used",
-        "name": "Б/у устройства (VEX)",
-        "parentId": null,
-        "slug": "cat-vex-used",
-        "description": "Товары категории «Б/у устройства (VEX)»."
-      },
-      {
-        "id": "cat-other",
-        "name": "Другое",
-        "parentId": null,
-        "slug": "cat-other",
-        "description": "Товары категории «Другое»."
-      },
-      {
-        "id": "cat-lighters",
-        "name": "Зажигалки",
-        "parentId": null,
-        "slug": "cat-lighters",
-        "description": "Товары категории «Зажигалки»."
-      },
-      {
-        "id": "cat-cartridges-alt",
-        "name": "Картриджи / Испарители",
-        "parentId": null,
-        "slug": "cat-cartridges-alt",
-        "description": "Товары категории «Картриджи / Испарители»."
+        "id": "cat-tea",
+        "name": "Чай",
+        "parentId": "cat-drinks",
+        "slug": "cat-tea",
+        "description": "Товары категории «Чай».",
+        "image": "/images/fx-tea.webp"
       }
     ],
     "brands": [],
