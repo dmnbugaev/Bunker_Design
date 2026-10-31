@@ -75,6 +75,22 @@ function normalizeAttributeName(name: string | undefined): string {
   return (name ?? "").trim().toLocaleLowerCase("ru").replace(/\s+/g, " ");
 }
 
+/**
+ * Публичные имена папок, отличающиеся от учётных имён «МойСклад» (в аккаунте
+ * бывают корни капсом — «СИГАРЕТЫ»). Ключ — нормализованное имя как в
+ * classifyRootCategory, значение — публичное имя. Классификация не зависит
+ * от регистра и работает по исходному имени папки.
+ */
+const FOLDER_DISPLAY_NAMES: Record<string, string> = {
+  сигареты: "Сигареты",
+};
+
+/** Публичное имя категории: переопределение из карты либо имя как есть. */
+export function displayNameForFolder(name: string): string {
+  const key = name.trim().toLocaleLowerCase("ru").replace(/\s+/g, " ");
+  return FOLDER_DISPLAY_NAMES[key] ?? name;
+}
+
 /** Имена дополнительных полей в нормализованном виде для сопоставления. */
 function attrPublishKey(): string {
   return normalizeAttributeName(ATTR_PUBLISH_NAME);
@@ -374,8 +390,8 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
     .map((folder) => ({
       id: folder.id,
       slug: folder.id,
-      name: folder.name,
-      description: `Товары категории «${folder.name}».`,
+      name: displayNameForFolder(folder.name),
+      description: `Товары категории «${displayNameForFolder(folder.name)}».`,
       parentId: idOf(folder.productFolder) ?? null,
     }));
   const categoryNames = new Map(categories.map((item) => [item.id, item.name]));
