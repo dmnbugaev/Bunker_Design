@@ -1775,6 +1775,16 @@
           "id": "fx-tea-oolong-0",
           "src": "/images/fx-tea.webp",
           "alt": "Китайский чай «Молочный улун», 50 г — изображение 1"
+        },
+        {
+          "id": "fx-tea-oolong-1",
+          "src": "/images/fx-liquid-1.webp",
+          "alt": "Китайский чай «Молочный улун», 50 г — изображение 2"
+        },
+        {
+          "id": "fx-tea-oolong-2",
+          "src": "/images/fx-liquid-2.webp",
+          "alt": "Китайский чай «Молочный улун», 50 г — изображение 3"
         }
       ],
       "unit": "1 шт",

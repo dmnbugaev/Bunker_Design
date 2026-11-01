@@ -131,6 +131,42 @@ test("product page separates compatibility from the description", async ({
   expect(compatBox.y).toBeGreaterThanOrEqual(paragraph.y + paragraph.height);
 });
 
+test("catalog card flips through photos when a product has several", async ({
+  page,
+}) => {
+  await open(page);
+  // Фикстура: у молочного улуна три фото — карточка получает стрелки
+  // и точки; однофото-товары управляющих элементов не имеют.
+  const card = page.locator(".product-card", {
+    hasText: "Молочный улун",
+  });
+  await expect(card).toBeVisible();
+  const visual = card.locator(".product-card__visual");
+  const front = visual.locator("img.product-image__front");
+  await expect(front).toHaveAttribute("src", "/images/fx-tea.webp");
+  const dots = card.locator(".product-card__dot");
+  await expect(dots).toHaveCount(3);
+  await expect(dots.nth(0)).toHaveClass(/product-card__dot--active/);
+  // Стрелки проявляются только по hover: вне подсказки мыши прозрачны.
+  const next = card.getByRole("button", { name: "Следующее фото товара" });
+  await expect(next).toHaveCSS("opacity", "0");
+  await visual.hover();
+  // Листание зациклено: шаг назад с первого фото показывает последнее.
+  await card.getByRole("button", { name: "Предыдущее фото товара" }).click();
+  await expect(front).toHaveAttribute("src", "/images/fx-liquid-2.webp");
+  await expect(dots.nth(2)).toHaveClass(/product-card__dot--active/);
+  // Шаг вперёд с последнего возвращает на первое, дальше — второе.
+  await next.click();
+  await expect(front).toHaveAttribute("src", "/images/fx-tea.webp");
+  await expect(dots.nth(0)).toHaveClass(/product-card__dot--active/);
+  await next.click();
+  await expect(front).toHaveAttribute("src", "/images/fx-liquid-1.webp");
+  await expect(dots.nth(1)).toHaveClass(/product-card__dot--active/);
+  // Клик по фото по-прежнему ведёт в карточку товара.
+  await visual.locator(".product-card__link").click();
+  await expect(page).toHaveURL(/\/product\/fx-tea-oolong/);
+});
+
 test("instant filters: availability is on by default, photo filter removed", async ({
   page,
 }) => {
