@@ -139,13 +139,22 @@ onMounted(() => {
       <div class="catalog-store">
         <span class="catalog-store__icon" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M12 21s-6.5-5.5-6.5-10.5a6.5 6.5 0 1 1 13 0C18.5 15.5 12 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+            <path
+              d="M12 21s-6.5-5.5-6.5-10.5a6.5 6.5 0 1 1 13 0C18.5 15.5 12 21 12 21Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
             <circle cx="12" cy="10.5" r="2.25" fill="currentColor" />
           </svg>
         </span>
         <div class="catalog-store__info">
-          <span class="catalog-store__label">{{ store ? "Цены и наличие" : "Минимальная цена по городам" }}</span>
-          <span class="catalog-store__value">{{ store ? `${city?.name} · ${store.name}` : "по всем магазинам сети" }}</span>
+          <span class="catalog-store__label">{{
+            store ? "Цены и наличие" : "Минимальная цена по городам"
+          }}</span>
+          <span class="catalog-store__value">{{
+            store ? `${city?.name} · ${store.name}` : "по всем магазинам сети"
+          }}</span>
         </div>
         <button
           type="button"

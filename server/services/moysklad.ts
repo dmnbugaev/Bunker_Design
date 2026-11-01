@@ -83,7 +83,7 @@ function normalizeAttributeName(name: string | undefined): string {
  */
 const FOLDER_DISPLAY_NAMES: Record<string, string> = {
   сигареты: "Сигареты",
-  'ремонт с магазинов': 'Ремонт с магазинов',
+  "ремонт с магазинов": "Ремонт с магазинов",
 };
 
 /** Публичное имя категории: переопределение из карты либо имя как есть. */
