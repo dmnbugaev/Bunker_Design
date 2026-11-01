@@ -1,6 +1,31 @@
 <script setup lang="ts">
 import type { Category } from "~~/shared/types/category";
+
 defineProps<{ categories: Category[] }>();
+
+// Фолббек-арт направлений: брендовые снимки из design-kit для ветвей, в
+// которых в МойСклад ещё нет ни одной фотографии товара. Живая обложка
+// (фото товара ветви) всегда важнее арта; сопоставление — по
+// нормализованному имени корня (порядок корней зависит от склада).
+const FALLBACK_ART: Record<string, string> = {
+  жидкости: "/images/fx-liquid-1.webp",
+  устройства: "/images/fx-pod.webp",
+  "одноразовые эс": "/images/fx-stels.webp",
+  "табак для кальяна": "/images/fx-tea.webp",
+  ароматизаторы: "/images/fx-liquid-2.webp",
+  "vape express": "/images/storefront.webp",
+};
+function artFor(category: Category):
+  | {
+      id: string;
+      src: string;
+      alt: string;
+    }
+  | undefined {
+  const key = category.name.trim().toLocaleLowerCase("ru").replace(/\s+/g, " ");
+  const src = category.image ?? FALLBACK_ART[key];
+  return src ? { id: category.id, src, alt: category.name } : undefined;
+}
 </script>
 <template>
   <UiContainer as="section" class="section"
@@ -19,14 +44,7 @@ defineProps<{ categories: Category[] }>();
         class="category-tile"
       >
         <span class="category-tile__window">
-          <ProductImage
-            :image="
-              category.image
-                ? { id: category.id, src: category.image, alt: category.name }
-                : undefined
-            "
-            :label="category.name"
-          />
+          <ProductImage :image="artFor(category)" :label="category.name" />
         </span>
         <span class="category-tile__name">{{ category.name }}</span>
       </NuxtLink>

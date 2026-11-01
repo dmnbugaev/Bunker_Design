@@ -765,8 +765,17 @@ button.text-link {
 /* ─── Юридическая плашка и cookie ────────────────────────────────────── */
 
 .legal-notice {
-  background: var(--color-bg-secondary);
-  border-bottom: var(--border-thin) solid var(--color-border-default);
+  /* Мягкий коралловый отлив слева: плашка читается как «важное»,
+     но остаётся тихой на фоне контента. */
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-primary) 7%, transparent),
+      transparent 55%
+    ),
+    var(--color-bg-secondary);
+  border-bottom: var(--border-thin) solid
+    color-mix(in srgb, var(--color-primary) 25%, var(--color-border-default));
 }
 /* Одна строка компоновки на любой ширине: символ, текст и крестик всегда
    в одном ряду — текст забирает всё свободное место и переносится сам,
@@ -788,17 +797,21 @@ button.text-link {
   max-width: none;
   margin: 0;
   font-size: var(--font-size-caption);
-  line-height: var(--line-compact);
-  color: var(--color-text-muted);
+  line-height: 1.45;
+  color: var(--color-text-secondary);
   text-wrap: balance;
 }
 .legal-notice__content a {
-  color: var(--color-text-secondary);
-  /* Инлайн-ссылка внутри текста: расширяем цель касания вверх/вниз
-     без влияния на строки (в негативном margin высота блока не растёт). */
-  padding-block: 0.375rem;
-  margin-block: -0.375rem;
+  color: var(--color-link);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color var(--duration-fast) var(--easing-standard);
 }
+.legal-notice__content a:hover {
+  color: var(--color-link-hover);
+}
+/* Символ — коралловая плитка со срезанным углом (мотив «плитки» бренда):
+   вместо тихой обводки — заметный маркер «важного». */
 .legal-notice__symbol {
   display: inline-flex;
   align-items: center;
@@ -806,11 +819,16 @@ button.text-link {
   width: 1.625rem;
   height: 1.625rem;
   flex-shrink: 0;
-  border: var(--border-thin) solid
-    color-mix(in srgb, var(--color-primary) 55%, transparent);
-  border-radius: 50%;
-  color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   font-weight: 800;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 0.4rem),
+    calc(100% - 0.4rem) 100%,
+    0 100%
+  );
 }
 .legal-notice__close {
   display: inline-flex;
@@ -1114,6 +1132,15 @@ button.text-link {
 .stores-toolbar__geo svg {
   flex-shrink: 0;
   color: var(--color-primary);
+}
+/* На телефоне кнопка геолокации — той же ширины, что поле поиска над ней. */
+@media (max-width: 47.99rem) {
+  .stores-toolbar__side {
+    justify-items: stretch;
+  }
+  .stores-toolbar__geo {
+    width: 100%;
+  }
 }
 
 /* Чипы города в пикере: один клик фильтрует список точек, повторный —
@@ -2209,21 +2236,59 @@ button.text-link {
 .catalog-loading .skeleton-box {
   aspect-ratio: 1;
 }
-/* Контекст магазина — строка-ведомость на hairline (как в пикере магазина),
-   без коробки: город, точка и ссылка «Изменить». */
+/* Контекст магазина в шапке каталога — карточка с пином: подпись, точка
+   сети и действие в одной плите, выровненной по низу заголовка. */
 .catalog-store {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: flex-end;
-  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  gap: var(--space-3);
   margin-left: auto;
-  padding: var(--space-2) 0;
-  border-bottom: var(--border-thin) solid var(--color-border-default);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface-secondary);
+  border: var(--border-thin) solid var(--color-border-default);
+  border-radius: var(--radius-md);
   color: var(--color-text-secondary);
 }
-.catalog-store .caption {
+.catalog-store__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+.catalog-store__info {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+}
+.catalog-store__label {
+  color: var(--color-text-muted);
+}
+.catalog-store__value {
   color: var(--color-text-primary);
+  font-size: var(--font-size-body-sm);
+  font-weight: 650;
+}
+.catalog-store .button {
+  flex-shrink: 0;
+}
+@media (max-width: 47.99rem) {
+  .catalog-store {
+    width: 100%;
+    margin-left: 0;
+    /* Вертикальная компоновка: подпись и точка сверху на полной ширине,
+       действие — широкая кнопка строкой ниже (как футеры диалогов). */
+    flex-wrap: wrap;
+    row-gap: var(--space-2);
+  }
+  .catalog-store__info {
+    flex: 1 1 calc(100% - 2.5rem);
+  }
+  .catalog-store .button {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+  .catalog-store__value {
+    overflow-wrap: anywhere;
+  }
 }
 
 .filter-chips {
