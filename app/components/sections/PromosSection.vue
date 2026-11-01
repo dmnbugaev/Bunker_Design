@@ -397,14 +397,17 @@ onBeforeUnmount(() => {
   --ink: var(--color-on-primary);
   --background: var(--color-text-primary);
   --gutter: var(--space-container);
-  --section-space: var(--space-16);
+  /* Ритм секции как у исходника: 128px → 96px (≤89.99rem) → 64px
+     (≤47.99rem) — шаги дизайн-системы ProHook, от которой портирован
+     блок; бункерная шкала space таких крупных секционных шагов не имеет. */
+  --section-space: 8rem;
   --radius-card: var(--radius-md);
   --radius-control: var(--radius-sm);
   --weight-semibold: 600;
   --weight-bold: 700;
   --weight-extrabold: 800;
   --duration-panel: var(--duration-normal);
-  background: var(--color-bg-secondary);
+  background: #000;
   color: var(--color-text-primary);
   /* Светлая полоса между витриной «Новинок» и чёрной плашкой: без неё край
      плашки прилипает к карточкам — прежний отступ был только внутри чёрного
@@ -778,6 +781,39 @@ onBeforeUnmount(() => {
   }
   .promo-card {
     transition: none;
+  }
+}
+
+/* Заголовок секции как у исходника: две колонки (1.2fr 1fr), подсказка
+   прижата вправо к базовой линии заголовка; на телефоне — стопкой. */
+.promos .section-heading {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: end;
+  gap: var(--space-12);
+  margin-bottom: var(--space-12);
+}
+.promos .section-heading > p {
+  justify-self: end;
+  max-width: 36ch;
+}
+@media (max-width: 89.99rem) {
+  .promos {
+    --section-space: 6rem;
+  }
+}
+@media (max-width: 47.99rem) {
+  .promos {
+    --section-space: 4rem;
+  }
+  .promos .section-heading {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    margin-bottom: var(--space-8);
+  }
+  .promos .section-heading > p {
+    justify-self: start;
+    text-align: left;
   }
 }
 </style>
