@@ -79,8 +79,9 @@ test("banned and unclassified categories are never published; pouches are publis
       headers,
     })
   ).json();
-  // 29 позиций фикстуры минус непубликуемая nbc-01 из корня «Новая папка».
-  expect(list.total).toBe(28);
+  // 30 позиций фикстуры минус непубликуемая nbc-01 из корня «Новая папка»
+  // (ветка Vape Express добавлена 01.11.2026: fx-vex-vinci + fx-vex-argus).
+  expect(list.total).toBe(29);
   const pouch = list.items.find(
     (item: { slug: string }) => item.slug === "chew-01",
   );
@@ -260,10 +261,18 @@ test("used-devices section is gated and points to Vape Express communities", asy
     await expect(link).toHaveAttribute("target", "_blank");
     await expect(link).toHaveAttribute("rel", "noopener noreferrer");
   }
-  // Витрина комиссии — категория «Б/у устройства (VEX)» из каталога.
+  // Витрина комиссии — корень «Vape Express» из каталога: на странице
+  // живёт мини-каталог ветки (подпапка «РЕМОНТ с магазинов» + товары).
   await expect(
-    page.getByRole("link", { name: "Открыть в каталоге" }),
-  ).toHaveAttribute("href", "/catalog/cat-vex-used");
+    page.getByRole("heading", { name: "Каталог б/у устройств" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "РЕМОНТ с магазинов" }),
+  ).toHaveAttribute("href", "/catalog/cat-vex-repair");
+  await expect(
+    page.getByRole("link", { name: "Открыть весь раздел" }),
+  ).toHaveAttribute("href", "/catalog/cat-vex-express");
+  await expect(page.locator(".product-card")).not.toHaveCount(0);
   // Раздел доступен из основной навигации шапки.
   await expect(
     page.locator(".desktop-nav").getByRole("link", { name: "Б/у устройства" }),

@@ -63,9 +63,6 @@ async function submit() {
 
 <template>
   <UiContainer class="page-shell">
-    <UiBreadcrumbs
-      :items="[{ label: 'Главная', to: '/' }, { label: 'Вход' }]"
-    />
     <div class="auth-page">
       <div class="auth-intro">
         <p class="eyebrow">Личный кабинет</p>

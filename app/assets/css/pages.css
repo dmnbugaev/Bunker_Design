@@ -333,6 +333,32 @@ button.text-link {
   rotate: 180deg;
 }
 
+/* На лэптопе (64–80rem) шапке физически не хватает места полной табличке:
+   шесть пунктов меню + три иконки + бренд оставляют тексту ~14px, имя точки
+   сжималось в однобуквенный ellipsis. В этом диапазоне табличка сворачивается
+   до пина-кнопки в ряду иконок; текст визуально скрыт, но остаётся в
+   доступном имени кнопки. Полная табличка — от десктопа (80rem). */
+@media (min-width: 64rem) and (max-width: 79.99rem) {
+  .store-trigger {
+    max-width: none;
+    padding-inline: var(--space-2);
+  }
+  .store-trigger__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+  .store-trigger__chevron {
+    display: none;
+  }
+}
+
 .icon-button {
   display: inline-flex;
   align-items: center;
@@ -464,10 +490,11 @@ button.text-link {
   }
 }
 
-/* Экстремально узкие экраны (Galaxy Fold, 280px): бренд и иконки ещё
-   компактнее; вход в аккаунт скрыт — он продублирован первым пунктом
-   мобильного меню, а поиск/список/менё остаются в шапке. */
-@media (max-width: 20rem) {
+/* Узкая полоса 321–336px: «средний» режим шапки (бренд 18px + 4 иконки 44px)
+   требует ~332px — не влезает. Компактный режим (вход в аккаунт скрыт — он
+   продублирован первым пунктом мобильного меню) включаем уже с 336px вниз,
+   включая экстремально узкие экраны (Galaxy Fold, 280px). */
+@media (max-width: 21rem) {
   .app-header {
     gap: var(--space-2);
     padding-inline: var(--space-2);
@@ -717,6 +744,23 @@ button.text-link {
   font-size: 0.75rem;
   clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
 }
+/* На телефоне юридическая строка центрируется: короткие ссылки и бейдж
+   без этого выглядят рваной стопкой у левого края. */
+@media (max-width: 47.99rem) {
+  .footer-bottom {
+    justify-content: center;
+    text-align: center;
+  }
+  .footer-bottom__legal {
+    justify-content: center;
+  }
+  .footer-bottom nav {
+    justify-content: center;
+  }
+  .footer-bottom__age {
+    margin-right: 0;
+  }
+}
 
 /* ─── Юридическая плашка и cookie ────────────────────────────────────── */
 
@@ -921,7 +965,10 @@ button.text-link {
    пикер становится нижним листом — по образцу диалога мобильного меню. */
 .store-dialog {
   position: fixed;
-  top: calc(var(--header-height) + var(--space-2));
+  /* Пока юридическая плашка не закрыта, sticky-шапка сдвинута вниз на её
+     высоту (--legal-notice-h, публикует LegalNotice) — панель обязана
+     открываться ПОД шапкой, а не поверх неё. */
+  top: calc(var(--header-height) + var(--legal-notice-h, 0px) + var(--space-2));
   right: max(
     var(--space-container),
     calc(50% - var(--container-max) / 2 + var(--space-container))
@@ -930,7 +977,9 @@ button.text-link {
   bottom: auto;
   margin: 0;
   width: min(calc(100vw - 2 * var(--space-container)), 26rem);
-  max-height: calc(100dvh - var(--header-height) - var(--space-8));
+  max-height: calc(
+    100dvh - var(--header-height) - var(--legal-notice-h, 0px) - var(--space-8)
+  );
   border-top: 2px solid var(--color-primary);
   animation: panel-drop var(--duration-normal) var(--easing-emphasized);
 }
@@ -972,7 +1021,11 @@ button.text-link {
 @media (max-width: 63.99rem) {
   .store-dialog {
     margin: auto auto 0;
+    /* bottom: 0 обязателен: у fixed с top: auto Firefox ставит бокс
+       в «статическую позицию» конца DOM (за пределами вьюпорта),
+       Chromium маскирует это центрированием top-layer. */
     top: auto;
+    bottom: 0;
     right: 0;
     left: 0;
     width: 100%;
@@ -1109,7 +1162,7 @@ button.text-link {
   margin: 0;
   border: 0;
   padding: 0;
-  max-height: min(26rem, 55vh);
+  max-height: min(26rem, 55dvh);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -1833,13 +1886,12 @@ button.text-link {
   justify-self: start;
 }
 
-/* Контактные строки и ссылки согласий — инлайн-ссылки с достаточной
-   целью касания (WCAG 2.5.8: ≥24px). */
+/* Контактные строки и ссылки согласий — обычные инлайн-ссылки внутри
+   текста: переносятся вместе со словами, а не распадаются на «кнопки»,
+   рвущие строку (цель касания ≥24px даёт padding-block, WCAG 2.5.8). */
 .register-consent a,
 .partner-form__consent-links a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.5rem;
+  padding-block: 0.25rem;
 }
 
 /* Сервисы комиссии (Vape Express) — панель с коралловым отливом:
@@ -1898,13 +1950,18 @@ button.text-link {
 
 /* ─── Б/у устройства (/used) ──────────────────────────────────────────── */
 
-/* Переход к витрине «Б/у устройства (VEX)» под панелью сервиса. */
-.used-page__catalog {
+/* Каталог комиссионной ветки «Vape Express»: заголовок, чипы подпапок
+   (бренды, «РЕМОНТ с магазинов»), витрина карточек и переход в раздел
+   каталога. Сетка карточек — общий .product-grid. */
+.used-catalog {
+  display: grid;
+  gap: var(--space-5);
+}
+.used-catalog__head {
   display: grid;
   gap: var(--space-2);
-  max-width: 65ch;
 }
-.used-page__catalog h2 {
+.used-catalog__head h2 {
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--font-size-h3);
@@ -1912,13 +1969,21 @@ button.text-link {
   text-transform: uppercase;
   color: var(--color-text-primary);
 }
-.used-page__catalog p {
+.used-catalog__head p {
   margin: 0;
+  max-width: 65ch;
   color: var(--color-text-secondary);
 }
-.used-page__catalog .button {
-  justify-self: start;
-  margin-block-start: var(--space-2);
+.used-catalog__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.used-catalog__count {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-body-sm);
 }
 
 /* ─── Каталог ────────────────────────────────────────────────────────── */
@@ -2026,7 +2091,7 @@ button.text-link {
 .catalog-nav {
   display: grid;
   align-content: start;
-  max-height: min(34rem, 70vh);
+  max-height: min(34rem, 70dvh);
   overflow-y: auto;
   scrollbar-width: thin;
   border-top: var(--border-thin) solid var(--color-border-default);
@@ -2107,6 +2172,15 @@ button.text-link {
   }
   .catalog-toolbar__controls {
     width: 100%;
+    /* «Фильтры» и сортировка — в один ряд: кнопка по содержимому,
+       селект забирает остаток; без переноса кнопка не висит криво
+       отдельной строкой над селектом. */
+    flex-wrap: nowrap;
+    align-items: end;
+  }
+  .catalog-toolbar__controls .field {
+    flex: 1;
+    min-width: 0;
   }
 }
 .catalog-results {
@@ -2328,6 +2402,20 @@ button.text-link {
   overflow-wrap: anywhere;
   transition: color var(--duration-fast) var(--easing-standard);
 }
+/* На телефоне плитка ~130–170px: наборный кегль 17px рвёт длинные имена
+   («АРОМАТИЗАТОРЫ», «ОДНОРАЗОВЫЕ ЭС») посреди слова — шаги вниз держат
+   слово в одну строку (при 320px трек ≈136px, самому длинному слову
+   нужно 13px). */
+@media (max-width: 47.99rem) {
+  .category-tile__name {
+    font-size: 0.9375rem;
+  }
+}
+@media (max-width: 22.49rem) {
+  .category-tile__name {
+    font-size: 0.8125rem;
+  }
+}
 .category-tile:hover .category-tile__name,
 .category-tile:focus-visible .category-tile__name {
   color: var(--color-primary-hover);
@@ -2383,6 +2471,10 @@ button.text-link {
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: var(--tracking-overline);
+  /* Длинные корневые категории («Предзаправленные картриджи») в узкой
+     колонке (280–304px) не влезают одним словом и распирают карточку
+     за пределы трека сетки. */
+  overflow-wrap: anywhere;
 }
 .product-card__name {
   margin: 0;
@@ -2402,9 +2494,11 @@ button.text-link {
 .product-card__name a:hover {
   color: var(--color-link);
 }
-/* Цена — якорь карточки: крупная, табличные цифры (выравнивание в сетке). */
+/* Цена — якорь карточки: крупная, табличные цифры (выравнивание в сетке).
+   Отступы задаёт gap тела карточки — без собственных margin, чтобы ритм
+   текстовых строк был равномерный. */
 .product-card .product-price {
-  margin: var(--space-1) 0 var(--space-2);
+  margin: 0;
   font-size: 1.375rem;
   font-weight: 800;
   line-height: var(--line-compact);
@@ -2517,6 +2611,10 @@ button.text-link {
   font-size: var(--font-size-body-sm);
   text-align: center;
   padding: var(--space-4);
+  /* «Изображение доступно совершеннолетним»: без переноса длинные слова
+     («совершеннолетним») распирают окно и выталкивают карточку за трек
+     сетки на узких экранах (280–304px). Свойство наследуется на спаны. */
+  overflow-wrap: anywhere;
 }
 .image-placeholder--restricted {
   border-style: dashed;
@@ -2750,7 +2848,7 @@ button.text-link {
   box-shadow: var(--shadow-overlay);
   /* 8 подсказок не должны вылезать за нижний край окна: на низких
      экранах список скроллится внутри себя. */
-  max-height: min(26rem, 60vh);
+  max-height: min(26rem, 60dvh);
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -2968,9 +3066,11 @@ button.text-link {
   background: url("/images/smoke-hero.webp") center / contain no-repeat;
   filter: saturate(0.82) contrast(1.06);
   mix-blend-mode: screen;
+  /* backwards: дрейф держит стартовый кадр всю задержку (пока идёт bloom),
+     поэтому в момент передачи масштаб непрерывен — дым не дёргается. */
   animation:
     smoke-bloom 1400ms var(--easing-emphasized) both,
-    smoke-drift 13s 1400ms ease-in-out infinite alternate;
+    smoke-drift 13s 1400ms ease-in-out infinite alternate backwards;
 }
 .hero__smoke--two {
   top: auto;
@@ -2981,9 +3081,11 @@ button.text-link {
   opacity: 0.45;
   rotate: 11deg;
   background-image: url("/images/smoke-hero-2.webp");
+  /* alternate (не reverse): обратный старт брал бы кадр scale(1.08) и
+     дёргал слой в момент окончания bloom. */
   animation:
     smoke-bloom 1600ms 120ms var(--easing-emphasized) both,
-    smoke-drift 16s 1720ms ease-in-out infinite alternate-reverse;
+    smoke-drift 16s 1720ms ease-in-out infinite alternate backwards;
 }
 .hero__smoke--three {
   top: auto;
@@ -2997,7 +3099,7 @@ button.text-link {
   background-image: url("/images/smoke-bonus.webp");
   animation:
     smoke-bloom 1700ms 220ms var(--easing-emphasized) both,
-    smoke-drift 18s 1920ms ease-in-out infinite alternate;
+    smoke-drift 18s 1920ms ease-in-out infinite alternate backwards;
 }
 .hero__spark {
   position: absolute;
@@ -3025,7 +3127,7 @@ button.text-link {
   left: 0;
   right: 0;
   bottom: 0;
-  height: clamp(5rem, 12vh, 9rem);
+  height: clamp(5rem, 12dvh, 9rem);
   background: linear-gradient(to bottom, transparent, var(--color-bg-primary));
   pointer-events: none;
 }
@@ -3044,14 +3146,17 @@ button.text-link {
     min(54rem, 72vw) auto no-repeat;
   mask-image: linear-gradient(to top, black 18%, transparent 94%);
 }
+/* Масштаб дрейфа живёт в transform (а не в индивидуальном scale), чтобы
+   composing-ом накладываться на масштаб bloom: оба эффекта действуют
+   одновременно и передача между анимациями проходит без скачка. */
 @keyframes smoke-drift {
   from {
     translate: -2% -3%;
-    scale: 0.96;
+    transform: scale(0.96);
   }
   to {
     translate: 5% 4%;
-    scale: 1.08;
+    transform: scale(1.08);
   }
 }
 @keyframes smoke-bloom {
@@ -3087,36 +3192,6 @@ button.text-link {
     rotate: 7deg;
     filter: blur(10px);
   }
-}
-
-.hero__bottom {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding-top: var(--space-4);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-caption);
-  letter-spacing: var(--tracking-overline);
-  text-transform: uppercase;
-  animation: hero-copy-in 600ms 860ms var(--easing-standard) both;
-}
-.hero__bottom-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: 2rem;
-  padding-block: var(--space-1);
-  color: var(--color-text-muted);
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--easing-standard);
-}
-.hero__bottom-link:hover {
-  color: var(--color-text-primary);
-}
-.small-mark {
-  color: var(--color-primary);
 }
 
 /* Наклонная лента шире вьюпорта: режем горизонтальный скролл, не трогая
@@ -3299,7 +3374,7 @@ button.text-link {
   mix-blend-mode: screen;
   animation:
     smoke-bloom 1500ms var(--easing-emphasized) both,
-    smoke-drift 14s 1500ms ease-in-out infinite alternate;
+    smoke-drift 14s 1500ms ease-in-out infinite alternate backwards;
 }
 .about-hero__smoke--two {
   top: auto;
@@ -3313,7 +3388,7 @@ button.text-link {
   background-image: url("/images/smoke-hero-2.webp");
   animation:
     smoke-bloom 1700ms 140ms var(--easing-emphasized) both,
-    smoke-drift 17s 1840ms ease-in-out infinite alternate-reverse;
+    smoke-drift 17s 1840ms ease-in-out infinite alternate backwards;
 }
 
 /* Плавный вход в ленту-скотч и туман у пола — как у героя главной. */
@@ -3324,7 +3399,7 @@ button.text-link {
   left: 0;
   right: 0;
   bottom: 0;
-  height: clamp(5rem, 12vh, 9rem);
+  height: clamp(5rem, 12dvh, 9rem);
   background: linear-gradient(to bottom, transparent, var(--color-bg-primary));
   pointer-events: none;
 }
@@ -3439,17 +3514,15 @@ button.text-link {
   }
 }
 
+/* Преимущества и шаги — тройки: от планшета сразу три в ряд, как витрина
+   категорий (2 колонки на 48–80rem оставляли третью карточку сиротой
+   во втором ряду с пустотой справа). */
 .advantages {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-6);
 }
 @media (min-width: 48rem) {
-  .advantages {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 80rem) {
   .advantages {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -3465,11 +3538,6 @@ button.text-link {
   list-style: none;
 }
 @media (min-width: 48rem) {
-  .steps-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 80rem) {
   .steps-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -3489,11 +3557,6 @@ button.text-link {
   gap: var(--space-4);
 }
 @media (min-width: 48rem) {
-  .card-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 80rem) {
   .card-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -3592,6 +3655,12 @@ button.text-link {
 .auth-fields {
   display: grid;
   gap: var(--space-4);
+  /* Нативная рамка/поля fieldset гасим (как в partner-form): браузерный
+     padding-inline ~12px сужал поля на 16px относительно кнопок карточки. */
+  margin: 0;
+  border: 0;
+  padding: 0;
+  min-inline-size: 0;
 }
 .auth-actions {
   display: grid;
@@ -3610,17 +3679,19 @@ button.text-link {
 }
 
 .register-consent {
-  display: grid;
-  gap: var(--space-3);
+  /* Блок — обычный абзац: сетка расчленяла текст и ссылки на отдельные
+     строки (каждый дочерний узел — свой grid-item). */
   padding: var(--space-4);
   background: var(--color-surface-secondary);
   border: var(--border-thin) solid var(--color-border-default);
   border-radius: var(--radius-sm);
 }
-.register-consent .choice {
+/* Согласие регистрации — многострочный текст: чекбокс у первой строки,
+   а не по центру блока (align-items по умолчанию center). */
+.auth-form .choice {
   align-items: flex-start;
 }
-.register-consent .choice input {
+.auth-form .choice input {
   margin-top: 0.25rem;
 }
 
@@ -4142,7 +4213,9 @@ button.text-link {
 .state-example {
   display: grid;
   gap: var(--space-3);
-  justify-items: start;
+  /* Центр и по горизонтали тоже: заголовок, текст и кнопка пустого
+     состояния выстраиваются по оси карточки (text-align ниже). */
+  justify-items: center;
   padding: var(--space-10) var(--space-6);
   text-align: center;
   background: var(--color-surface-primary);
@@ -4155,6 +4228,7 @@ button.text-link {
 }
 .state-example p {
   margin: 0;
+  max-width: 44ch;
   color: var(--color-text-muted);
 }
 .state-symbol {
@@ -4313,8 +4387,7 @@ button.text-link {
   .hero__title,
   .hero__intro,
   .hero__copy .button,
-  .hero__visual,
-  .hero__bottom {
+  .hero__visual {
     animation: none;
   }
 }

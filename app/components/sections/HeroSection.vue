@@ -80,16 +80,6 @@ onBeforeUnmount(() => {
         />
         <span class="hero__stamp" aria-hidden="true">Bunker · Vape shop</span>
       </div>
-      <div class="hero__bottom">
-        <NuxtLink to="/catalog" class="hero__bottom-link"
-          >Каталог
-          <span class="small-mark" aria-hidden="true">↗</span></NuxtLink
-        >
-        <NuxtLink to="/stores" class="hero__bottom-link"
-          >Магазины сети
-          <span class="small-mark" aria-hidden="true">✳</span></NuxtLink
-        >
-      </div>
     </UiContainer>
   </section>
 </template>

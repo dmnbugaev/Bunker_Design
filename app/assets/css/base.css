@@ -6,6 +6,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Якоря не уезжают под sticky-шапку: та же высота на всех экранах
+     (мобайл 4rem прятал заголовок на 8px — шапка и там 4.5rem). */
   scroll-padding-top: calc(var(--header-height) + 1rem);
 }
 
@@ -166,9 +168,6 @@ p {
 }
 
 @media (max-width: 47.99rem) {
-  html {
-    scroll-padding-top: 4rem;
-  }
   .section {
     padding-block: var(--space-20);
   }

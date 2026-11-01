@@ -130,9 +130,6 @@ async function logout() {
 
 <template>
   <UiContainer class="page-shell account-page">
-    <UiBreadcrumbs
-      :items="[{ label: 'Главная', to: '/' }, { label: 'Личный кабинет' }]"
-    />
     <section v-if="!user" class="account-gate" aria-labelledby="account-title">
       <h1 id="account-title">Личный кабинет</h1>
       <p>Войдите, чтобы получить доступ к личному кабинету.</p>

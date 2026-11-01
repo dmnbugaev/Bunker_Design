@@ -234,12 +234,6 @@ async function submit() {
 
 <template>
   <UiContainer class="page-shell reserve-page">
-    <UiBreadcrumbs
-      :items="[
-        { label: 'Главная', to: '/' },
-        { label: 'Список выбранных товаров' },
-      ]"
-    />
     <div class="page-heading">
       <p class="eyebrow">Бункер / Самовывоз</p>
       <h1>Список выбранных товаров</h1>

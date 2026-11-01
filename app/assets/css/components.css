@@ -104,6 +104,18 @@
 .button[data-loading="true"] .button__spinner {
   display: block;
 }
+/* Подпись кнопки — тоже флекс-ряд: иконка и текст центрируются по
+   вертикали друг к другу (svg в инлайне виснет на базовой линии
+   текста — «Определить по геолокации», «Рядом со мной»). Спиннер и
+   sr-only не трогаем: у них свои правила отображения. */
+.button > span:not(.button__spinner):not(.sr-only) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.button > span:not(.button__spinner):not(.sr-only) svg {
+  flex-shrink: 0;
+}
 
 /* Fields */
 .field {
@@ -830,7 +842,7 @@
 .catalog-toolbar {
   position: sticky;
   top: var(--header-height);
-  z-index: 150;
+  z-index: var(--z-below-sticky);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -843,7 +855,9 @@
 .catalog-toolbar__controls {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  /* По нижней кромке: у селекта сортировки есть подпись сверху, и при
+     центрировании кнопка «Фильтры» висела выше/ниже строки выбора. */
+  align-items: end;
   gap: var(--space-3);
   margin-left: auto;
 }

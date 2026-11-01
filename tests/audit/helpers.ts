@@ -61,6 +61,24 @@ export async function openPage(page: Page, path: string) {
   await page.waitForLoadState("networkidle").catch(() => {});
 }
 
+// Entrance-анимации страниц (hero-copy-in и семейные, fill: both с
+// задержками до ~1.7s) идут ПОСЛЕ networkidle: замер в полупрозрачном
+// состоянии даёт ложный color-contrast. Ждём только конечные анимации —
+// бесконечные (marquee ленты) пропускаем. Страховочный таймаут — 5s.
+export async function settleAnimations(page: Page) {
+  await page.evaluate(() =>
+    Promise.race([
+      Promise.all(
+        document
+          .getAnimations()
+          .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+          .map((a) => a.finished.catch(() => {})),
+      ),
+      new Promise((resolve) => setTimeout(resolve, 5000)),
+    ]),
+  );
+}
+
 export function ensureDir(dir: string) {
   mkdirSync(dir, { recursive: true });
 }

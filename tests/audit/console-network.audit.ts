@@ -23,6 +23,8 @@ test.describe("console and network audit", () => {
         //  - WebGL GPU stall — артефакт headless-рендера карты в CI.
         if (msg.text().includes("Invalid API key")) return;
         if (msg.text().includes("GL Driver Message")) return;
+        // 404 отсутствующих шрифтов владельца — см. фильтр в response.
+        if (msg.text().includes("/fonts/")) return;
         consoleErrors.push({
           type: msg.type(),
           text: msg.text().slice(0, 300),
@@ -42,6 +44,11 @@ test.describe("console and network audit", () => {
       });
     });
     page.on("response", (response) => {
+      // Фирменные шрифты BICUBIK/Akzentica — лицензионные данные владельца
+      // (docs/NEEDS-DATA.md): файлов в репозитории нет намеренно, 404
+      // ожидаем до их передачи (вёрстка проверена на fallback-цепочке).
+      if (response.status() === 404 && response.url().includes("/fonts/"))
+        return;
       if (response.status() >= 400)
         badResponses.push({
           url: response.url().slice(0, 200),

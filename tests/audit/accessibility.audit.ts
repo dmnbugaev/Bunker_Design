@@ -1,12 +1,21 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, type Page } from "@playwright/test";
 import { writeFileSync } from "node:fs";
-import { ARTIFACTS, AUDIT_PAGES, ensureDir, openPage } from "./helpers";
+import {
+  ARTIFACTS,
+  AUDIT_PAGES,
+  ensureDir,
+  openPage,
+  settleAnimations,
+} from "./helpers";
 
 // Автоматический a11y-аудит (axe-core): критичные нарушения
 // (контраст, имена контролов, структура заголовков, aria).
 // Ручные проверки клавиатуры — в functional.audit.ts.
 async function axe(page: Page) {
+  // Контраст меряем в финальном состоянии entrance-анимаций, иначе
+  // полупрозрачные слои дают ложные serious-нарушения (/partners).
+  await settleAnimations(page);
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
     .analyze();

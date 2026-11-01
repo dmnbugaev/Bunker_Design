@@ -214,13 +214,6 @@
         "description": "Товары категории «Ароматизаторы»."
       },
       {
-        "id": "cat-vex-used",
-        "name": "Б/у устройства (VEX)",
-        "parentId": null,
-        "slug": "cat-vex-used",
-        "description": "Товары категории «Б/у устройства (VEX)»."
-      },
-      {
         "id": "cat-other",
         "name": "Другое",
         "parentId": null,
@@ -304,6 +297,20 @@
         "slug": "cat-tea",
         "description": "Товары категории «Чай».",
         "image": "/images/fx-tea.webp"
+      },
+      {
+        "id": "cat-vex-express",
+        "name": "Vape Express",
+        "parentId": null,
+        "slug": "cat-vex-express",
+        "description": "Товары категории «Vape Express»."
+      },
+      {
+        "id": "cat-vex-repair",
+        "name": "РЕМОНТ с магазинов",
+        "parentId": "cat-vex-express",
+        "slug": "cat-vex-repair",
+        "description": "Товары категории «РЕМОНТ с магазинов»."
       }
     ],
     "brands": [],
@@ -3548,8 +3555,8 @@
       "slug": "fx-vex-vinci",
       "sku": "VEX-001",
       "name": "VEX: VooPoo Vinci X (б/у)",
-      "categoryId": "cat-vex-used",
-      "categoryName": "Б/у устройства (VEX)",
+      "categoryId": "cat-vex-repair",
+      "categoryName": "РЕМОНТ с магазинов",
       "images": [
         {
           "id": "fx-vex-vinci-0",
@@ -4068,6 +4075,140 @@
         }
       ],
       "publishedAt": "2026-09-20T09:00:00Z"
+    },
+    {
+      "id": "fx-vex-argus",
+      "slug": "fx-vex-argus",
+      "sku": "VEX-002",
+      "name": "VEX: Voopoo Argus Pro 2 (б/у)",
+      "categoryId": "cat-vex-repair",
+      "categoryName": "РЕМОНТ с магазинов",
+      "images": [
+        {
+          "id": "fx-vex-vinci-0",
+          "src": "/images/fx-vmate.webp",
+          "alt": "VEX: VooPoo Vinci X (б/у) — изображение 1"
+        }
+      ],
+      "unit": "1 шт",
+      "description": "Комиссионное устройство, проверено сервисом Vape Express, гарантия 14 дней.",
+      "attributes": [
+        {
+          "code": "attr-condition",
+          "name": "Состояние",
+          "value": "Б/у"
+        },
+        {
+          "code": "attr-warranty",
+          "name": "Гарантия",
+          "value": "14 дней"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "available"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 229000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-09-23T09:00:00Z"
     }
   ],
   "stockDetail": {
@@ -4214,6 +4355,11 @@
       "store-b1": 0,
       "store-b2": 0,
       "store-b3": 4
+    },
+    "fx-vex-argus": {
+      "store-b1": 1,
+      "store-b2": 0,
+      "store-b3": 0
     }
   }
 }

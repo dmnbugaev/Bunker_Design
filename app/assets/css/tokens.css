@@ -156,6 +156,10 @@
   --container-max: 90rem;
   --grid-columns: 12;
   --grid-gap: clamp(1rem, 2vw, 2rem);
+  /* Шкала брейкпоинтов — документационная: переменные не работают внутри
+     @media, все запросы в css-файтах пишутся числами по этой шкале.
+     Единственная производная точка вне шкалы — 75rem (витринная сетка
+     .product-grid--featured: 2 → 3 колонки без сироты на 1200–1279px). */
   --breakpoint-mobile: 20rem;
   --breakpoint-tablet: 48rem;
   --breakpoint-laptop: 64rem;
@@ -172,6 +176,9 @@
   /* Elevation */
   --z-dropdown: 100;
   --z-sticky: 200;
+  /* Прилипающие панели ПОД шапкой (тулбар каталога): выше дропдаунов,
+     ниже шапки. */
+  --z-below-sticky: 150;
   --z-overlay: 300;
   --z-modal: 400;
   --z-toast: 500;
