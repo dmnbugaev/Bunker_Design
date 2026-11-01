@@ -98,6 +98,9 @@ export default defineNuxtConfig({
     "~/assets/css/pages.css",
   ],
   nitro: {
+    // Статика сборки отдаётся предсжатыми gzip/brotli (nginx на проде
+    // отдаст br без сжатия на лету) — быстрее первый и повторные визиты.
+    compressPublicAssets: true,
     routeRules: {
       "/**": {
         headers: {

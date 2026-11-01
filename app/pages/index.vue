@@ -53,6 +53,8 @@ useHead({
           ><UiButton @click="refresh()">Повторить</UiButton></template
         ></UiEmptyState
       ></UiContainer
-    ><HowItWorksSection /><AboutSection /><StoresSection /><ContactsSection />
+    ><PromosSection
+      v-if="catalogVisible"
+    />><HowItWorksSection /><AboutSection /><StoresSection /><ContactsSection />
   </div>
 </template>

@@ -63,6 +63,14 @@ export default defineConfig({
       // подняты: все спецификации идут с одного 127.0.0.1.
       ACCOUNT_DATA_DIR: resolve("test-results/account-data"),
       RESERVATION_DATA_DIR: resolve("test-results/reservation-data"),
+      // Промо-блок: демо-карточки в изолированном хранилище; ключи бота
+      // затёрты — поллинг и отправки Telegram в e2e исключены.
+      PROMO_DATA_DIR: resolve("test-results/promo-data"),
+      PROMO_SEED_DEMO: "1",
+      TELEGRAM_SILENT: "1",
+      TELEGRAM_PROMO_BOT_TOKEN: "",
+      TELEGRAM_PROMO_CHAT_IDS: "",
+      TELEGRAM_PROMO_POLLING: "0",
       SESSION_COOKIE_INSECURE: "1",
       AUTH_RATE_LIMIT_REGISTER: "1000",
       AUTH_RATE_LIMIT_LOGIN: "1000",
