@@ -19,6 +19,12 @@ import {
   type TelegramMessageEntity,
 } from "./promo-format";
 import { telegramSilenced } from "../utils/telegram-silence";
+// Прод-секреты бота приходят из .env.extra (см. server/utils/env-extra.ts):
+// грузим до первого чтения TELEGRAM_* — модуль используется и поллингом,
+// и вебхуком, поэтому загрузка гарантирована в обоих каналах.
+import { loadExtraEnv } from "../utils/env-extra";
+
+loadExtraEnv();
 
 /**
  * Бот промо-акций (@…, токен в TELEGRAM_PROMO_BOT_TOKEN): наполняет блок
