@@ -2602,15 +2602,19 @@ button.text-link {
 
 /* ─── Страница товара ────────────────────────────────────────────────── */
 
+/* Витрина товара: фото-окно и сводка делят ширину примерно поровну —
+   правая колонка плотная, левая дышит. */
 .product-detail {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-8);
-  padding-block: var(--space-8) var(--space-24);
+  padding-block: var(--space-8) var(--space-12);
 }
 @media (min-width: 64rem) {
   .product-detail {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    column-gap: clamp(2rem, 4vw, 4rem);
+    align-items: start;
   }
 }
 .product-detail__info {
@@ -2618,16 +2622,79 @@ button.text-link {
   gap: var(--space-5);
   align-content: start;
 }
+/* В сетке колонки eyebrow живёт своим margin — здесь ритм задаёт gap. */
+.product-detail__info .eyebrow {
+  margin-bottom: 0;
+}
+/* Параграфы внутри панели: глобальный margin-bottom у p выбрасывает ритм
+   между строками плитки — обнуляем, интервалы задаёт gap панели. */
+.product-buy p {
+  margin: 0;
+}
+/* Название — заголовок витрины, а не лендинга: длинные имена МойСклад
+   набираются фирменным BICUBIK в товарном масштабе, 2–4 строки вместо
+   семи строк посадочным кеглем. */
+.product-detail__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 0.5rem + 1.4vw, 2.25rem);
+  line-height: 1.16;
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+/* Панель покупки: цена, наличие, магазин и действие собраны одной
+   плиткой — разреженные данные карточки получают композицию. */
+.product-buy {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  background: var(--color-surface-primary);
+  border: var(--border-thin) solid var(--color-border-default);
+  border-radius: var(--radius-md);
+}
+.product-buy__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-thin) solid var(--color-border-default);
+}
+/* Цена — якорь панели: крупный кегль с табличными цифрами. Стиль адресно
+   в витрине: в карточках каталога кегль задаёт .product-card. */
+.product-detail .product-price {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: var(--line-compact);
+  font-variant-numeric: tabular-nums;
+}
+/* Единица («/ 1 шт») не теряется рядом с крупной ценой. */
+.product-detail .product-price__unit {
+  font-size: var(--font-size-body-sm);
+  color: var(--color-text-secondary);
+}
+.product-buy__summary .availability {
+  font-size: var(--font-size-body-sm);
+}
 
 .product-gallery {
   display: grid;
   gap: var(--space-3);
 }
 /* Главное окно галереи — та же квадратная светлая плашка, что и в
-   карточках каталога: единая система фото-окон по всему сайту. */
+   карточках каталога: единая система фото-окон по всему сайту. На широких
+   экранах окно ограничено, чтобы плашка не вытягивалась в гигантский
+   квадрат. */
 .product-gallery > .product-image {
   height: auto;
   aspect-ratio: 1;
+  max-width: 44rem;
   padding: var(--space-6);
   background: var(--product-plate);
   border-radius: var(--radius-sm);
@@ -2706,24 +2773,28 @@ button.text-link {
   clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%);
 }
 
-.product-price {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-h3);
-  font-weight: 700;
-}
 .product-price__unit {
   font-weight: 400;
 }
 
-/* Действия со списком выбранных: главная кнопка + ссылка в ряд. */
+/* Действия со списком выбранных: главная кнопка занимает ряд целиком,
+   ссылка на список — рядом с «Убрать». */
+.product-select {
+  display: grid;
+  gap: var(--space-3);
+}
 .product-select__actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3) var(--space-4);
 }
+.product-select__actions .button {
+  flex: 1 1 auto;
+}
 
-/* Характеристики: двухколоночный список с разделителями. */
+/* Характеристики: двухколоночный список с разделителями; значение
+   крупнее ключа — данные важнее подписей. */
 .specifications {
   display: grid;
   gap: 0;
@@ -2733,7 +2804,7 @@ button.text-link {
   display: grid;
   grid-template-columns: minmax(9rem, 1fr) minmax(0, 1.6fr);
   gap: var(--space-4);
-  padding-block: var(--space-3);
+  padding-block: var(--space-4);
   border-bottom: var(--border-thin) solid var(--color-border-default);
 }
 .specifications > div:first-child {
@@ -2746,30 +2817,49 @@ button.text-link {
 .specifications dd {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: var(--font-size-body-sm);
+  font-size: var(--font-size-body-md);
   overflow-wrap: anywhere;
 }
 
 /* Наличие по магазинам: строка «магазин — статус — цена», выбранный
-   магазин подсвечен. */
+   магазин подсвечен. На десктопе — две колонки: список из полутора
+   десятков магазинов не вытягивается лентой на всю ширину. */
+.product-offers {
+  display: grid;
+  gap: var(--space-6);
+  padding-block: var(--space-12);
+  border-top: var(--border-thin) solid var(--color-border-default);
+}
 .product-offers ul {
   display: grid;
 }
+@media (min-width: 64rem) {
+  .product-offers ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-16);
+  }
+}
 .product-offers li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--space-3) var(--space-5);
+  gap: var(--space-1) var(--space-4);
   padding-block: var(--space-3);
-  border-bottom: var(--border-thin) solid var(--color-border-default);
+  border-top: var(--border-thin) solid var(--color-border-default);
   font-size: var(--font-size-body-sm);
 }
-.product-offers li:first-child {
-  border-top: var(--border-thin) solid var(--color-border-default);
-}
 .product-offers__store {
+  min-width: 0;
   color: var(--color-text-primary);
   font-weight: 600;
+}
+/* Наличие и цена — правый кластер строки: цена табличными цифрами
+   прижата к краю колонки и не «пляшет» между строками. */
+.product-offers__meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-left: auto;
 }
 .product-offers__availability {
   color: var(--color-text-muted);
@@ -2793,51 +2883,48 @@ button.text-link {
   border-radius: var(--radius-sm);
   padding-inline: var(--space-3);
 }
-.product-offers__row--current:first-child {
-  border-top-color: transparent;
-}
-/* На узких экранах строка магазина не ужимается в три колонки: название
-   и цена — первая строка, наличие — второй. */
+/* На узких экранах правый кластер не влезает в строку с длинным именем
+   магазина — переносится целиком на вторую строку. */
 @media (max-width: 30rem) {
-  .product-offers li {
-    grid-template:
-      "store price" auto
-      "avail avail" auto / minmax(0, 1fr) auto;
-    align-items: baseline;
-  }
-  .product-offers__store {
-    grid-area: store;
-  }
-  .product-offers__availability {
-    grid-area: avail;
-  }
-  .product-offers strong {
-    grid-area: price;
+  .product-offers__meta {
+    flex-basis: 100%;
+    justify-content: space-between;
   }
 }
+/* Магазин получения — строка внутри панели покупки, без вложенной
+   коробки: имя магазина заметнее подписи, ссылка смены — справа. */
 .product-store {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-surface-primary);
-  border: var(--border-thin) solid var(--color-border-default);
-  border-radius: var(--radius-sm);
+  gap: var(--space-2) var(--space-4);
 }
-.product-store a {
+.product-store .caption {
   color: var(--color-text-primary);
-  text-decoration: none;
-}
-.product-store a:hover {
-  color: var(--color-primary-hover);
+  font-size: var(--font-size-body-sm);
 }
 
+/* Секции под витриной — общий ритм: hairline сверху, отступ, заголовок
+   фирменным BICUBIK (мельче каталожных секций: это подчинённый уровень). */
 .product-description {
   display: grid;
   gap: var(--space-3);
+  padding-block: var(--space-12);
+  border-top: var(--border-thin) solid var(--color-border-default);
   color: var(--color-text-secondary);
+}
+.product-description h2,
+.product-offers h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 0.6rem + 1.2vw, 2.25rem);
+  line-height: var(--line-heading);
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  text-wrap: balance;
 }
 .product-description__compat-label {
   color: var(--color-text-muted);
@@ -2850,30 +2937,28 @@ button.text-link {
   white-space: pre-line;
 }
 
+/* Соседние товары категории — тихая строка ссылок под витриной:
+   стрелка, название в одну строку с многоточием, hover — коралл. */
 .product-adjacent {
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
-  gap: var(--space-4);
-  margin-block: var(--space-8);
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-6);
+  padding-block: var(--space-4);
+  border-top: var(--border-thin) solid var(--color-border-default);
 }
 .product-adjacent__link {
   display: inline-flex;
-  flex: 1 1 16rem;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-4) var(--space-5);
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+  max-width: min(100%, 34rem);
   color: var(--color-text-secondary);
   text-decoration: none;
-  background: var(--color-surface-primary);
-  border: var(--border-thin) solid var(--color-border-default);
-  border-radius: var(--radius-md);
-  transition:
-    border-color var(--duration-fast) var(--easing-standard),
-    color var(--duration-fast) var(--easing-standard);
+  transition: color var(--duration-fast) var(--easing-standard);
 }
 .product-adjacent__link:hover {
-  border-color: var(--color-primary);
   color: var(--color-text-primary);
 }
 .product-adjacent__link:hover .product-adjacent__name {
@@ -2881,11 +2966,18 @@ button.text-link {
 }
 .product-adjacent__link--next {
   text-align: right;
-  margin-left: auto;
+}
+.product-adjacent__arrow {
+  flex: none;
+  color: var(--color-text-muted);
 }
 .product-adjacent__name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: var(--color-text-primary);
-  font-size: var(--font-size-body-md);
+  font-size: var(--font-size-body-sm);
   font-weight: 600;
 }
 

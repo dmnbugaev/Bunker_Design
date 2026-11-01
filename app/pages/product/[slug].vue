@@ -120,43 +120,50 @@ const storeName = (storeId: string) =>
           <p class="eyebrow">
             {{ product.categoryName ?? "Каталог" }} / {{ product.sku }}
           </p>
-          <h1>{{ product.name }}</h1>
-          <ProductPrice :product="product" /><ProductAvailability
-            :product="product"
-          />
-          <div class="product-store">
-            <p class="caption">
-              {{ store?.name ?? "Выберите магазин для проверки наличия" }}
-            </p>
-            <button type="button" class="text-link" @click="pickerOpen = true">
-              {{ store ? "Изменить магазин" : "Выбрать магазин" }}
-            </button>
-          </div>
-          <div class="product-select">
-            <template v-if="inList">
-              <div class="product-select__actions">
+          <h1 class="product-detail__title">{{ product.name }}</h1>
+          <div class="product-buy">
+            <div class="product-buy__summary">
+              <ProductPrice :product="product" />
+              <ProductAvailability :product="product" />
+            </div>
+            <div class="product-store">
+              <p class="caption">
+                {{ store?.name ?? "Выберите магазин для проверки наличия" }}
+              </p>
+              <button
+                type="button"
+                class="text-link"
+                @click="pickerOpen = true"
+              >
+                {{ store ? "Изменить магазин" : "Выбрать магазин" }}
+              </button>
+            </div>
+            <div class="product-select">
+              <template v-if="inList">
+                <div class="product-select__actions">
+                  <UiButton
+                    variant="secondary"
+                    @click="product && remove(product.id)"
+                    >Убрать из списка</UiButton
+                  >
+                  <NuxtLink to="/reserve" class="text-link"
+                    >К списку выбранных ↗</NuxtLink
+                  >
+                </div>
+              </template>
+              <div v-else class="product-select__actions">
                 <UiButton
-                  variant="secondary"
-                  @click="product && remove(product.id)"
-                  >Убрать из списка</UiButton
-                >
-                <NuxtLink to="/reserve" class="text-link"
-                  >К списку выбранных ↗</NuxtLink
+                  variant="primary"
+                  size="large"
+                  @click="product && add(product.id)"
+                  >Добавить в список</UiButton
                 >
               </div>
-            </template>
-            <div v-else class="product-select__actions">
-              <UiButton
-                variant="primary"
-                size="large"
-                @click="product && add(product.id)"
-                >Добавить в список</UiButton
-              >
+              <p class="caption">
+                Список используется для запроса на резерв в магазине; покупка —
+                только в магазине.
+              </p>
             </div>
-            <p class="caption">
-              Список используется для запроса на резерв в магазине; покупка —
-              только в магазине.
-            </p>
           </div>
           <ProductSpecifications :attributes="product.attributes" />
         </div>
@@ -171,7 +178,8 @@ const storeName = (storeId: string) =>
           :to="`/product/${adjacent.prev.slug}`"
           class="product-adjacent__link"
         >
-          <span class="caption" aria-hidden="true">← Предыдущий</span>
+          <span class="product-adjacent__arrow" aria-hidden="true">←</span>
+          <span class="visually-hidden">Предыдущий товар:</span>
           <span class="product-adjacent__name">{{ adjacent.prev.name }}</span>
         </NuxtLink>
         <span v-else aria-hidden="true"></span>
@@ -180,8 +188,9 @@ const storeName = (storeId: string) =>
           :to="`/product/${adjacent.next.slug}`"
           class="product-adjacent__link product-adjacent__link--next"
         >
-          <span class="caption" aria-hidden="true">Следующий →</span>
+          <span class="visually-hidden">Следующий товар:</span>
           <span class="product-adjacent__name">{{ adjacent.next.name }}</span>
+          <span class="product-adjacent__arrow" aria-hidden="true">→</span>
         </NuxtLink>
       </nav>
       <section v-if="product.description" class="product-description">
@@ -207,11 +216,14 @@ const storeName = (storeId: string) =>
             <span class="product-offers__store">{{
               storeName(offer.storeId)
             }}</span>
-            <span
-              class="product-offers__availability"
-              :data-availability="offer.availability"
-              >{{ availabilityLabels[offer.availability] }}</span
-            ><strong>{{ formatPrice(offer.price) }}</strong>
+            <span class="product-offers__meta">
+              <span
+                class="product-offers__availability"
+                :data-availability="offer.availability"
+                >{{ availabilityLabels[offer.availability] }}</span
+              >
+              <strong>{{ formatPrice(offer.price) }}</strong>
+            </span>
           </li>
         </ul>
       </section>
