@@ -17,6 +17,15 @@ import { telegramSilenced } from "../utils/telegram-silence";
 
 const POLL_DELAY_MS = 3000;
 const RETRY_DELAY_MS = 5000;
+/**
+ * 409 «Conflict» выдаётся не только вебхуку, но и ЛЮБОМУ конкурентному
+ * getUpdates — включая разовый диагностический curl или параллельно
+ * поднятый dev-сервер: они живут секунды, а поллинг раньше навсегда
+ * выходил по первому 409 (наблюдавшееся падение прода 01.11). Теперь
+ * конфликт пережидается с растущим интервалом; выйти «навсегда» можно
+ * только по устойчивой серии — признаки реально включённого вебхука.
+ */
+const MAX_CONSECUTIVE_409 = 6;
 
 export default defineNitroPlugin(() => {
   if (process.env.TELEGRAM_PROMO_POLLING !== "1") return;
@@ -28,21 +37,32 @@ export default defineNitroPlugin(() => {
   const timer = setTimeout(() => {
     void (async () => {
       let offset = 0;
+      let conflicts = 0;
       for (;;) {
         try {
           const updates = await fetchPromoUpdates(offset);
+          conflicts = 0;
           for (const update of updates) {
             offset = update.update_id + 1;
             await handlePromoUpdateOnce(update);
           }
         } catch (error) {
-          // 409 — конфликт с активным вебхуком: поллинг не нужен, выходим.
           const message = error instanceof Error ? error.message : "";
           if (message.includes("409")) {
-            console.error(
-              "Promo bot polling stopped: webhook is active (409).",
+            conflicts += 1;
+            if (conflicts >= MAX_CONSECUTIVE_409) {
+              console.error(
+                "Promo bot polling stopped: webhook is active (409 series).",
+              );
+              return;
+            }
+            console.warn(
+              `Promo bot polling conflict (409), попытка ${conflicts}/${MAX_CONSECUTIVE_409} — пережидаем конкурента.`,
             );
-            return;
+            await new Promise((resolve) =>
+              setTimeout(resolve, RETRY_DELAY_MS * conflicts),
+            );
+            continue;
           }
           console.error(
             "Promo bot polling failed:",
