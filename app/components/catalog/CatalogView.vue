@@ -185,109 +185,111 @@ onMounted(() => {
           ><UiButton @click="refreshMeta()">Повторить</UiButton></template
         ></UiEmptyState
       >
-      <div v-else class="catalog-layout">
-        <aside class="catalog-sidebar" aria-label="Фильтры каталога">
-          <div>
-            <p class="catalog-sidebar__title">Категории</p>
-            <nav class="catalog-nav" aria-label="Категории каталога">
-              <NuxtLink
-                to="/catalog"
-                :aria-current="!category ? 'page' : undefined"
-                >Все товары</NuxtLink
-              >
-              <template v-for="root in parents" :key="root.id">
+      <template v-else>
+        <CatalogToolbar
+          :total="data?.total ?? 0"
+          :sort="parsed.sort"
+          :active-count="activeCount"
+          @sort="sort"
+          @filters="filtersOpen = true"
+        />
+        <div class="catalog-layout">
+          <aside class="catalog-sidebar" aria-label="Фильтры каталога">
+            <div>
+              <p class="catalog-sidebar__title">Категории</p>
+              <nav class="catalog-nav" aria-label="Категории каталога">
                 <NuxtLink
-                  :to="`/catalog/${root.slug}`"
-                  :aria-current="
-                    category &&
-                    [category.id, category.parentId].includes(root.id)
-                      ? 'page'
-                      : undefined
-                  "
-                  >{{ root.name }}</NuxtLink
+                  to="/catalog"
+                  :aria-current="!category ? 'page' : undefined"
+                  >Все товары</NuxtLink
                 >
-                <div
-                  v-if="root.id === activeRootId && sidebarChildren.length"
-                  class="catalog-nav__children"
-                >
+                <template v-for="root in parents" :key="root.id">
                   <NuxtLink
-                    v-for="child in sidebarChildren"
-                    :key="child.id"
-                    :to="`/catalog/${child.slug}`"
+                    :to="`/catalog/${root.slug}`"
                     :aria-current="
-                      category?.id === child.id ? 'page' : undefined
+                      category &&
+                      [category.id, category.parentId].includes(root.id)
+                        ? 'page'
+                        : undefined
                     "
-                    >{{ child.name }}</NuxtLink
+                    >{{ root.name }}</NuxtLink
                   >
-                </div>
-              </template>
-            </nav>
+                  <div
+                    v-if="root.id === activeRootId && sidebarChildren.length"
+                    class="catalog-nav__children"
+                  >
+                    <NuxtLink
+                      v-for="child in sidebarChildren"
+                      :key="child.id"
+                      :to="`/catalog/${child.slug}`"
+                      :aria-current="
+                        category?.id === child.id ? 'page' : undefined
+                      "
+                      >{{ child.name }}</NuxtLink
+                    >
+                  </div>
+                </template>
+              </nav>
+            </div>
+            <div>
+              <p class="catalog-sidebar__title">Фильтры</p>
+              <CatalogFilters
+                :values="values"
+                @apply="applyFilters"
+                @reset="resetFilters"
+              />
+            </div>
+          </aside>
+          <div class="catalog-results" :aria-busy="status === 'pending'">
+            <ul
+              v-if="chips.length"
+              class="filter-chips"
+              aria-label="Активные фильтры"
+            >
+              <li v-for="chip in chips" :key="chip.key">
+                <button type="button" @click="removeChip(chip.key)">
+                  {{ chip.label }} <span aria-hidden="true">×</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="filter-chips__reset"
+                  @click="resetFilters"
+                >
+                  Сбросить всё
+                </button>
+              </li>
+            </ul>
+            <div v-if="status === 'pending'" class="catalog-loading">
+              <UiSkeleton v-for="n in 8" :key="n" />
+            </div>
+            <UiEmptyState v-else-if="error" title="Не удалось загрузить товары"
+              >Проверьте соединение и повторите попытку.<template #action
+                ><UiButton @click="refresh()">Повторить</UiButton></template
+              ></UiEmptyState
+            >
+            <template v-else-if="data?.items.length"
+              ><ProductGrid :products="data.items" /><CatalogPagination
+                :page="data.page"
+                :page-count="data.pageCount"
+            /></template>
+            <UiEmptyState v-else title="Ничего не найдено"
+              >Попробуйте изменить запрос или снять часть фильтров.<template
+                #action
+                ><UiButton
+                  v-if="activeCount"
+                  variant="secondary"
+                  @click="resetFilters"
+                  >Сбросить фильтры</UiButton
+                ><NuxtLink v-else to="/catalog" class="button button--secondary"
+                  >Весь каталог</NuxtLink
+                ></template
+              ></UiEmptyState
+            >
           </div>
-          <div>
-            <p class="catalog-sidebar__title">Фильтры</p>
-            <CatalogFilters
-              :values="values"
-              @apply="applyFilters"
-              @reset="resetFilters"
-            />
-          </div>
-        </aside>
-        <div class="catalog-results" :aria-busy="status === 'pending'">
-          <CatalogToolbar
-            :total="data?.total ?? 0"
-            :sort="parsed.sort"
-            :active-count="activeCount"
-            @sort="sort"
-            @filters="filtersOpen = true"
-          />
-          <ul
-            v-if="chips.length"
-            class="filter-chips"
-            aria-label="Активные фильтры"
-          >
-            <li v-for="chip in chips" :key="chip.key">
-              <button type="button" @click="removeChip(chip.key)">
-                {{ chip.label }} <span aria-hidden="true">×</span>
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                class="filter-chips__reset"
-                @click="resetFilters"
-              >
-                Сбросить всё
-              </button>
-            </li>
-          </ul>
-          <div v-if="status === 'pending'" class="catalog-loading">
-            <UiSkeleton v-for="n in 8" :key="n" />
-          </div>
-          <UiEmptyState v-else-if="error" title="Не удалось загрузить товары"
-            >Проверьте соединение и повторите попытку.<template #action
-              ><UiButton @click="refresh()">Повторить</UiButton></template
-            ></UiEmptyState
-          >
-          <template v-else-if="data?.items.length"
-            ><ProductGrid :products="data.items" /><CatalogPagination
-              :page="data.page"
-              :page-count="data.pageCount"
-          /></template>
-          <UiEmptyState v-else title="Ничего не найдено"
-            >Попробуйте изменить запрос или снять часть фильтров.<template
-              #action
-              ><UiButton
-                v-if="activeCount"
-                variant="secondary"
-                @click="resetFilters"
-                >Сбросить фильтры</UiButton
-              ><NuxtLink v-else to="/catalog" class="button button--secondary"
-                >Весь каталог</NuxtLink
-              ></template
-            ></UiEmptyState
-          >
         </div>
-      </div>
+      </template>
       <UiDialog v-model="filtersOpen" title="Фильтры" drawer
         ><CatalogFilters
           v-if="meta && filtersOpen"
