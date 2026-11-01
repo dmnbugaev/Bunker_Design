@@ -180,12 +180,15 @@ test("applyLegalPolicy hides unclassified, keeps owner-written descriptions", ()
   assert.deepEqual(twice.meta.categories, result.meta.categories);
 });
 
-test("drinks subfolders stay visible while owner hide-lists are empty", () => {
-  // Механизм скрытия подкатегорий/линеек существует (HIDDEN_SUBCATEGORY_IDS,
-  // HIDDEN_PRODUCT_NAME_PREFIXES), но идентификаторы аккаунта ProHook не
-  // переносятся: до сверки с реальным «МойСклад» Бункера списки пусты и
-  // все подкатегории «Напитков» наследуют класс корня.
-  assert.equal(HIDDEN_SUBCATEGORY_IDS.size, 0);
+test("drinks subfolders stay visible; hide-list holds only owner-hidden folders", () => {
+  // Механизм скрытия подкатегорий/линеек (HIDDEN_SUBCATEGORY_IDS,
+  // HIDDEN_PRODUCT_NAME_PREFIXES): в списке — только служебная папка
+  // «РЕМОНТ с магазинов» ветки Vape Express (решение владельца 01.11.2026);
+  // посторонние подкатегории «Напитков» класс корня наследуют и видны.
+  assert.deepEqual(
+    [...HIDDEN_SUBCATEGORY_IDS],
+    ["7dfeb8f0-d55f-11f1-0a80-1d67002e42e8"],
+  );
   assert.equal(HIDDEN_PRODUCT_NAME_PREFIXES.length, 0);
   const categories = [
     {

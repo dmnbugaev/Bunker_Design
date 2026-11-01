@@ -306,11 +306,11 @@
         "description": "Товары категории «Vape Express»."
       },
       {
-        "id": "cat-vex-repair",
-        "name": "РЕМОНТ с магазинов",
+        "id": "cat-vex-smoant",
+        "name": "Smoant",
         "parentId": "cat-vex-express",
-        "slug": "cat-vex-repair",
-        "description": "Товары категории «РЕМОНТ с магазинов»."
+        "slug": "cat-vex-smoant",
+        "description": "Товары категории «Smoant»."
       }
     ],
     "brands": [],
@@ -3555,8 +3555,8 @@
       "slug": "fx-vex-vinci",
       "sku": "VEX-001",
       "name": "VEX: VooPoo Vinci X (б/у)",
-      "categoryId": "cat-vex-repair",
-      "categoryName": "РЕМОНТ с магазинов",
+      "categoryId": "cat-vex-smoant",
+      "categoryName": "Smoant",
       "images": [
         {
           "id": "fx-vex-vinci-0",
@@ -4081,8 +4081,8 @@
       "slug": "fx-vex-argus",
       "sku": "VEX-002",
       "name": "VEX: Voopoo Argus Pro 2 (б/у)",
-      "categoryId": "cat-vex-repair",
-      "categoryName": "РЕМОНТ с магазинов",
+      "categoryId": "cat-vex-smoant",
+      "categoryName": "Smoant",
       "images": [
         {
           "id": "fx-vex-vinci-0",

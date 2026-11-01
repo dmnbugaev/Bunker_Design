@@ -262,13 +262,14 @@ test("used-devices section is gated and points to Vape Express communities", asy
     await expect(link).toHaveAttribute("rel", "noopener noreferrer");
   }
   // Витрина комиссии — корень «Vape Express» из каталога: на странице
-  // живёт мини-каталог ветки (подпапка «РЕМОНТ с магазинов» + товары).
+  // живёт мини-каталог ветки (подпапка «Smoant» + товары).
   await expect(
     page.getByRole("heading", { name: "Каталог б/у устройств" }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "РЕМОНТ с магазинов" }),
-  ).toHaveAttribute("href", "/catalog/cat-vex-repair");
+  await expect(page.getByRole("link", { name: "Smoant" })).toHaveAttribute(
+    "href",
+    "/catalog/cat-vex-smoant",
+  );
   await expect(
     page.getByRole("link", { name: "Открыть весь раздел" }),
   ).toHaveAttribute("href", "/catalog/cat-vex-express");
