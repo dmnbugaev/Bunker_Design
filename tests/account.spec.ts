@@ -321,8 +321,10 @@ test("loyalty block shows balance and program terms from MoySklad", async ({
     "бонусов",
   );
   await expect(page.getByText("Тестовая бонусная программа")).toBeVisible();
-  // Правила программы приходят из «МойСклад», а не задаются сайтом.
-  await expect(page.getByText("50 ₽ покупки = 1 балл")).toBeVisible();
+  // Правила программы приходят из «МойСклад», а не задаются сайтом:
+  // три правила-плитки (начисление / списание / оплата баллами).
+  await expect(page.getByText("50 ₽ = 1 бонус")).toBeVisible();
+  await expect(page.getByText("1 бонус = 1 ₽")).toBeVisible();
   await expect(page.getByText("до 30% покупки")).toBeVisible();
 });
 

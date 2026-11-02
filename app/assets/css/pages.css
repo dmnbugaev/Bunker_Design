@@ -4078,6 +4078,57 @@ button.text-link {
   margin: 0;
   color: var(--color-text-secondary);
 }
+/* Условия программы: имя мелкой строкой и три правила в ряд — число-якорь
+   крупнее подписи, колонки делят волосяные разделители. На узких экранах
+   правила складываются в столбец. */
+.account-bonus__program {
+  display: grid;
+  gap: var(--space-4);
+}
+.account-bonus__program-name {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body-sm);
+}
+.account-bonus__terms {
+  display: grid;
+  margin: 0;
+}
+.account-bonus__terms > div {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-3);
+  border-top: var(--border-thin) solid var(--color-border-default);
+}
+.account-bonus__terms dt {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-caption);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-overline);
+}
+.account-bonus__terms dd {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-body-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 40rem) {
+  .account-bonus__terms {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--space-6);
+  }
+  .account-bonus__terms > div + div {
+    border-left: var(--border-thin) solid var(--color-border-default);
+    padding-left: var(--space-6);
+  }
+}
+/* Юридическая сноска тише правил программы: кэпшн, приглушённый. */
+.account-bonus__note--legal {
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-body-sm);
+}
 .account-bonus--loading,
 .account-bonus--empty,
 .account-bonus--error {

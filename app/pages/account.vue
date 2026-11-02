@@ -177,15 +177,34 @@ async function logout() {
             {{ loyalty.balance }}
             <span>{{ pluralBonus(loyalty.balance ?? 0) }}</span>
           </p>
-          <p v-if="loyalty.program" class="account-bonus__note">
-            Программа «{{ loyalty.program.name }}»:
-            {{ loyalty.program.earnRateRoublesToPoint }} ₽ покупки = 1 балл ·
-            {{ loyalty.program.spendRatePointsToRouble }}
-            {{ pluralBonus(loyalty.program.spendRatePointsToRouble) }} = 1 ₽
-            скидки · оплатить баллами можно до
-            {{ loyalty.program.maxPaidRatePercents }}% покупки.
-          </p>
-          <p class="account-bonus__note">
+          <!-- Условия программы: имя отдельно, три коротких правила в ряд —
+               длинная строка через «·» не читалась. -->
+          <div v-if="loyalty.program" class="account-bonus__program">
+            <p class="account-bonus__program-name">
+              {{ loyalty.program.name }}
+            </p>
+            <dl class="account-bonus__terms">
+              <div>
+                <dt>Начисление</dt>
+                <dd>
+                  {{ loyalty.program.earnRateRoublesToPoint }} ₽ = 1 бонус
+                </dd>
+              </div>
+              <div>
+                <dt>Списание</dt>
+                <dd>
+                  {{ loyalty.program.spendRatePointsToRouble }}
+                  {{ pluralBonus(loyalty.program.spendRatePointsToRouble) }} = 1
+                  ₽
+                </dd>
+              </div>
+              <div>
+                <dt>Оплата баллами</dt>
+                <dd>до {{ loyalty.program.maxPaidRatePercents }}% покупки</dd>
+              </div>
+            </dl>
+          </div>
+          <p class="account-bonus__note account-bonus__note--legal">
             Начисление и списание выполняются на кассе магазинов сети — сайт
             бонусы дистанционно не списывает.
           </p>
