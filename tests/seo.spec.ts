@@ -181,6 +181,25 @@ test("404 для несуществующих категорий и товаро
   expect((await request.get("/nonexistent")).status()).toBe(404);
 });
 
+test("страница 404 возвращает на главную: логотип и кнопка — ссылки", async ({
+  page,
+}) => {
+  await page.goto("/nonexistent-page-xyz");
+  await expect(
+    page.getByRole("heading", { name: "Здесь пока пусто." }),
+  ).toBeVisible();
+  // Логотип и кнопка — настоящие ссылки (href="/"): путь на главную
+  // есть и до гидрации, и вовсе без JS.
+  const logo = page.getByRole("link", { name: "Бункер — главная" });
+  await expect(logo).toHaveAttribute("href", "/");
+  const home = page.getByRole("link", { name: "На главную ↗" });
+  await expect(home).toHaveAttribute("href", "/");
+  // Клик по кнопке уходит на главную (clearError + redirect).
+  await home.click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("banner")).toBeVisible();
+});
+
 test("SSR главной для краулеров: без витрины каталога, но с контентом", async ({
   request,
 }) => {

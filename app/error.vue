@@ -7,11 +7,20 @@ useSeoMeta({
     is404.value ? "Страница не найдена — Бункер" : "Ошибка — Бункер",
   robots: "noindex, nofollow",
 });
+/**
+ * Возврат на главную: с гидрацией — чистая смена состояния через
+ * clearError (страница ошибки не «залипает»), без JS — обычная ссылка
+ * с полной загрузкой главной. Один обработчик у логотипа и кнопки.
+ */
+const goHome = (event: MouseEvent) => {
+  event.preventDefault();
+  clearError({ redirect: "/" });
+};
 </script>
 <template>
   <main class="page-shell container error-page">
-    <span class="brand-link" aria-hidden="true"
-      ><span class="brand-mark"></span>БУНКЕР</span
+    <a href="/" class="brand-link" aria-label="Бункер — главная" @click="goHome"
+      ><span class="brand-mark" aria-hidden="true"></span>БУНКЕР</a
     >
     <p class="eyebrow">{{ error.statusCode }}</p>
     <h1>{{ is404 ? "Здесь пока пусто." : "Не удалось открыть страницу." }}</h1>
@@ -22,6 +31,8 @@ useSeoMeta({
           : "Попробуйте вернуться на главную и повторить действие."
       }}
     </p>
-    <UiButton @click="clearError({ redirect: '/' })">На главную ↗</UiButton>
+    <a href="/" class="button button--primary button--normal" @click="goHome"
+      >На главную ↗</a
+    >
   </main>
 </template>
