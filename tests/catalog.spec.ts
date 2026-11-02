@@ -167,6 +167,35 @@ test("catalog card flips through photos when a product has several", async ({
   await expect(page).toHaveURL(/\/product\/fx-tea-oolong/);
 });
 
+test("product page gallery flips through photos", async ({ page }) => {
+  await open(page, "/product/fx-tea-oolong");
+  const gallery = page.locator(".product-gallery");
+  const window = gallery.locator(".product-gallery__window");
+  const front = window.locator("img.product-image__front");
+  await expect(front).toHaveAttribute("src", "/images/fx-tea.webp");
+  // Миниатюры — позиция галереи: три, активна первая.
+  const thumbs = gallery.locator(".gallery-thumbnails button");
+  await expect(thumbs).toHaveCount(3);
+  await expect(thumbs.nth(0)).toHaveAttribute("aria-pressed", "true");
+  // Стрелки проявляются по hover: вне подсказки мыши прозрачны.
+  const next = gallery.getByRole("button", { name: "Следующее фото товара" });
+  await expect(next).toHaveCSS("opacity", "0");
+  await window.hover();
+  await next.click();
+  await expect(front).toHaveAttribute("src", "/images/fx-liquid-1.webp");
+  await expect(thumbs.nth(1)).toHaveAttribute("aria-pressed", "true");
+  // Миниатюра — прямой переключатель на третье фото.
+  await thumbs.nth(2).click();
+  await expect(front).toHaveAttribute("src", "/images/fx-liquid-2.webp");
+  await expect(thumbs.nth(2)).toHaveAttribute("aria-pressed", "true");
+  // Листание зациклено: два шага назад с последнего — на первое.
+  const prev = gallery.getByRole("button", { name: "Предыдущее фото товара" });
+  await prev.click();
+  await prev.click();
+  await expect(front).toHaveAttribute("src", "/images/fx-tea.webp");
+  await expect(thumbs.nth(0)).toHaveAttribute("aria-pressed", "true");
+});
+
 test("instant filters: availability is on by default, photo filter removed", async ({
   page,
 }) => {

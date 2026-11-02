@@ -26,43 +26,17 @@ const soldOut = computed(() => {
   );
 });
 /* Листание фото окна: несколько снимков — стрелки по hover/focus на
-   десктопе, свайп на тач-экранах, позиция — точки на нижней кромке. */
-const multiImage = computed(() => props.product.images.length > 1);
-const selected = ref(0);
+   десктопе, свайп на тач-экранах, позиция — точки на нижней кромке.
+   Логика общая с галереей страницы товара (usePhotoFlip). */
+const { selected, multiImage, step, onTouchStart, onTouchEnd } = usePhotoFlip(
+  () => props.product.images,
+);
 watch(
   () => props.product.id,
   () => {
     selected.value = 0;
   },
 );
-const step = (direction: 1 | -1) => {
-  const count = props.product.images.length;
-  if (count < 2) return;
-  selected.value = (selected.value + direction + count) % count;
-};
-/* Свайп: горизонтальный жест листает фото и отменяет переход по
-   ссылке-подложке; вертикальный жест и короткие касания не мешают
-   навигации в карточку. */
-let touchStart: { x: number; y: number } | null = null;
-const onTouchStart = (event: TouchEvent) => {
-  const touch = event.touches[0];
-  touchStart =
-    event.touches.length === 1 && touch
-      ? { x: touch.clientX, y: touch.clientY }
-      : null;
-};
-const onTouchEnd = (event: TouchEvent) => {
-  const start = touchStart;
-  touchStart = null;
-  const touch = event.changedTouches[0];
-  if (!start || event.changedTouches.length !== 1 || !touch) return;
-  const dx = touch.clientX - start.x;
-  const dy = touch.clientY - start.y;
-  if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-    event.preventDefault();
-    step(dx < 0 ? 1 : -1);
-  }
-};
 </script>
 <template>
   <article class="product-card" :class="{ 'product-card--soon': soldOut }">
