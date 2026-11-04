@@ -1,14 +1,16 @@
 # CI/CD «Бункер».
 # quality: формат → линт → типы → unit-тесты → production build
-# deploy:  после зелёных проверок на main — деплой на VPS по SSH
-#          (образец ProHook). Пока сервер/домен сети не предоставлены,
-#          джоб включается переменной репозитория DEPLOY_ENABLED=true и
-#          настраивается секретами:
-#            BUNKER_DEPLOY_KEY   — приватный SSH-ключ (только форсированная
-#                                  команда deploy, sudoers NOPASSWD)
-#            BUNKER_DEPLOY_HOST  — адрес VPS
-#            BUNKER_DEPLOY_PORT  — SSH-порт (по умолчанию 22)
-#            BUNKER_DEPLOY_USER  — пользователь (по умолчанию admin)
+# deploy:  после зелёных проверок на push в main — деплой на прод
+#          «vapeserver» по SSH (живёт с 26.10.2026). Джоб включён
+#          переменной репозитория DEPLOY_ENABLED=true и настроен секретами:
+#            BUNKER_DEPLOY_KEY   — приватный SSH-ключ (форсированная команда
+#                                  на сервере: sudo -n /usr/local/bin/
+#                                  bunker-deploy — git reset → npm ci → build
+#                                  с откатом на .output.prev → restart +
+#                                  health-check; sudoers NOPASSWD)
+#            BUNKER_DEPLOY_HOST  — адрес vapeserver
+#            BUNKER_DEPLOY_PORT  — SSH-порт (по умолчанию 22222)
+#            BUNKER_DEPLOY_USER  — пользователь (по умолчанию bunker)
 #            BUNKER_KNOWN_HOSTS  — строка known_hosts для закрепления ключа
 #            SITE_URL            — публичный URL для проверки здоровья
 name: CI
@@ -86,20 +88,20 @@ jobs:
           # host key закреплён (TOFU исключён)
           printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
 
-      - name: Деплой (форсированная команда deploy на сервере)
+      - name: Деплой (форсированная команда bunker-deploy на сервере)
         env:
           DEPLOY_HOST: ${{ secrets.BUNKER_DEPLOY_HOST }}
           DEPLOY_PORT: ${{ secrets.BUNKER_DEPLOY_PORT }}
           DEPLOY_USER: ${{ secrets.BUNKER_DEPLOY_USER }}
           SITE_URL: ${{ vars.SITE_URL }}
         run: |
-          ssh -p "${DEPLOY_PORT:-22}" -i ~/.ssh/bunker_deploy_key \
+          ssh -p "${DEPLOY_PORT:-22222}" -i ~/.ssh/bunker_deploy_key \
             -o IdentitiesOnly=yes -o BatchMode=yes \
             -o UserKnownHostsFile=~/.ssh/known_hosts \
-            "${DEPLOY_USER:-admin}@$DEPLOY_HOST" deploy
+            "${DEPLOY_USER:-bunker}@$DEPLOY_HOST" deploy
 
           echo "Проверка продакшена..."
           sleep 3
           curl -sf --max-time 20 -o /dev/null \
-            -w "${SITE_URL:-https://bunker.example} → HTTP %{http_code}\n" \
-            "${SITE_URL:-https://bunker.example}/"
+            -w "${SITE_URL:-https://xn----8sbabcv8afu6axg.xn--p1ai} → HTTP %{http_code}\n" \
+            "${SITE_URL:-https://xn----8sbabcv8afu6axg.xn--p1ai}/"
