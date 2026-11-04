@@ -191,10 +191,13 @@ test("drinks subfolders stay visible; hide-list holds only owner-hidden folders"
     [
       "7dfeb8f0-d55f-11f1-0a80-1d67002e42e8",
       "a73f8c59-aaac-11f1-0a80-144000238a99",
-      "dbebb56c-b597-11f1-0a80-02d3004601fe",
+      "dbebb56c-8031-11f1-0a80-07b600485f3f",
     ],
   );
-  assert.equal(HIDDEN_PRODUCT_NAME_PREFIXES.length, 0);
+  assert.deepEqual(HIDDEN_PRODUCT_NAME_PREFIXES, [
+    "Жидкость ICE FOX",
+    "Жидкость Soak",
+  ]);
   const categories = [
     {
       id: "drinks",
@@ -237,7 +240,9 @@ test("owner-hidden liquid brands ICE FOX and Soak drop with branch, root stays",
   // Решение владельца 04.11.2026: бренды жидкостей «ICE FOX» и «Soak»
   // сняты с витрины по стабильным id папок МойСклад (вместе с вложенными
   // папками — SOAK 10 / SOAK L 30 наследуют скрытие родителя), категория
-  // «Жидкости» и остальные бренды публикуются.
+  // «Жидкости» и остальные бренды публикуются. Жидкости этих брендов,
+  // лежащие в МойСклад мимо брендовых папок, скрыты префиксами названий;
+  // одноимённые одноразки «Парогенератор ICE FOX …» не задеты.
   const categories = [
     {
       id: "liq-root",
@@ -254,7 +259,7 @@ test("owner-hidden liquid brands ICE FOX and Soak drop with branch, root stays",
       parentId: "liq-root",
     },
     {
-      id: "dbebb56c-b597-11f1-0a80-02d3004601fe",
+      id: "dbebb56c-8031-11f1-0a80-07b600485f3f",
       name: "Soak",
       slug: "soak",
       description: "",
@@ -265,7 +270,7 @@ test("owner-hidden liquid brands ICE FOX and Soak drop with branch, root stays",
       name: "SOAK 10",
       slug: "soak-10",
       description: "",
-      parentId: "dbebb56c-b597-11f1-0a80-02d3004601fe",
+      parentId: "dbebb56c-8031-11f1-0a80-07b600485f3f",
     },
     {
       id: "plonq",
@@ -273,6 +278,13 @@ test("owner-hidden liquid brands ICE FOX and Soak drop with branch, root stays",
       slug: "plonq",
       description: "",
       parentId: "liq-root",
+    },
+    {
+      id: "disposables",
+      name: "Одноразовые ЭС",
+      slug: "disposables",
+      description: "",
+      parentId: null,
     },
   ];
   const products = [
@@ -283,19 +295,38 @@ test("owner-hidden liquid brands ICE FOX and Soak drop with branch, root stays",
     }),
     product({
       id: "soak-1",
-      categoryId: "dbebb56c-b597-11f1-0a80-02d3004601fe",
+      categoryId: "dbebb56c-8031-11f1-0a80-07b600485f3f",
     }),
     product({ id: "soak-10-1", categoryId: "soak-10" }),
     product({ id: "plonq-1", categoryId: "plonq" }),
+    // Жидкости брендов прямо в корне «Жидкостей» — скрыты префиксами.
+    product({
+      id: "loose-ice-fox",
+      categoryId: "liq-root",
+      name: "Жидкость ICE FOX By ICEBERG",
+    }),
+    product({
+      id: "loose-soak",
+      categoryId: "liq-root",
+      name: "Жидкость Soak 30ml",
+    }),
+    // Одноимённая линейка одноразок публикуется.
+    product({
+      id: "disposable-ice-fox",
+      categoryId: "disposables",
+      name: "Парогенератор ICE FOX 1200",
+    }),
   ];
   const result = applyLegalPolicy(snapshot(categories, products));
   assert.deepEqual(result.products.map((item) => item.id).sort(), [
+    "disposable-ice-fox",
     "liq-root-1",
     "plonq-1",
   ]);
   assert.deepEqual(result.meta.categories.map((item) => item.name).sort(), [
     "PlonQ",
     "Жидкости",
+    "Одноразовые ЭС",
   ]);
 });
 

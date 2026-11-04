@@ -201,11 +201,17 @@ export function isAgePublicRootCategory(name: string | undefined): boolean {
 export const HIDDEN_SUBCATEGORY_IDS: ReadonlySet<string> = new Set([
   "7dfeb8f0-d55f-11f1-0a80-1d67002e42e8",
   "a73f8c59-aaac-11f1-0a80-144000238a99",
-  "dbebb56c-b597-11f1-0a80-02d3004601fe",
+  "dbebb56c-8031-11f1-0a80-07b600485f3f",
 ]);
 
 /**
  * Скрытые линейки товаров по префиксу названия МойСклад — независимо от
- * папки. TODO(данные владельца): префиксы аккаунта ProHook не переносятся.
+ * папки. Жидкости брендов ICE FOX и Soak, лежащие в МойСклад мимо своих
+ * брендовых папок (прямо в корне «Жидкостей»), скрыты вместе с папками
+ * брендов (решение владельца 04.11.2026): префиксы не задевают одноимённые
+ * одноразки «Парогенератор ICE FOX …» и б/у устройства Soak Q (Vape Express).
  */
-export const HIDDEN_PRODUCT_NAME_PREFIXES: readonly string[] = [];
+export const HIDDEN_PRODUCT_NAME_PREFIXES: readonly string[] = [
+  "Жидкость ICE FOX",
+  "Жидкость Soak",
+];
