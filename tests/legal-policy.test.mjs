@@ -92,9 +92,9 @@ test("root category classification", () => {
 });
 
 test("applyLegalPolicy hides unclassified, keeps owner-written descriptions", () => {
-  // Блок-листы подкатегорий/линеек ProHook не переносятся (см.
-  // HIDDEN_SUBCATEGORY_IDS в shared/legal/classification.ts): пока списки
-  // пусты, скрытие работает только через классы категорий.
+  // Блок-листы подкатегорий/линеек ProHook не переносятся: скрытие веток
+  // живого аккаунта — через HIDDEN_SUBCATEGORY_IDS (см. тест ниже),
+  // неклассифицированные корни блокируются как PENDING_REVIEW.
   const categories = [
     {
       id: "snack",
@@ -182,12 +182,17 @@ test("applyLegalPolicy hides unclassified, keeps owner-written descriptions", ()
 
 test("drinks subfolders stay visible; hide-list holds only owner-hidden folders", () => {
   // Механизм скрытия подкатегорий/линеек (HIDDEN_SUBCATEGORY_IDS,
-  // HIDDEN_PRODUCT_NAME_PREFIXES): в списке — только служебная папка
-  // «РЕМОНТ с магазинов» ветки Vape Express (решение владельца 01.11.2026);
-  // посторонние подкатегории «Напитков» класс корня наследуют и видны.
+  // HIDDEN_PRODUCT_NAME_PREFIXES): в списке — только папки, снятые с
+  // витрины решением владельца: «РЕМОНТ с магазинов» (01.11.2026) и бренды
+  // жидкостей «ICE FOX»/«Soak» (04.11.2026); посторонние подкатегории
+  // «Напитков» класс корня наследуют и видны.
   assert.deepEqual(
     [...HIDDEN_SUBCATEGORY_IDS],
-    ["7dfeb8f0-d55f-11f1-0a80-1d67002e42e8"],
+    [
+      "7dfeb8f0-d55f-11f1-0a80-1d67002e42e8",
+      "a73f8c59-aaac-11f1-0a80-144000238a99",
+      "dbebb56c-b597-11f1-0a80-02d3004601fe",
+    ],
   );
   assert.equal(HIDDEN_PRODUCT_NAME_PREFIXES.length, 0);
   const categories = [
@@ -226,6 +231,72 @@ test("drinks subfolders stay visible; hide-list holds only owner-hidden folders"
     result.meta.categories.map((item) => item.name),
     ["Напитки", "Энергетики", "Coca Cola"],
   );
+});
+
+test("owner-hidden liquid brands ICE FOX and Soak drop with branch, root stays", () => {
+  // Решение владельца 04.11.2026: бренды жидкостей «ICE FOX» и «Soak»
+  // сняты с витрины по стабильным id папок МойСклад (вместе с вложенными
+  // папками — SOAK 10 / SOAK L 30 наследуют скрытие родителя), категория
+  // «Жидкости» и остальные бренды публикуются.
+  const categories = [
+    {
+      id: "liq-root",
+      name: "Жидкости",
+      slug: "liq-root",
+      description: "",
+      parentId: null,
+    },
+    {
+      id: "a73f8c59-aaac-11f1-0a80-144000238a99",
+      name: "ICE FOX",
+      slug: "ice-fox",
+      description: "",
+      parentId: "liq-root",
+    },
+    {
+      id: "dbebb56c-b597-11f1-0a80-02d3004601fe",
+      name: "Soak",
+      slug: "soak",
+      description: "",
+      parentId: "liq-root",
+    },
+    {
+      id: "soak-10",
+      name: "SOAK 10",
+      slug: "soak-10",
+      description: "",
+      parentId: "dbebb56c-b597-11f1-0a80-02d3004601fe",
+    },
+    {
+      id: "plonq",
+      name: "PlonQ",
+      slug: "plonq",
+      description: "",
+      parentId: "liq-root",
+    },
+  ];
+  const products = [
+    product({ id: "liq-root-1", categoryId: "liq-root" }),
+    product({
+      id: "ice-fox-1",
+      categoryId: "a73f8c59-aaac-11f1-0a80-144000238a99",
+    }),
+    product({
+      id: "soak-1",
+      categoryId: "dbebb56c-b597-11f1-0a80-02d3004601fe",
+    }),
+    product({ id: "soak-10-1", categoryId: "soak-10" }),
+    product({ id: "plonq-1", categoryId: "plonq" }),
+  ];
+  const result = applyLegalPolicy(snapshot(categories, products));
+  assert.deepEqual(result.products.map((item) => item.id).sort(), [
+    "liq-root-1",
+    "plonq-1",
+  ]);
+  assert.deepEqual(result.meta.categories.map((item) => item.name).sort(), [
+    "PlonQ",
+    "Жидкости",
+  ]);
 });
 
 test("age-public assortment is exactly the owner list of 13.10.2026", () => {
