@@ -469,6 +469,9 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
         description: item.description?.trim() ?? "",
         attributes,
         offers,
+        // У товара нет даты создания — только updated; для нового товара она
+        // совпадает с датой появления, а для старых publishedAt закрепляется
+        // переносом из предыдущего снимка (catalog-cache, retainPublishedAt).
         publishedAt: item.updated ? item.updated.replace(" ", "T") + "Z" : "",
       };
     })

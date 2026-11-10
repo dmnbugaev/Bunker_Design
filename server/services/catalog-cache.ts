@@ -66,11 +66,35 @@ function retainStock(next: CatalogSnapshot, previous?: CatalogSnapshot) {
   return next;
 }
 
+/**
+ * Дата публикации закрепляется за товаром при первом появлении в выгрузке и
+ * дальше переносится из снимка в снимок. «МойСклад» отдаёт только updated,
+ * которая меняется при любой правке товара (цена, описание, фото) — без
+ * переноса старые товары всплывали бы в сортировке «Новинки».
+ */
+export function retainPublishedAt(
+  next: CatalogSnapshot,
+  previous?: CatalogSnapshot,
+) {
+  if (!previous) return next;
+  const known = new Map(
+    previous.products.map((product) => [product.id, product.publishedAt]),
+  );
+  next.products = next.products.map((product) => {
+    const prior = known.get(product.id);
+    return prior ? { ...product, publishedAt: prior } : product;
+  });
+  return next;
+}
+
 export async function refreshCatalog() {
   if (catalogRefresh) return catalogRefresh;
   catalogRefresh = (async () => {
     await load();
-    const next = retainStock(await fetchCatalog(), snapshot);
+    const next = retainPublishedAt(
+      retainStock(await fetchCatalog(), snapshot),
+      snapshot,
+    );
     snapshot = next;
     await save(next);
     return next;
