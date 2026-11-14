@@ -47,6 +47,7 @@ npm run build          # production-сборка (.output/)
 npm run preview        # прогон production-сборки
 npm run catalog:sync   # разовая выгрузка из «МойСклад» + проверка МРЦ
 npm run stores:geocode # координаты магазинов (Яндекс/2ГИС) в sidecar
+node scripts/reset-password.mjs <тел.> # ручной сброс пароля юзера (sudo, прод)
 npm run test:unit      # юнит-тесты (node --test)
 npm run test           # e2e-тесты Playwright (фикстурный режим)
 npm run lint           # eslint
