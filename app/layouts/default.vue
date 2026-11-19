@@ -32,6 +32,17 @@ const ageConfirmed = useAgeConfirmed();
 watch(ageConfirmed, (value) => {
   if (value) ageCookie.value = true;
 });
+// Взрослый аккаунт — уже верифицированный посетитель: дата рождения из
+// личного кабинета подтверждает возраст (источник истины), cookie гейта
+// лишь фиксирует это для следующих страниц.
+const { user, loggedIn } = useSessionUser();
+watch(
+  () => user.value?.isAdult,
+  (adult) => {
+    if (adult && !ageConfirmed.value) ageConfirmed.value = true;
+  },
+  { immediate: true },
+);
 const route = useRoute();
 const publicRoute = computed(() => PUBLIC_ROUTES.includes(route.path));
 const catalogRoute = computed(() => CATALOG_ROUTES.test(route.path));
@@ -43,6 +54,30 @@ const contentVisible = computed(
 const gated = computed(
   () => !ageConfirmed.value && !publicRoute.value && !catalogRoute.value,
 );
+// Окно подтверждения возраста открывается при входе на сайт (первая
+// страница сессии) для всех, кто не вошёл в аккаунт и ещё не подтверждал
+// возраст, — независимо от маршрута (паритет с ProHook, решение заказчика
+// 19.11.2026). Страницы входа/регистрации/кабинета не прерываем: посетитель
+// идёт авторизоваться. Метка «предлагали» — session-cookie без maxAge (живёт
+// до закрытия браузера); latch читается один раз при загрузке, чтобы метка
+// не подавляла собственный первый показ. Контент закрытых маршрутов
+// по-прежнему скрыт правилом `gated` выше — окно лишь спрашивает возраст.
+const AGE_MODAL_EXEMPT = ["/login", "/register", "/account"];
+const gateShownCookie = useCookie<boolean | null>("bunker-age-gate-shown");
+const gateSuppressed = ref(gateShownCookie.value === true);
+onMounted(() => {
+  gateSuppressed.value = gateShownCookie.value === true;
+});
+const showAgeGate = computed(
+  () =>
+    !ageConfirmed.value &&
+    !loggedIn.value &&
+    !gateSuppressed.value &&
+    !AGE_MODAL_EXEMPT.includes(route.path),
+);
+watch(showAgeGate, (shown) => {
+  if (shown) gateShownCookie.value = true;
+});
 const { data: meta } = await useCatalogMeta();
 const { store, pickerOpen, pickerDismissed, autoDetected, detect } =
   useStoreSelection();
@@ -57,6 +92,9 @@ watch(
       meta.value &&
       !consentUndecided.value &&
       route.path !== "/partners" &&
+      // Служебные страницы (кабинет, вход, регистрация) окном выбора
+      // магазина не прерываем — оно ждёт перехода в каталог.
+      !["/account", "/login", "/register"].includes(route.path) &&
       !store.value &&
       // Закрытое без выбора окно не открываем заново до конца сессии.
       !pickerDismissed.value
@@ -91,15 +129,24 @@ onBeforeUnmount(() => noticeTimer && clearTimeout(noticeTimer));
         <p v-else class="caption age-hint">
           Содержимое сайта доступно после подтверждения совершеннолетнего
           возраста.
+          <button
+            type="button"
+            class="text-link"
+            @click="gateSuppressed = false"
+          >
+            Подтвердить 18+
+          </button>
         </p>
       </main>
       <AppFooter />
     </div>
-    <AgeGate v-if="gated" v-model="ageConfirmed" />
+    <AgeGate v-if="showAgeGate" v-model="ageConfirmed" />
     <StorePicker v-if="ageConfirmed || catalogRoute" />
     <!-- Баннер согласия на cookie: до подтверждения 18+ не показываем,
          чтобы не складывать два поверхностных слоя поверх гейта. -->
-    <CookieConsent v-if="contentVisible" />
+    <!-- Баннер согласия на cookie: до подтверждения 18+ и пока открыто
+         окно возраста не показываем — два поверхностных слоя не наслаиваются. -->
+    <CookieConsent v-if="contentVisible && !showAgeGate" />
     <div v-if="autoDetected" class="geo-note" role="status">
       <p class="caption">
         Ближайший магазин — <strong>{{ store?.name }}</strong

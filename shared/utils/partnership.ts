@@ -6,18 +6,13 @@ export type Partnership = {
   offer: string;
   /** Отдельное согласие на обработку персональных данных (152-ФЗ ст. 9). */
   consent: boolean;
-  /** Отдельное согласие на передачу данных через Telegram (трансграничная). */
-  consentTelegram: boolean;
 };
 
 /**
  * Согласие на передачу через Telegram требуется только при настроенной
  * доставке (см. validateReservation): без интеграции чекбокса в форме нет.
  */
-export function validatePartnership(
-  input: unknown,
-  options: { requireTelegramConsent?: boolean } = {},
-) {
+export function validatePartnership(input: unknown) {
   const raw =
     input && typeof input === "object" && !Array.isArray(input)
       ? (input as Record<string, unknown>)
@@ -30,7 +25,6 @@ export function validatePartnership(
     company: "",
     offer: "",
     consent: raw.consent === true,
-    consentTelegram: raw.consentTelegram === true,
   };
   for (const key of ["name", "phone", "city", "company"] as const) {
     const value = raw[key];
@@ -68,8 +62,5 @@ export function validatePartnership(
   }
   if (!data.consent)
     errors.consent = "Подтвердите согласие на обработку персональных данных.";
-  if (options.requireTelegramConsent !== false && !data.consentTelegram)
-    errors.consentTelegram =
-      "Подтвердите согласие на передачу заявки через Telegram.";
   return { data, errors, valid: Object.keys(errors).length === 0 };
 }

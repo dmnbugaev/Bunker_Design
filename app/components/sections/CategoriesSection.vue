@@ -3,18 +3,12 @@ import type { Category } from "~~/shared/types/category";
 
 defineProps<{ categories: Category[] }>();
 
-// Фолббек-арт направлений: брендовые снимки из design-kit для ветвей, в
-// которых в МойСклад ещё нет ни одной фотографии товара. Живая обложка
-// (фото товара ветви) всегда важнее арта; сопоставление — по
-// нормализованному имени корня (порядок корней зависит от склада).
-const FALLBACK_ART: Record<string, string> = {
-  жидкости: "/images/fx-liquid-1.webp",
-  устройства: "/images/fx-pod.webp",
-  "одноразовые эс": "/images/fx-stels.webp",
-  "табак для кальяна": "/images/fx-tea.webp",
-  ароматизаторы: "/images/fx-liquid-2.webp",
-  "vape express": "/images/storefront.webp",
-};
+// Обложка направления — только живое фото товара ветви (category.image,
+// ставится первым фото товара в снимке). Раньше для ветвей без фото
+// подставлялись брендовые арты из design-kit — рекламные посты сети
+// (fx-tea у табака, fx-stels у одноразок) — заказчик принял их за
+// «подгрузившиеся картинки постов» и просил убрать (19.11.2026):
+// без фото плитка остаётся честной монограммой ProductImage.
 function artFor(category: Category):
   | {
       id: string;
@@ -22,8 +16,7 @@ function artFor(category: Category):
       alt: string;
     }
   | undefined {
-  const key = category.name.trim().toLocaleLowerCase("ru").replace(/\s+/g, " ");
-  const src = category.image ?? FALLBACK_ART[key];
+  const src = category.image;
   return src ? { id: category.id, src, alt: category.name } : undefined;
 }
 </script>

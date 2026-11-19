@@ -231,7 +231,8 @@ test("publish/site-name fields, price types, city groups and legal policy", asyn
   const extra = snapshot.meta.stores.find(
     (store) => store.id === "bunker-store-engels-chapaeva-45",
   );
-  assert.equal(extra?.cityId, "engels");
+  // Город точки — Саратов (уточнение владельца 19.11.2026).
+  assert.equal(extra?.cityId, "saratov");
   assert.equal(extra?.address, "ул. Чапаева, 45");
   assert.ok(
     snapshot.products.every((product) =>

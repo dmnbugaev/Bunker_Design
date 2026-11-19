@@ -1,8 +1,5 @@
 import { validatePartnership } from "../../shared/utils/partnership";
-import {
-  isTelegramDeliveryConfigured,
-  parseTelegramChatIds,
-} from "../services/telegram";
+import { parseTelegramChatIds } from "../services/telegram";
 import { createPartnership } from "../services/partnership-store";
 import { dispatchPartnershipNotification } from "../services/partnership-telegram";
 import { allowPartnership } from "../utils/partnership-rate-limit";
@@ -45,10 +42,9 @@ export default defineEventHandler(async (event) => {
   if (body && typeof body === "object" && "website" in body && body.website) {
     throw createError({ statusCode: 400, statusMessage: "Invalid submission" });
   }
-  const { data, errors, valid } = validatePartnership(body, {
-    // Согласие на Telegram нужно только при настроенной доставке.
-    requireTelegramConsent: isTelegramDeliveryConfigured(),
-  });
+  // Согласие одно и покрывает передачу через Telegram (решение заказчика
+  // 19.11.2026).
+  const { data, errors, valid } = validatePartnership(body);
   if (!valid)
     throw createError({
       statusCode: 422,

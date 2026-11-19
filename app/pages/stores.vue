@@ -81,9 +81,10 @@ const introLead = computed(() => {
   const total = allStores.value.length;
   return `${total} ${pluralPoints(total)} сети${parts ? `: ${parts}` : ""}. Выберите удобную — каталог покажет цены и наличие по ней.`;
 });
-// Режим точки: индивидуальный из выгрузки или общий режим сети.
+// Режим точки: индивидуальный из выгрузки; общего режима сети нет
+// (владелец, 19.11.2026), без записи — подсказка про телефон.
 function storeHours(item: { hours?: string }): string {
-  return item.hours ?? bunkerContacts.hours;
+  return item.hours ?? "Часы работы уточняйте по телефону";
 }
 // Строка фактов о точке: полный адрес и режим. Лицензии каждой точки
 // публикуются целиком на /information — в ведомости они повторялись

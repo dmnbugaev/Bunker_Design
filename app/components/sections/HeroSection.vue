@@ -66,8 +66,8 @@ onBeforeUnmount(() => {
           цены. Бронирование — в выбранный магазин, оплата на месте.
         </p>
         <NuxtLink to="/catalog" class="button button--primary button--large"
-          >Смотреть каталог <span aria-hidden="true">↗</span></NuxtLink
-        >
+          >Смотреть каталог <UiArrow
+        /></NuxtLink>
       </div>
       <div id="hero-visual" class="hero__visual">
         <img

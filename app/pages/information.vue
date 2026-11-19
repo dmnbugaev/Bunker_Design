@@ -70,8 +70,8 @@ const licensedStores = computed(
           bunkerContacts.email
         }}</a
         >.<br />
-        Режим работы торговых точек уточняйте по телефону; для сети указан общий
-        режим {{ bunkerContacts.hours.toLowerCase() }}.
+        Режим работы каждой точки — на странице «Магазины»; при необходимости
+        уточняйте его по телефону.
       </p>
       <p v-else>
         {{ sellerRequisites.legalName }}.<br />
@@ -88,8 +88,8 @@ const licensedStores = computed(
           bunkerContacts.email
         }}</a
         >.<br />
-        Режим работы торговых точек уточняйте по телефону; для сети указан общий
-        режим {{ bunkerContacts.hours.toLowerCase() }}.
+        Режим работы каждой точки — на странице «Магазины»; при необходимости
+        уточняйте его по телефону.
       </p>
       <h2>Лицензирование розничной продажи</h2>
       <p v-if="licensedStores.length">

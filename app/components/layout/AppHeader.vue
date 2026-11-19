@@ -112,6 +112,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
           <path d="m16 16 5 5" stroke="currentColor" stroke-width="2" /></svg
       ></NuxtLink>
       <NuxtLink
+        v-if="loggedIn"
         to="/reserve"
         class="icon-button selection-link"
         :aria-label="
@@ -206,6 +207,7 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
         >{{ accountLink.label }}</NuxtLink
       >
       <NuxtLink
+        v-if="loggedIn"
         to="/reserve"
         class="mobile-nav__account"
         @click="menuOpen = false"

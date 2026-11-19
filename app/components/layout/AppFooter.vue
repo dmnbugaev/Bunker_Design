@@ -100,7 +100,6 @@ function footerPhoneClick() {
             >{{ bunkerContacts.phone }}</a
           >
           <p class="footer-note__meta">
-            {{ bunkerContacts.hours }}<br />
             <a :href="`mailto:${bunkerContacts.email}`">{{
               bunkerContacts.email
             }}</a>

@@ -14,9 +14,10 @@ export const bunkerContacts = {
   vk: "https://vk.ru/bunker_vape",
   telegram: "https://t.me/bunker_store",
   instagram: "https://www.instagram.com/bunker_srtv/",
-  // Общий режим работы всех точек сети.
-  hours: "Ежедневно, 8:00–01:00",
 };
+// Часы работы точек не публикуются единым режимом: у каждой точки свои
+// часы (владелец, 19.11.2026) — см. server/data/store-hours.ts и
+// server/data/extra-stores.ts.
 
 /**
  * Комиссионный сервис сети — Vape Express: сообщества ВКонтакте и Telegram

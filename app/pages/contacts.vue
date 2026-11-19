@@ -140,10 +140,6 @@ const network = computed(() => {
       <aside class="contacts-summary" aria-labelledby="contacts-summary">
         <h2 id="contacts-summary" class="contacts-summary__title">Сеть</h2>
         <dl class="contacts-summary__list">
-          <div>
-            <dt>Режим работы</dt>
-            <dd>{{ bunkerContacts.hours }}</dd>
-          </div>
           <div v-if="network.total">
             <dt>Магазины</dt>
             <dd>

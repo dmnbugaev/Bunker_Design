@@ -58,8 +58,8 @@ onBeforeUnmount(() => {
       <div class="about-hero__deck">
         <span class="about-hero__sub">Больше, чем вейпшоп</span>
         <NuxtLink to="/catalog" class="button button--primary button--large"
-          >Смотреть каталог <span aria-hidden="true">↗</span></NuxtLink
-        >
+          >Смотреть каталог <UiArrow
+        /></NuxtLink>
       </div>
     </UiContainer>
   </section>

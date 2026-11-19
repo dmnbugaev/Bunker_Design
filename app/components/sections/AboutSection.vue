@@ -17,8 +17,8 @@ withDefaults(defineProps<{ showLink?: boolean }>(), { showLink: true });
           о наличии доступны по выбранной точке.
         </p>
         <NuxtLink v-if="showLink" to="/about" class="text-link"
-          >О Бункер ↗</NuxtLink
-        >
+          >О Бункер <UiArrow
+        /></NuxtLink>
       </div>
     </div>
     <div class="advantages">

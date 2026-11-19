@@ -59,10 +59,7 @@ export function normalizeSelectionItems(
  * через Telegram действительно настроена (requireTelegramConsent: false —
  * интеграция выключена, чекбокса в форме нет).
  */
-export function validateReservation(
-  input: unknown,
-  options: { requireTelegramConsent?: boolean } = {},
-): {
+export function validateReservation(input: unknown): {
   data: ReservationData;
   errors: Record<string, string>;
   valid: boolean;
@@ -117,9 +114,6 @@ export function validateReservation(
 
   if (raw.consent !== true)
     errors.consent = "Подтвердите согласие на обработку персональных данных.";
-  if (options.requireTelegramConsent !== false && raw.consentTelegram !== true)
-    errors.consentTelegram =
-      "Подтвердите согласие на передачу запроса через Telegram.";
 
   return {
     data: {
@@ -128,7 +122,6 @@ export function validateReservation(
       storeId,
       comment,
       consent: raw.consent === true,
-      consentTelegram: raw.consentTelegram === true,
       items: items ?? [],
     },
     errors,

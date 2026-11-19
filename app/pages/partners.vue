@@ -18,7 +18,6 @@ const form = reactive({
   company: "",
   offer: "",
   consent: false,
-  consentTelegram: false,
   website: "",
 });
 const errors = ref<Record<string, string>>({});
@@ -27,19 +26,10 @@ const sent = ref(false);
 const failure = ref("");
 const formElement = ref<HTMLFormElement>();
 const successElement = ref<HTMLElement>();
-// Согласие на передачу через Telegram — только при настроенной доставке;
-// тот же признак использует серверная валидация, расхождения быть не может.
-const { data: integrationFlags } = await useFetch<{
-  telegramNotify: boolean;
-}>("/api/integration-flags");
-const telegramEnabled = integrationFlags.value?.telegramNotify === true;
-
 async function submit() {
   if (pending.value) return;
   failure.value = "";
-  const validation = validatePartnership(form, {
-    requireTelegramConsent: telegramEnabled,
-  });
+  const validation = validatePartnership(form);
   errors.value = validation.errors;
   if (!validation.valid) {
     await nextTick();
@@ -59,7 +49,6 @@ async function submit() {
       company: "",
       offer: "",
       consent: false,
-      consentTelegram: false,
       website: "",
     });
     await nextTick();
@@ -179,11 +168,14 @@ async function submit() {
               /></label>
             </div>
             <div>
+              <!-- Согласие одно (решение заказчика 19.11.2026): текст прямо
+                   называет передачу заявки через Telegram с трансграничной
+                   передачей — отдельной галочки нет, раскрытие — в политике. -->
               <UiCheckbox
                 v-model="form.consent"
                 name="consent"
                 required
-                label="Согласен(на) на обработку моих персональных данных (ФИО, телефон, город/регион, компания, текст предложения) в целях рассмотрения заявки о сотрудничестве."
+                label="Согласен(на) на обработку моих персональных данных (ФИО, телефон, город/регион, компания, текст предложения) в целях рассмотрения заявки о сотрудничестве, включая передачу заявки продавцу через сервис Telegram (api.telegram.org) с трансграничной передачей указанных данных."
                 :aria-invalid="!!errors.consent"
                 :aria-describedby="errors.consent ? 'consent-error' : undefined"
               />
@@ -202,25 +194,6 @@ async function submit() {
                 class="field__help field__help--error"
               >
                 {{ errors.consent }}
-              </p>
-            </div>
-            <div v-if="telegramEnabled">
-              <UiCheckbox
-                v-model="form.consentTelegram"
-                name="consentTelegram"
-                required
-                label="Согласен(на) на передачу заявки через сервис Telegram (api.telegram.org), включая трансграничную передачу указанных персональных данных."
-                :aria-invalid="!!errors.consentTelegram"
-                :aria-describedby="
-                  errors.consentTelegram ? 'consent-telegram-error' : undefined
-                "
-              />
-              <p
-                v-if="errors.consentTelegram"
-                id="consent-telegram-error"
-                class="field__help field__help--error"
-              >
-                {{ errors.consentTelegram }}
               </p>
             </div>
           </fieldset>

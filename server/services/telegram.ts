@@ -23,32 +23,6 @@ export function parseTelegramChatIds(raw: string | number) {
     .filter(Boolean);
 }
 
-/**
- * Доставка персональных данных через api.telegram.org реально настроена
- * (токен + хотя бы один чат резерва или партнёрства). Только в этом случае
- * формам нужно обязательное согласие на трансграничную передачу; без
- * Telegram запросы уходят задачей в МойСклад и согласие не требуется.
- */
-export function isTelegramDeliveryConfigured(): boolean {
-  // Резервы читают сырые env, партнёрская форма — NUXT_-маппинг runtimeConfig
-  // (telegramBotToken/telegramChatId): учитываем оба варианта.
-  const token =
-    process.env.TELEGRAM_BOT_TOKEN?.trim() ||
-    process.env.NUXT_TELEGRAM_BOT_TOKEN?.trim() ||
-    "";
-  if (!token) return false;
-  const reservationChats = parseTelegramChatIds(
-    process.env.TELEGRAM_RESERVATION_CHAT_IDS ?? "",
-  ).length;
-  const partnershipChats = parseTelegramChatIds(
-    process.env.TELEGRAM_PARTNERSHIP_CHAT_IDS ??
-      process.env.TELEGRAM_CHAT_ID ??
-      process.env.NUXT_TELEGRAM_CHAT_ID ??
-      "",
-  ).length;
-  return reservationChats + partnershipChats > 0;
-}
-
 /** api.telegram.org недоступен на сетевом уровне (DNS/TCP) — ретраи бессмысленны. */
 export class TelegramUnreachableError extends Error {}
 

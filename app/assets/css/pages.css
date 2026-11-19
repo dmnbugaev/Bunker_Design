@@ -115,6 +115,12 @@
     color var(--duration-fast) var(--easing-standard),
     border-color var(--duration-fast) var(--easing-standard);
 }
+/* Стрелка UiArrow повторяет направление ссылки: лёгкий сдвиг при наведении
+   на родителя (единая замена текстовых «↗», правка 19.11.2026). */
+a:hover .ui-arrow,
+.button:hover .ui-arrow {
+  transform: translate(1px, -1px);
+}
 .text-link:hover {
   color: var(--color-link-hover);
   border-color: var(--color-link-hover);

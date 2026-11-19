@@ -41,6 +41,13 @@ test.beforeEach(async ({ context }) => {
 test("first visit chooses a real city and store", async ({ page, context }) => {
   await context.clearCookies();
   await open(page, "/");
+  // Вход без аккаунта: сначала окно подтверждения возраста (19.11.2026),
+  // после него — выбор города и магазина.
+  const gate = page.getByRole("dialog", {
+    name: "Вам уже исполнилось 18 лет?",
+  });
+  await expect(gate).toBeVisible();
+  await gate.getByRole("button", { name: "Мне 18 лет или больше" }).click();
   // Пикер магазина не открывается поверх нерешённого cookie-баннера:
   // сначала отвечаем на него.
   await page.getByRole("button", { name: "Принять" }).click();
@@ -279,9 +286,10 @@ test("category descendants, search, missing image and API pagination", async ({
   });
   expect(response.ok()).toBe(true);
   expect(await response.json()).toMatchObject({
-    total: 28,
+    // Фикстура выросла до 29 позиций ветви (пагинация по 2).
+    total: 29,
     page: 2,
-    pageCount: 14,
+    pageCount: 15,
   });
 });
 

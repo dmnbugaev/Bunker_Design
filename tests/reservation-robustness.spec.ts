@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import {
+  test,
+  expect,
+  type Page,
+  type APIRequestContext,
+} from "@playwright/test";
 
 // Устойчивость списка выбранных товаров и API запроса на резерв к битым
 // данным и злоупотреблениям. Фикстура содержит stockDetail, поэтому эти
@@ -24,6 +29,36 @@ function selectionCookie(entries: unknown) {
     domain: "127.0.0.1",
     path: "/",
   };
+}
+
+/**
+ * Резерв — только для вошедших (19.11.2026): UI-сценарии списка/формы
+ * регистрируют совершеннолетний аккаунт и носят cookie сессии.
+ */
+async function registerAdultSession(request: APIRequestContext) {
+  const digits = String(Math.floor(Math.random() * 1e7)).padStart(7, "0");
+  const registration = await request.post("/api/auth/register", {
+    data: {
+      lastName: "Устойчивый",
+      firstName: "Иван",
+      middleName: "Иванович",
+      dateOfBirth: `01.01.${new Date().getFullYear() - 30}`,
+      phone: `+7 (999) ${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`,
+      password: "secret123",
+      passwordConfirm: "secret123",
+      consent: true,
+    },
+  });
+  const setCookie = registration.headers()["set-cookie"] ?? "";
+  return /bunker-session=([^;]+)/.exec(setCookie)?.[1] ?? "";
+}
+
+async function addSessionCookie(page: Page, token: string) {
+  await page
+    .context()
+    .addCookies([
+      { name: "bunker-session", value: token, domain: "127.0.0.1", path: "/" },
+    ]);
 }
 
 async function openGated(page: Page, path: string) {
@@ -64,7 +99,9 @@ test("corrupted selection cookie never breaks the page", async ({ page }) => {
 
 test("hostile selection cookie is sanitized to valid entries", async ({
   page,
+  request,
 }) => {
+  await addSessionCookie(page, await registerAdultSession(request));
   await page.context().addCookies([
     AGE_COOKIE,
     STORE_COOKIE,
@@ -124,7 +161,9 @@ test("oversized cookie (30 items) is capped to the first 20", async ({
 
 test("stale product in the list blocks submit and can be removed", async ({
   page,
+  request,
 }) => {
+  await addSessionCookie(page, await registerAdultSession(request));
   await page
     .context()
     .addCookies([
@@ -195,7 +234,11 @@ async function selectionHelper(
     ]);
 }
 
-test("double-click submit sends exactly one request", async ({ page }) => {
+test("double-click submit sends exactly one request", async ({
+  page,
+  request,
+}) => {
+  await addSessionCookie(page, await registerAdultSession(request));
   await page
     .context()
     .addCookies([
@@ -245,13 +288,14 @@ test("double-click submit sends exactly one request", async ({ page }) => {
 test("exact stock beats availability bucket on the server", async ({
   request,
 }) => {
+  const sessionToken = await registerAdultSession(request);
+  const auth = { cookie: `bunker-session=${sessionToken}` };
   const payload = {
     name: "Иван Точный",
     phone: "+7 999 222-22-22",
     storeId: "store-b2",
     comment: "",
     consent: true,
-    consentTelegram: true,
   };
   // fx-kaos-eclipse на Танкистов, 64: бакет «В наличии» разрешил бы 10 шт.,
   // точный остаток 2 → сервер обязан отказать в 3 шт. (точные данные
@@ -302,13 +346,32 @@ test("exact stock beats availability bucket on the server", async ({
 test("API rejects malformed bodies, sizes and wrong methods", async ({
   request,
 }) => {
+  // Резерв — только для вошедших (19.11.2026): сценарий с созданием
+  // запроса (badKey/withToken) идёт с сессией, транспортные гварды
+  // (404/405/413/415) срабатывают до авторизации и живут без неё.
+  const digits = String(Math.floor(Math.random() * 1e7)).padStart(7, "0");
+  const registration = await request.post("/api/auth/register", {
+    data: {
+      lastName: "Устойчивый",
+      firstName: "Иван",
+      middleName: "Иванович",
+      dateOfBirth: `01.01.${new Date().getFullYear() - 30}`,
+      phone: `+7 (999) ${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`,
+      password: "secret123",
+      passwordConfirm: "secret123",
+      consent: true,
+    },
+  });
+  const setCookie = registration.headers()["set-cookie"] ?? "";
+  const auth = {
+    cookie: `bunker-session=${/bunker-session=([^;]+)/.exec(setCookie)?.[1]}`,
+  };
   const payload = {
     name: "Иван Точный",
     phone: "+7 999 222-22-22",
     storeId: "store-b2",
     comment: "",
     consent: true,
-    consentTelegram: true,
     items: [{ productId: "fx-liquid-classic", quantity: 1 }],
   };
   // GET не поддерживается (только POST-эндпоинт; Nitro отвечает 404/405).
@@ -329,13 +392,14 @@ test("API rejects malformed bodies, sizes and wrong methods", async ({
   // путём (ключ слишком короткий).
   const badKey = await request.post("/api/reservations", {
     data: payload,
-    headers: { "Idempotency-Key": "short" },
+    headers: { ...auth, "Idempotency-Key": "short" },
   });
   expect(badKey.status()).toBe(200);
   expect((await badKey.json()).replayed).toBeUndefined();
   // Поле captchaToken без настроенной капчи не влияет на результат.
   const withToken = await request.post("/api/reservations", {
     data: { ...payload, captchaToken: "leftover-token" },
+    headers: auth,
   });
   expect(withToken.status()).toBe(200);
 });

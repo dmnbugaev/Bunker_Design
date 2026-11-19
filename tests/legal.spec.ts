@@ -5,6 +5,14 @@ import { test, expect, type Page } from "@playwright/test";
 // лексики дистанционной продажи и стимулирования, юридические страницы
 // доступны без подтверждения возраста.
 
+/** Метка «окно 18+ уже показывали в этом входе» (19.11.2026). */
+const GATE_SHOWN_COOKIE = {
+  name: "bunker-age-gate-shown",
+  value: "true",
+  domain: "127.0.0.1",
+  path: "/",
+};
+
 /** Клик по кнопке подтверждения 18+ после окончания гидрации Vue. */
 async function confirmAgeByButton(page: Page) {
   // SSR-разметка отвечает на ассерты и до гидрации, а клик по кнопке
@@ -129,7 +137,8 @@ test("unregulated assortment is reachable before age confirmation; regulated sta
   const teaPublic = list.items.find(
     (item: { slug: string }) => item.slug === "fx-tea-oolong",
   );
-  expect(teaPublic.images.length).toBe(1);
+  // В фикстуре у чая три снимка (перелистывание фото, коммит 51295f9).
+  expect(teaPublic.images.length).toBe(3);
   expect(teaPublic.imagesRestricted).toBeUndefined();
   expect(
     (await request.get("/api/products/fx-vmate-pro-2/images/0")).status(),
@@ -137,6 +146,9 @@ test("unregulated assortment is reachable before age confirmation; regulated sta
 
   // Страница каталога рендерится без модального гейта: карточки
   // общедоступных товаров видны, регулируемые не показываются.
+  // Окно 18+ при входе (19.11.2026) помечаем «уже предлагали», чтобы
+  // оно не мешало проверке страницы до подтверждения.
+  await page.context().addCookies([GATE_SHOWN_COOKIE]);
   await page.goto("/catalog");
   await expect(
     page.getByRole("dialog", { name: "Вам уже исполнилось 18 лет?" }),
@@ -209,6 +221,8 @@ test("legal pages are reachable without the age gate", async ({ page }) => {
     "/stores",
     "/partners",
   ]) {
+    // Окно 18+ при входе (19.11.2026) здесь не тестируем.
+    await page.context().addCookies([GATE_SHOWN_COOKIE]);
     await page.goto(path);
     await expect(
       page.getByRole("dialog", { name: "Вам уже исполнилось 18 лет?" }),
@@ -232,6 +246,8 @@ test("used-devices section is gated and points to Vape Express communities", asy
 }) => {
   // Раздел «Б/у устройства» (Vape Express) — за модальным гейтом, как
   // /reserve: до подтверждения 18+ контент не отдаётся вовсе.
+  // Окно 18+ открывается на входе (первая страница сессии, 19.11.2026) —
+  // для проверки скрытого контента этого достаточно.
   await page.goto("/used");
   await expect(
     page.getByRole("dialog", { name: "Вам уже исполнилось 18 лет?" }),

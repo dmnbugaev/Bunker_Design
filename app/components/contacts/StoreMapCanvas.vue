@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { bunkerContacts } from "~~/shared/content/bunker";
-
 /**
  * Минимальная форма магазина для карты: ей соответствуют и учётные Store
  * из меты каталога («МойСклад»), и локальный справочник
@@ -159,7 +157,7 @@ const buildPopupHtml = (store: MapStore) => {
     ...(store.district
       ? [`<span class="caption">${escapeHtml(store.district)}</span>`]
       : []),
-    `<span class="caption">Режим: ${escapeHtml(store.hours ?? bunkerContacts.hours)}</span>`,
+    `<span class="caption">Режим: ${escapeHtml(store.hours ?? "уточняйте по телефону")}</span>`,
   ];
   return `<div class="store-popup-card">${rows.join("")}</div>`;
 };

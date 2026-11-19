@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import {
+  test,
+  expect,
+  type Page,
+  type APIRequestContext,
+} from "@playwright/test";
 
 // Запрос на резерв: список выбранных товаров, форма, серверная валидация,
 // идемпотентность и отсутствие утечек Telegram-секретов. Капча и Telegram
@@ -18,6 +23,43 @@ const STORE_COOKIE = {
   path: "/",
 };
 
+/** Регистрирует совершеннолетний аккаунт и возвращает токен сессии. */
+async function registerAdultSession(
+  request: APIRequestContext,
+): Promise<string> {
+  const digits = String(Math.floor(Math.random() * 1e7)).padStart(7, "0");
+  const phone = `+7 (999) ${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+  const birthYear = new Date().getFullYear() - 30;
+  const registration = await request.post("/api/auth/register", {
+    data: {
+      lastName: "Резерров",
+      firstName: "Иван",
+      middleName: "Иванович",
+      dateOfBirth: `01.01.${birthYear}`,
+      phone,
+      password: "secret123",
+      passwordConfirm: "secret123",
+      consent: true,
+    },
+  });
+  expect(registration.status()).toBe(200);
+  const setCookie = registration.headers()["set-cookie"] ?? "";
+  const sessionToken = /bunker-session=([^;]+)/.exec(setCookie)?.[1];
+  expect(sessionToken).toBeTruthy();
+  return sessionToken as string;
+}
+
+async function addSessionCookie(page: Page, sessionToken: string) {
+  await page.context().addCookies([
+    {
+      name: "bunker-session",
+      value: sessionToken,
+      domain: "127.0.0.1",
+      path: "/",
+    },
+  ]);
+}
+
 async function openGated(page: Page, path: string) {
   await page.goto(path);
   await page.waitForLoadState("networkidle");
@@ -33,8 +75,12 @@ async function openGated(page: Page, path: string) {
 
 test("selection list supports add, quantity, removal, clear and persistence", async ({
   page,
+  request,
 }) => {
   await page.context().addCookies([AGE_COOKIE, STORE_COOKIE]);
+  // «+ В список» показывается только вошедшим (модерация карточек,
+  // 19.11.2026) — сценарии списка идут с сессией.
+  await addSessionCookie(page, await registerAdultSession(request));
   await openGated(page, "/product/fx-vmate-pro-2");
   await page.getByRole("button", { name: "Добавить в список" }).click();
   await expect(
@@ -84,8 +130,56 @@ test("selection list supports add, quantity, removal, clear and persistence", as
   await expect(page.getByText("Список пуст")).toBeVisible();
 });
 
-test("catalog cards add to the list and link to /reserve", async ({ page }) => {
+test("reserve form is gated for anonymous visitors", async ({ page }) => {
   await page.context().addCookies([AGE_COOKIE, STORE_COOKIE]);
+  await page.context().addCookies([
+    {
+      name: "bunker-selection",
+      value: JSON.stringify([{ productId: "fx-vmate-pro-2", quantity: 1 }]),
+      domain: "127.0.0.1",
+      path: "/",
+    },
+  ]);
+  await openGated(page, "/reserve");
+  // Список выбранных остаётся публичным, отправка — только после входа.
+  await expect(
+    page.getByRole("link", { name: "VooPoo VMATE Pro 2" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Отправить запрос на резерв" }),
+  ).toHaveCount(0);
+  const gate = page.locator(".reserve-gate");
+  await expect(gate).toBeVisible();
+  await expect(
+    gate.getByRole("link", { name: "Войти", exact: true }),
+  ).toHaveAttribute("href", "/login?redirect=/reserve");
+  await expect(
+    page.getByText("держит выбранные товары 12 часов"),
+  ).toBeVisible();
+});
+
+test("anonymous visitors cannot submit reservation requests", async ({
+  request,
+}) => {
+  const response = await request.post("/api/reservations", {
+    data: {
+      name: "Иван Анонимов",
+      phone: "+7 999 123-45-67",
+      storeId: "store-b1",
+      comment: "",
+      consent: true,
+      items: [{ productId: "fx-vmate-pro-2", quantity: 1 }],
+    },
+  });
+  expect(response.status()).toBe(401);
+});
+
+test("catalog cards add to the list and link to /reserve", async ({
+  page,
+  request,
+}) => {
+  await page.context().addCookies([AGE_COOKIE, STORE_COOKIE]);
+  await addSessionCookie(page, await registerAdultSession(request));
   await openGated(page, "/catalog");
   await page.getByRole("button", { name: "+ В список" }).first().click();
   const active = page.getByRole("link", { name: /В списке/ }).first();
@@ -96,11 +190,19 @@ test("catalog cards add to the list and link to /reserve", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("reserve form requires contacts, store and consent", async ({ page }) => {
+test("reserve form requires contacts, store and consent", async ({
+  page,
+  request,
+}) => {
   await page.context().addCookies([AGE_COOKIE, STORE_COOKIE]);
+  await addSessionCookie(page, await registerAdultSession(request));
   await openGated(page, "/product/fx-vmate-pro-2");
   await page.getByRole("button", { name: "Добавить в список" }).click();
   await openGated(page, "/reserve");
+  // Авторизованному имя и телефон подставляются из аккаунта — очищаем,
+  // чтобы проверить валидацию на по-настоящему пустой форме.
+  await page.getByLabel("Имя *", { exact: true }).fill("");
+  await page.getByLabel("Телефон *").fill("");
   await page
     .getByRole("button", { name: "Отправить запрос на резерв" })
     .click();
@@ -110,7 +212,7 @@ test("reserve form requires contacts, store and consent", async ({ page }) => {
   await page
     .getByRole("button", { name: "Отправить запрос на резерв" })
     .click();
-  // Telegram-уведомления в e2e отключены (нет ключей) — согласие одно.
+  // Согласие одно и покрывает передачу через Telegram (19.11.2026).
   await expect(
     page.getByText("Подтвердите согласие на обработку персональных данных."),
   ).toBeVisible();
@@ -118,8 +220,10 @@ test("reserve form requires contacts, store and consent", async ({ page }) => {
 
 test("reserve form submits and shows the public request id", async ({
   page,
+  request,
 }) => {
   await page.context().addCookies([AGE_COOKIE, STORE_COOKIE]);
+  await addSessionCookie(page, await registerAdultSession(request));
   await openGated(page, "/product/fx-vmate-pro-2");
   await page.getByRole("button", { name: "Добавить в список" }).click();
   await openGated(page, "/reserve");
@@ -146,17 +250,20 @@ test("reserve form submits and shows the public request id", async ({
 test("server re-validates store, products, stock and consents", async ({
   request,
 }) => {
+  const sessionToken = await registerAdultSession(request);
   const payload = {
     name: "Иван Резерров",
     phone: "+7 999 123-45-67",
     storeId: "store-b1",
     comment: "",
     consent: true,
-    consentTelegram: true,
     items: [{ productId: "fx-vmate-pro-2", quantity: 1 }],
   };
   const post = (data: unknown, headers: Record<string, string> = {}) =>
-    request.post("/api/reservations", { data, headers });
+    request.post("/api/reservations", {
+      data,
+      headers: { cookie: `bunker-session=${sessionToken}`, ...headers },
+    });
 
   // Несуществующий магазин.
   const unknownStore = await post({ ...payload, storeId: "store-99" });
@@ -230,19 +337,20 @@ test("server re-validates store, products, stock and consents", async ({
 test("idempotency: the same key returns the same request without duplicates", async ({
   request,
 }) => {
+  const sessionToken = await registerAdultSession(request);
+  const authHeaders = { cookie: `bunker-session=${sessionToken}` };
   const payload = {
     name: "Иван Резерров",
     phone: "+7 999 123-45-67",
     storeId: "store-b1",
     comment: "",
     consent: true,
-    consentTelegram: true,
     items: [{ productId: "fx-vmate-pro-2", quantity: 1 }],
   };
   const key = `e2e-key-${Date.now()}`;
   const first = await request.post("/api/reservations", {
     data: payload,
-    headers: { "Idempotency-Key": key },
+    headers: { "Idempotency-Key": key, ...authHeaders },
   });
   expect(first.status()).toBe(200);
   const firstBody = await first.json();
@@ -251,7 +359,7 @@ test("idempotency: the same key returns the same request without duplicates", as
   // double-submit/retry: тот же ключ — тот же запрос.
   const second = await request.post("/api/reservations", {
     data: payload,
-    headers: { "Idempotency-Key": key },
+    headers: { "Idempotency-Key": key, ...authHeaders },
   });
   expect(second.status()).toBe(200);
   expect(await second.json()).toMatchObject({
@@ -262,7 +370,7 @@ test("idempotency: the same key returns the same request without duplicates", as
   // Другой ключ — другой запрос.
   const third = await request.post("/api/reservations", {
     data: payload,
-    headers: { "Idempotency-Key": `${key}-next` },
+    headers: { "Idempotency-Key": `${key}-next`, ...authHeaders },
   });
   expect((await third.json()).publicId).not.toBe(firstBody.publicId);
 });

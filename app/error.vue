@@ -32,7 +32,7 @@ const goHome = (event: MouseEvent) => {
       }}
     </p>
     <a href="/" class="button button--primary button--normal" @click="goHome"
-      >На главную ↗</a
-    >
+      >На главную <UiArrow
+    /></a>
   </main>
 </template>

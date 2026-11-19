@@ -3,6 +3,10 @@ import { websiteSchema } from "~~/shared/seo/schema";
 
 const { data: meta, error, refresh } = await useCatalogMeta();
 const ageConfirmed = useAgeConfirmed();
+// Секция «Как это работает» объясняет отправку запроса на резерв —
+// анонимам (в том числе модераторам рекламных карточек, паритет с ProHook
+// 19.11.2026) и краулерам она не показывается, SSR-HTML тоже чист.
+const { loggedIn } = useSessionUser();
 const categories = computed(
   () =>
     meta.value?.categories.filter((item) => !item.parentId).slice(0, 6) ?? [],
@@ -53,8 +57,8 @@ useHead({
           ><UiButton @click="refresh()">Повторить</UiButton></template
         ></UiEmptyState
       ></UiContainer
-    ><PromosSection
-      v-if="catalogVisible"
-    />><HowItWorksSection /><AboutSection /><StoresSection /><ContactsSection />
+    ><PromosSection v-if="catalogVisible" />><HowItWorksSection
+      v-if="loggedIn"
+    /><AboutSection /><StoresSection /><ContactsSection />
   </div>
 </template>

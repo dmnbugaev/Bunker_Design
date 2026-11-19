@@ -87,8 +87,22 @@ SSH-туннель на myserver (api.telegram.org → 127.0.0.2 в /etc/hosts, 
 prohook-telegram-relay). Деплой из CI: job deploy в ci.yml дергает форс-команду
 `sudo -n /usr/local/bin/bunker-deploy` на vapeserver (скрипт: git reset →
 npm ci → build с откатом на .output.prev → restart + health-check).
-Ежедневный бэкап .data и .env на myserver: /etc/cron.d/bunker-backup →
-/backups/bunker/ (ротация 14 дней). Порт SSH на обоих серверах — 22222.
+Порт SSH на обоих серверах — 22222.
+
+**Субдомены (с 11.11.2026, nginx `sites-available/bunker-subdomains`,
+один сертификат на оба имени):** `miniapp.бункер-табак.рф` — Telegram
+Mini App (NestJS `bunker-mini.service` на :3008, каталог /var/www/BunkerMiniApp,
+проект `../Bunker_MiniApp`, деплой rsync); `api.бункер-табак.рф` — только
+`/api/*` и `/telegram/*` этого же сервиса (SPA отдаёт 404). Легаси-путь
+`/app/` основного домена продолжает работать. Вебхуки Telegram на vapeserver
+невозможны (REG.RU режет сети Telegram в обе стороны) — бот мини-приложения
+работает поллингом через relay-туннель, как у ProHook.
+
+**Бэкап (с 11.11.2026):** `/usr/local/sbin/bunker-backup` (cron
+`/etc/cron.d/bunker-backup`, 4:17 MSK) — `.data`+`.env` сайта и
+мини-приложения, seed каталога, конфиги nginx/systemd → локально
+`/var/backups/bunker` + копия на myserver `/backups/bunker/` (ротация
+14 копий, ключ prohook_telegram_relay).
 
 Vercel (auto, `vercel.json`) остаётся как preview-стенд на фикстуре.
 Файловые хранилища на Vercel эфемерны (уходят в /tmp).

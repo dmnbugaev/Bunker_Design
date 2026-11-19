@@ -22,7 +22,7 @@ usePageSeo(
 const { store, city, pickerOpen } = useStoreSelection();
 const { entries, count, totalQuantity, setQuantity, remove, clear } =
   useSelectionList();
-const { user } = useSessionUser();
+const { user, loggedIn } = useSessionUser();
 await useCatalogMeta();
 
 // "__empty__" не существует в каталоге: пустой список не тянет страницу
@@ -83,7 +83,6 @@ const form = reactive({
   phone: "",
   comment: "",
   consent: false,
-  consentTelegram: false,
   website: "",
 });
 const errors = ref<Record<string, string>>({});
@@ -107,12 +106,6 @@ watch(
 
 const { public: config } = useRuntimeConfig();
 const captchaEnabled = Boolean(config.smartCaptchaClientKey);
-// Согласие на передачу через Telegram — только при настроенной доставке;
-// тот же признак использует серверная валидация, расхождения быть не может.
-const { data: integrationFlags } = await useFetch<{
-  telegramNotify: boolean;
-}>("/api/integration-flags");
-const telegramEnabled = integrationFlags.value?.telegramNotify === true;
 
 // Бонусный баланс для справки у формы брони: начисление/списание выполняет
 // касса магазина, сайт баллы дистанционно не списывает (модель ProHook).
@@ -159,14 +152,11 @@ onMounted(newIdempotencyKey);
 async function submit() {
   if (pending.value) return;
   failure.value = "";
-  const validation = validateReservation(
-    {
-      ...form,
-      storeId: store.value?.id ?? "",
-      items: entries.value,
-    },
-    { requireTelegramConsent: telegramEnabled },
-  );
+  const validation = validateReservation({
+    ...form,
+    storeId: store.value?.id ?? "",
+    items: entries.value,
+  });
   errors.value = { ...validation.errors };
   if (captchaEnabled && !captchaToken.value)
     errors.value.captcha = "Пройдите проверку «Я не робот».";
@@ -187,7 +177,6 @@ async function submit() {
         phone: form.phone,
         comment: form.comment,
         consent: form.consent,
-        consentTelegram: form.consentTelegram,
         storeId: store.value?.id,
         items: entries.value,
         website: form.website,
@@ -203,7 +192,6 @@ async function submit() {
       phone: "",
       comment: "",
       consent: false,
-      consentTelegram: false,
       website: "",
     });
     newIdempotencyKey();
@@ -258,7 +246,9 @@ async function submit() {
       </p>
       <p>
         Сотрудник выбранного магазина получит список и свяжется с вами, если
-        позициям потребуется уточнение. Запрос действует 24 часа. Это не
+        позициям потребуется уточнение. Запрос действует 12 часов: в это время
+        выбранные товары не продаются другим покупателям и ждут вас в магазине.
+        Резерв бесплатен — если вы не придёте, ничего не спишется. Это не
         покупка: приобретение, проверка возраста и оплата происходят только в
         магазине, онлайн-оплаты и доставки на сайте нет.
       </p>
@@ -271,6 +261,32 @@ async function submit() {
     </div>
 
     <template v-else>
+      <!-- Резерв доступен после входа (паритет с ProHook, модерация
+           рекламных карточек, 19.11.2026): гейт показывается и при пустом
+           списке; список/магазин/сайдбар остаются публичными. -->
+      <div v-if="!loggedIn" class="reserve-gate">
+        <p>Отправка запроса на резерв доступна после входа.</p>
+        <p class="caption">
+          Список выбранных товаров сохранится. После отправки магазин держит
+          выбранные товары 12 часов только для вас; покупка — в магазине после
+          проверки возраста.
+        </p>
+        <div class="reserve-gate__actions">
+          <NuxtLink to="/login?redirect=/reserve" class="button button--large"
+            >Войти</NuxtLink
+          >
+          <NuxtLink
+            to="/register?redirect=/reserve"
+            class="button button--secondary button--large"
+            >Зарегистрироваться</NuxtLink
+          >
+        </div>
+      </div>
+      <p v-else-if="user && !user.isAdult" class="reserve-gate" role="note">
+        Запросы на резерв доступны только совершеннолетним: возраст проверяется
+        по дате рождения из личного кабинета.
+      </p>
+
       <UiEmptyState v-if="count === 0" title="Список пуст" aria-live="polite">
         Выберите товары в каталоге — они появятся здесь, и вы сможете отправить
         запрос на резерв в удобный магазин.
@@ -395,11 +411,15 @@ async function submit() {
             <p class="reserve-legal-note">
               Отправляя форму, вы просите магазин отложить товары к вашему
               визиту. Это не покупка и не заказ с оплатой: сайт не принимает
-              оплату и не доставляет товары. Продажа, проверка возраста и выдача
-              товара происходят только в выбранном магазине; магазин вправе
-              отказать в продаже в предусмотренных законом случаях.
+              оплату и не доставляет товары. В течение 12 часов после запроса
+              магазин не продаёт выбранные товары другим покупателям — они ждут
+              владельца запроса по номеру телефона из заявки. Резерв бесплатен:
+              если вы не придёте, ничего не спишется. Продажа, проверка возраста
+              и выдача товара происходят только в выбранном магазине; магазин
+              вправе отказать в продаже в предусмотренных законом случаях.
             </p>
             <form
+              v-if="user && user.isAdult"
               ref="formElement"
               class="reserve-form"
               novalidate
@@ -474,7 +494,7 @@ async function submit() {
                     v-model="form.consent"
                     name="consent"
                     required
-                    label="Согласен(на) на обработку моих персональных данных (имя, телефон, комментарий, перечень выбранных товаров и магазин) в целях обработки запроса на резерв."
+                    label="Согласен(на) на обработку моих персональных данных (имя, телефон, комментарий, перечень выбранных товаров и магазин) в целях обработки запроса на резерв, включая передачу запроса продавцу через сервис Telegram (api.telegram.org) с трансграничной передачей указанных данных."
                     :aria-invalid="!!errors.consent"
                   />
                   <p
@@ -482,21 +502,6 @@ async function submit() {
                     class="field__help field__help--error"
                   >
                     {{ errors.consent }}
-                  </p>
-                </div>
-                <div v-if="telegramEnabled">
-                  <UiCheckbox
-                    v-model="form.consentTelegram"
-                    name="consentTelegram"
-                    required
-                    label="Согласен(на) на передачу запроса через сервис Telegram (api.telegram.org), включая трансграничную передачу указанных персональных данных."
-                    :aria-invalid="!!errors.consentTelegram"
-                  />
-                  <p
-                    v-if="errors.consentTelegram"
-                    class="field__help field__help--error"
-                  >
-                    {{ errors.consentTelegram }}
                   </p>
                 </div>
                 <p class="field__help">
@@ -544,7 +549,10 @@ async function submit() {
               Вы отправляете список товаров и контакты — это запрос, а не
               покупка и не заказ с оплатой.
             </li>
-            <li>Сотрудник магазина получает запрос и проверяет наличие.</li>
+            <li>
+              Сотрудник магазина получает запрос, проверяет наличие и держит
+              товары 12 часов за вами.
+            </li>
             <li>
               Вы приходите в выбранный магазин; сотрудник при необходимости
               проверит совершеннолетие по документу.

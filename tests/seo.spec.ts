@@ -192,7 +192,7 @@ test("страница 404 возвращает на главную: логот�
   // есть и до гидрации, и вовсе без JS.
   const logo = page.getByRole("link", { name: "Бункер — главная" });
   await expect(logo).toHaveAttribute("href", "/");
-  const home = page.getByRole("link", { name: "На главную ↗" });
+  const home = page.getByRole("link", { name: /На главную/ });
   await expect(home).toHaveAttribute("href", "/");
   // Клик по кнопке уходит на главную (clearError + redirect).
   await home.click();

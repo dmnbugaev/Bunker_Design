@@ -41,9 +41,8 @@ test("partnership form validates, preserves errors and confirms delivery", async
   await page
     .getByLabel("Партнёрское предложение")
     .fill("Хотим закупать продукцию оптом для своей сети.");
-  // Согласие на обработку персональных данных пусто по умолчанию и
-  // обязательно. Согласие на передачу через Telegram показывается только
-  // при настроенной интеграции — в e2e она отключена (нет ключей).
+  // Согласие одно, пустое по умолчанию и обязательное: Telegram-передача
+  // названа прямо в его тексте (решение заказчика 19.11.2026).
   const consents = page.getByRole("checkbox");
   await expect(consents).toHaveCount(1);
   await expect(consents.nth(0)).not.toBeChecked();

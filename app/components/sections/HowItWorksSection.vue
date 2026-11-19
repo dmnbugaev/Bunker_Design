@@ -11,7 +11,7 @@ const steps = [
   {
     number: "02",
     title: "Соберите список",
-    text: "Добавьте товары в список выбранных и отправьте запрос на резерв — он действует 24 часа.",
+    text: "Добавьте товары в список выбранных и отправьте запрос на резерв — магазин держит товары 12 часов.",
   },
   {
     number: "03",
@@ -35,11 +35,11 @@ const steps = [
     </ol>
     <div class="inline-actions steps-actions">
       <NuxtLink to="/catalog" class="button button--primary"
-        >Перейти в каталог <span aria-hidden="true">↗</span></NuxtLink
-      >
+        >Перейти в каталог <UiArrow
+      /></NuxtLink>
       <NuxtLink to="/stores" class="button button--outline"
-        >Выбрать магазин <span aria-hidden="true">↗</span></NuxtLink
-      >
+        >Выбрать магазин <UiArrow
+      /></NuxtLink>
     </div>
   </UiContainer>
 </template>

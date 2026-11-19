@@ -9,13 +9,12 @@ import {
   type StoredReservationItem,
 } from "../services/reservation-store";
 import { dispatchReservationNotification } from "../services/reservation-telegram";
-import { isTelegramDeliveryConfigured } from "../services/telegram";
 import {
   isSmartCaptchaConfigured,
   verifySmartCaptcha,
 } from "../services/smartcaptcha";
 import { enforceRegionalRestrictions } from "../../shared/legal/catalog-policy";
-import { getSessionUser } from "../utils/session";
+import { requireSessionUser } from "../utils/session";
 import { isMonitorProbe } from "../utils/monitor-probe";
 import { guardJsonRequest } from "../utils/request-guard";
 import { allowReservation } from "../utils/reservation-rate-limit";
@@ -60,11 +59,9 @@ export default defineEventHandler(async (event) => {
       };
   }
 
-  const { data, errors, valid } = validateReservation(body, {
-    // Без настроенного Telegram согласие на трансграничную передачу не
-    // требуется: запрос уходит задачей в МойСклад, чекбокса в форме нет.
-    requireTelegramConsent: isTelegramDeliveryConfigured(),
-  });
+  // Согласие одно и покрывает передачу через Telegram (решение заказчика
+  // 19.11.2026).
+  const { data, errors, valid } = validateReservation(body);
   if (!valid)
     throw createError({
       statusCode: 422,
@@ -99,9 +96,13 @@ export default defineEventHandler(async (event) => {
     captchaVerifiedAt = new Date().toISOString();
   }
 
-  // Авторизованным несовершеннолетним аккаунтам функционал закрыт по
-  // данным аккаунта; для остальных проверка возраста остаётся в магазине.
-  const user = await getSessionUser(event);
+  // Резерв доступен только вошедшим совершеннолетним пользователям
+  // (паритет с ProHook, требование модераторов рекламных карточек,
+  // 19.11.2026): анонимам форма не показывается, API отвечает 401. Пробы
+  // монитор-бота идут с секретом x-monitor-secret и без сессии — полная
+  // цепочка проверок остаётся рабочей.
+  const monitorProbe = isMonitorProbe(event);
+  const user = monitorProbe ? null : await requireSessionUser(event);
   if (user && !user.isAdult)
     throw createError({
       statusCode: 403,
@@ -185,7 +186,7 @@ export default defineEventHandler(async (event) => {
     storeNameSnapshot: store.name,
     storeAddressSnapshot: store.address ?? "",
     comment: data.comment,
-    consent: { personalData: data.consent, telegram: data.consentTelegram },
+    consent: { personalData: data.consent, telegram: data.consent }, // одно согласие (19.11.2026)
     captchaVerifiedAt,
     items,
   });

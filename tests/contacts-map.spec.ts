@@ -32,6 +32,16 @@ const cityLabel = (cityId: string) =>
   cities.find((city) => city.id === cityId)?.name ?? cityId;
 
 async function openContacts(page: Page) {
+  // Окно 18+ при входе (19.11.2026) здесь не тестируем — помечаем
+  // «уже предлагали», чтобы оно не перекрывало карту и список.
+  await page.context().addCookies([
+    {
+      name: "bunker-age-gate-shown",
+      value: "true",
+      domain: "127.0.0.1",
+      path: "/",
+    },
+  ]);
   await page.goto("/contacts");
   // Ждём гидрации: до неё клики по списку не обрабатываются Vue.
   await page.waitForFunction(
