@@ -305,6 +305,7 @@ test("exact stock beats availability bucket on the server", async ({
       ...payload,
       items: [{ productId: "fx-kaos-eclipse", quantity: 3 }],
     },
+    headers: auth,
   });
   expect(over.status()).toBe(422);
   expect(((await over.json()).data?.errors ?? {}).items).toContain(
@@ -315,6 +316,7 @@ test("exact stock beats availability bucket on the server", async ({
       ...payload,
       items: [{ productId: "fx-kaos-eclipse", quantity: 2 }],
     },
+    headers: auth,
   });
   expect(exact.status()).toBe(200);
   // Точный остаток в пределах лимита позиции не мешает
@@ -324,18 +326,20 @@ test("exact stock beats availability bucket on the server", async ({
       ...payload,
       items: [{ productId: "fx-liquid-classic", quantity: 3 }],
     },
+    headers: auth,
   });
   expect(fine.status()).toBe(200);
   // Точный остаток выше лимита позиции (12 > 10) ограничивается лимитом.
   const clamped = await request.post("/api/reservations", {
     data: { ...payload, items: [{ productId: "fx-lemonade", quantity: 10 }] },
-    headers: { "Idempotency-Key": `robust-${Date.now()}` },
+    headers: { ...auth, "Idempotency-Key": `robust-${Date.now()}` },
   });
   expect(clamped.status()).toBe(200);
   // Товар без оффера в выбранном магазине (fx-tea-earl продаётся без
   // Танкистов, 64 — см. skipOfferStores в генераторе фикстуры).
   const noOffer = await request.post("/api/reservations", {
     data: { ...payload, items: [{ productId: "fx-tea-earl", quantity: 1 }] },
+    headers: auth,
   });
   expect(noOffer.status()).toBe(422);
   expect(((await noOffer.json()).data?.errors ?? {}).items).toContain(
