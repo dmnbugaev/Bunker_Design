@@ -59,6 +59,20 @@ export default defineEventHandler(async (event) => {
       };
   }
 
+  // Резерв доступен только вошедшим совершеннолетним пользователям
+  // (паритет с ProHook, требование модераторов рекламных карточек,
+  // 19.11.2026): анонимам форма не показывается, API отвечает 401. Пробы
+  // монитор-бота идут с секретом x-monitor-secret и без сессии — полная
+  // цепочка проверок остаётся рабочей.
+  const monitorProbe = isMonitorProbe(event);
+  const user = monitorProbe ? null : await requireSessionUser(event);
+  if (user && !user.isAdult)
+    throw createError({
+      statusCode: 403,
+      statusMessage: "Forbidden",
+      data: { message: "Запросы на резерв доступны только совершеннолетним." },
+    });
+
   // Согласие одно и покрывает передачу через Telegram (решение заказчика
   // 19.11.2026).
   const { data, errors, valid } = validateReservation(body);
@@ -95,20 +109,6 @@ export default defineEventHandler(async (event) => {
       });
     captchaVerifiedAt = new Date().toISOString();
   }
-
-  // Резерв доступен только вошедшим совершеннолетним пользователям
-  // (паритет с ProHook, требование модераторов рекламных карточек,
-  // 19.11.2026): анонимам форма не показывается, API отвечает 401. Пробы
-  // монитор-бота идут с секретом x-monitor-secret и без сессии — полная
-  // цепочка проверок остаётся рабочей.
-  const monitorProbe = isMonitorProbe(event);
-  const user = monitorProbe ? null : await requireSessionUser(event);
-  if (user && !user.isAdult)
-    throw createError({
-      statusCode: 403,
-      statusMessage: "Forbidden",
-      data: { message: "Запросы на резерв доступны только совершеннолетним." },
-    });
 
   // Магазин и товары перепроверяются по свежему серверному снимку.
   const snapshot = await getCatalogSnapshot();
