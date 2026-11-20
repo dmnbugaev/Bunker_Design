@@ -29,9 +29,12 @@ const {
   setPromoStatus,
 } = await jiti.import("../server/services/promo-store.ts");
 const {
+  MAX_CONSECUTIVE_409,
+  MAX_POLL_BACKOFF_MS,
   handlePromoUpdateOnce,
   parsePromoBotCommand,
   parsePromoChatIds,
+  promoPollBackoffMs,
   resetPromoBotForTests,
 } = await jiti.import("../server/services/promo-telegram.ts");
 const {
@@ -582,4 +585,31 @@ test("хранилище: без html-полей текст экранирует
   // Ценник подсвечивается и в фолбэке без html-полей.
   const priced = await createPromo({ title: "Набор 490 ₽" });
   assert.equal(priced.titleHtml, 'Набор <span class="tg-price">490 ₽</span>');
+});
+
+test("поллинг: пауза 409 растёт монотонно и ограничена потолком", () => {
+  // Линейный разгон до порога серии.
+  assert.equal(promoPollBackoffMs(1), 5000);
+  assert.equal(promoPollBackoffMs(MAX_CONSECUTIVE_409 - 1), 25000);
+  // После порога — удвоение без провала ниже предыдущей паузы.
+  const afterThreshold = promoPollBackoffMs(MAX_CONSECUTIVE_409);
+  assert.ok(
+    afterThreshold > promoPollBackoffMs(MAX_CONSECUTIVE_409 - 1),
+    "пауза после порога не падает",
+  );
+  assert.ok(
+    afterThreshold > 30000,
+    "устойчивая серия 409 пережидается десятками секунд",
+  );
+  // Долгая серия конкурента не разгоняет паузу бесконечно: поллинг
+  // возвращается в строй не позже чем через потолок после исчезновения
+  // конкурента (инцидент 20.11: серия 409 раньше завершала поллинг).
+  let previous = 0;
+  for (let n = 1; n <= 30; n += 1) {
+    const delay = promoPollBackoffMs(n);
+    assert.ok(delay >= previous, `пауза монотонна на шаге ${n}`);
+    assert.ok(delay <= MAX_POLL_BACKOFF_MS);
+    previous = delay;
+  }
+  assert.equal(promoPollBackoffMs(30), MAX_POLL_BACKOFF_MS);
 });

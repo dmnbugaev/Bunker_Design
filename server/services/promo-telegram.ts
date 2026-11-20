@@ -481,6 +481,27 @@ export async function handlePromoUpdateOnce(
   }
 }
 
+/**
+ * Поллинг и «409 Conflict». Конкурентный getUpdates (локальный dev-сервер с
+ * тем же токеном, разовая диагностика) даёт 409; вебхук здесь конкурентом
+ * быть не может — входящие от Telegram до REG.RU не доходят. Пауза растёт:
+ * первые конфликты — линейно (5, 10, 15… с), после MAX_CONSECUTIVE_409 —
+ * удвоение с потолком MAX_POLL_BACKOFF_MS. Потолок — это и тишина в журнале,
+ * и время возврата в строй: конкуренту достаточно исчезнуть, чтобы поллинг
+ * продолжился не позже чем через 10 минут, без рестарта сервиса.
+ */
+export const POLL_CONFLICT_BASE_MS = 5000;
+export const MAX_CONSECUTIVE_409 = 6;
+export const MAX_POLL_BACKOFF_MS = 10 * 60 * 1000;
+
+export function promoPollBackoffMs(conflicts: number): number {
+  if (conflicts < MAX_CONSECUTIVE_409) return POLL_CONFLICT_BASE_MS * conflicts;
+  return Math.min(
+    POLL_CONFLICT_BASE_MS * 2 ** (conflicts - MAX_CONSECUTIVE_409 + 3),
+    MAX_POLL_BACKOFF_MS,
+  );
+}
+
 /** getUpdates для поллинга (вебхук при этом должен быть снят). */
 export async function fetchPromoUpdates(
   offset: number,
