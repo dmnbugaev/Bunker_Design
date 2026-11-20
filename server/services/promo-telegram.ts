@@ -19,6 +19,7 @@ import {
   type TelegramMessageEntity,
 } from "./promo-format";
 import { telegramSilenced } from "../utils/telegram-silence";
+import { TelegramHttpError, withTelegramRetries } from "./telegram-retry";
 // Прод-секреты бота приходят из .env.extra (см. server/utils/env-extra.ts):
 // грузим до первого чтения TELEGRAM_* — модуль используется и поллингом,
 // и вебхуком, поэтому загрузка гарантирована в обоих каналах.
@@ -105,23 +106,26 @@ async function telegramApi(
     // ложными «polling failed: aborted due to timeout».
     signal: AbortSignal.timeout(timeoutMs),
   });
-  if (!response.ok)
-    throw new Error(`Telegram ${method} failed: HTTP ${response.status}`);
+  if (!response.ok) throw new TelegramHttpError(response.status, method);
   return response.json();
 }
 
-/** Отправка ответа оператору; сбой (блок хостинга) только логируется. */
+/** Отправка ответа оператору; сбой (мерцающий туннель) только логируется. */
 export async function sendPromoReply(
   chatId: string,
   text: string,
 ): Promise<void> {
   if (!promoBotToken()) return;
   try {
-    await telegramApi("sendMessage", {
-      chat_id: chatId,
-      text: text.slice(0, 4000),
-      link_preview_options: '{"is_disabled":true}',
-    });
+    // Туннель теряет большинство соединений — ответ без ретраев терялся бы
+    // в двух случаях из трёх.
+    await withTelegramRetries(() =>
+      telegramApi("sendMessage", {
+        chat_id: chatId,
+        text: text.slice(0, 4000),
+        link_preview_options: '{"is_disabled":true}',
+      }),
+    );
   } catch (error) {
     console.error(
       "Promo bot reply failed:",
@@ -289,25 +293,37 @@ const HELP_TEXT = [
 async function downloadPromoMedia(fileId: string): Promise<string | null> {
   const token = promoBotToken();
   if (!token) return null;
-  const info = (await telegramApi("getFile", { file_id: fileId })) as {
-    result?: { file_path?: string };
-  };
-  const filePath = info.result?.file_path;
-  if (!filePath) return null;
-  const extension = filePath.split(".").at(-1)?.toLocaleLowerCase("ru");
-  if (!["jpg", "jpeg", "png", "webp", "webm"].includes(extension ?? ""))
+  try {
+    // Цепочка getFile → скачивание — три соединения через мерцающий туннель:
+    // без ретраев фото-карточки прикреплялись бы примерно в одном случае из
+    // десяти (0.35³), с ретраями — почти всегда.
+    const info = (await withTelegramRetries(() =>
+      telegramApi("getFile", { file_id: fileId }),
+    )) as { result?: { file_path?: string } };
+    const filePath = info.result?.file_path;
+    if (!filePath) return null;
+    const extension = filePath.split(".").at(-1)?.toLocaleLowerCase("ru");
+    if (!["jpg", "jpeg", "png", "webp", "webm"].includes(extension ?? ""))
+      return null;
+    const response = await withTelegramRetries(() =>
+      fetch(`https://api.telegram.org/file/bot${token}/${filePath}`, {
+        signal: AbortSignal.timeout(API_TIMEOUT_MS),
+      }),
+    );
+    if (!response.ok) return null;
+    const name = `${randomUUID()}.${extension}`;
+    const bytes = Buffer.from(await response.arrayBuffer());
+    if (bytes.byteLength > 5 * 1024 * 1024) return null;
+    await mkdir(PROMO_MEDIA_DIR, { recursive: true, mode: 0o700 });
+    await writeFile(`${PROMO_MEDIA_DIR}/${name}`, bytes, { mode: 0o600 });
+    return name;
+  } catch (error) {
+    console.error(
+      "Promo media download failed:",
+      error instanceof Error ? error.message : "Unknown error",
+    );
     return null;
-  const response = await fetch(
-    `https://api.telegram.org/file/bot${token}/${filePath}`,
-    { signal: AbortSignal.timeout(API_TIMEOUT_MS) },
-  );
-  if (!response.ok) return null;
-  const name = `${randomUUID()}.${extension}`;
-  const bytes = Buffer.from(await response.arrayBuffer());
-  if (bytes.byteLength > 5 * 1024 * 1024) return null;
-  await mkdir(PROMO_MEDIA_DIR, { recursive: true, mode: 0o700 });
-  await writeFile(`${PROMO_MEDIA_DIR}/${name}`, bytes, { mode: 0o600 });
-  return name;
+  }
 }
 
 /**

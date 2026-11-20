@@ -43,6 +43,9 @@ const {
   telegramTextToHtml,
   truncateForPromo,
 } = await jiti.import("../server/services/promo-format.ts");
+const { TelegramHttpError, withTelegramRetries } = await jiti.import(
+  "../server/services/telegram-retry.ts",
+);
 
 const originalFetch = globalThis.fetch;
 const Response = globalThis.Response;
@@ -612,4 +615,46 @@ test("поллинг: пауза 409 растёт монотонно и огра
     previous = delay;
   }
   assert.equal(promoPollBackoffMs(30), MAX_POLL_BACKOFF_MS);
+});
+
+test("ретраи исходящих: сетевой сбой повторяется, 4xx — нет, 5xx — да", async () => {
+  // Сетевые сбои (мерцающий туннель пропускает ~1 соединение из 3)
+  // повторяются до трёх раз с растущей паузой.
+  let calls = 0;
+  const flaky = async () => {
+    calls += 1;
+    if (calls < 3) throw new TypeError("fetch failed");
+    return "ok";
+  };
+  assert.equal(await withTelegramRetries(flaky, 3, 1), "ok");
+  assert.equal(calls, 3);
+
+  // 5xx и 429 тоже повторяются.
+  calls = 0;
+  const serverError = async () => {
+    calls += 1;
+    if (calls === 1) throw new TelegramHttpError(502, "sendMessage");
+    return "ok";
+  };
+  assert.equal(await withTelegramRetries(serverError, 3, 1), "ok");
+  assert.equal(calls, 2);
+
+  // Детерминированные 4xx не повторяются: невалидный токен или чужой
+  // chat_id не исправить повтором.
+  calls = 0;
+  const forbidden = async () => {
+    calls += 1;
+    throw new TelegramHttpError(403, "sendMessage");
+  };
+  await assert.rejects(withTelegramRetries(forbidden, 3, 1), TelegramHttpError);
+  assert.equal(calls, 1);
+
+  // Исчерпание попыток отдаёт последнюю ошибку.
+  calls = 0;
+  const alwaysDown = async () => {
+    calls += 1;
+    throw new TypeError("fetch failed");
+  };
+  await assert.rejects(withTelegramRetries(alwaysDown, 3, 1), TypeError);
+  assert.equal(calls, 3);
 });

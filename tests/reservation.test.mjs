@@ -395,15 +395,16 @@ test("dispatch is a no-op without a configured bot (dev and e2e mode)", async ()
   }
 });
 
-test("network-level Telegram failure skips retries (hosting block scenario)", async () => {
+test("network-level Telegram failure is retried like any other failure", async () => {
   const originalToken = process.env.TELEGRAM_BOT_TOKEN;
   const originalChats = process.env.TELEGRAM_RESERVATION_CHAT_IDS;
   const originalFetch = globalThis.fetch;
   process.env.TELEGRAM_BOT_TOKEN = "test-token";
   process.env.TELEGRAM_RESERVATION_CHAT_IDS = "111,222";
   let calls = 0;
-  // TypeError = сетевой уровень (fetch failed), как при блокировке
-  // api.telegram.org хостингом: ретраи не выполняются.
+  // TypeError = сетевой уровень (fetch failed). С 20.11.2026 туннель к
+  // Telegram мерцает (~1 соединение из 3 доходит), поэтому сетевые сбои
+  // повторяются наравне с остальными — одна упавшая попытка не финал.
   globalThis.fetch = async () => {
     calls++;
     throw new TypeError("fetch failed");
@@ -422,9 +423,10 @@ test("network-level Telegram failure skips retries (hosting block scenario)", as
       items: [],
     });
     await dispatchReservationNotification(created);
-    assert.equal(calls, 2); // 1 попытка × 2 чата, без повторов
+    assert.equal(calls, 6); // все 3 попытки × 2 чата
     const stored = await findReservationByPublicId(created.publicId);
-    assert.equal(stored.telegramDelivery.attempts, 1);
+    assert.equal(stored.telegramDelivery.attempts, 3);
+    assert.equal(stored.status, "PENDING"); // запрос не потерян
   } finally {
     process.env.TELEGRAM_BOT_TOKEN = originalToken;
     process.env.TELEGRAM_RESERVATION_CHAT_IDS = originalChats;

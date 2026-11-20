@@ -106,9 +106,8 @@ export async function deliverReservationMessage(
   chatIds: string[],
   text: string,
   request: typeof fetch = fetch,
-): Promise<{ deliveredTo: string[]; unreachable: boolean }> {
+): Promise<{ deliveredTo: string[] }> {
   const deliveredTo: string[] = [];
-  let networkFailures = 0;
   const results = await Promise.allSettled(
     chatIds.map(async (chatId) => {
       let response: Response;
@@ -127,9 +126,9 @@ export async function deliverReservationMessage(
           },
         );
       } catch (error) {
-        // TypeError = сетевой уровень (DNS/TCP): ретраи бессмысленны, пока
-        // хостинг не вернёт маршруты к Telegram.
-        if (error instanceof TypeError) networkFailures++;
+        // Сетевой сбой — не приговор: туннель к Telegram с 20.11.2026
+        // мерцает (DPI пропускает ~1 соединение из 3), поэтому сетевые
+        // ошибки повторяются на уровне dispatch, как и прочие сбои.
         throw new Error("telegram send failed", { cause: error });
       }
       const result = (await response.json().catch(() => null)) as {
@@ -142,10 +141,7 @@ export async function deliverReservationMessage(
   );
   for (const result of results)
     if (result.status === "fulfilled") deliveredTo.push(result.value);
-  return {
-    deliveredTo,
-    unreachable: deliveredTo.length === 0 && networkFailures > 0,
-  };
+  return { deliveredTo };
 }
 
 function retryDelayMs(): number {
@@ -182,8 +178,11 @@ export async function dispatchReservationNotification(
   inFlight.add(reservation.id);
   try {
     const text = buildReservationMessage(reservation);
+    // С 20.11.2026 туннель к Telegram не блокируется целиком, а мерцает
+    // (~1 соединение из 3 доходит) — повторяются ВСЕ сбои, включая сетевые:
+    // одна упавшая попытка не значит, что не дойдёт следующая.
     for (let attempt = 1; attempt <= MAX_DELIVERY_ATTEMPTS; attempt++) {
-      const { deliveredTo, unreachable } = await deliverReservationMessage(
+      const { deliveredTo } = await deliverReservationMessage(
         token,
         chatIds,
         text,
@@ -191,9 +190,6 @@ export async function dispatchReservationNotification(
       );
       await recordTelegramAttempt(reservation.id, deliveredTo);
       if (deliveredTo.length > 0) return;
-      // Сетевая недоступность (хостинг блокирует api.telegram.org) —
-      // ретраи не помогут, сразу уходим в резервный канал.
-      if (unreachable) break;
       if (attempt < MAX_DELIVERY_ATTEMPTS) await delay(retryDelayMs());
     }
     await fallbackToMoySkladTask(reservation);
