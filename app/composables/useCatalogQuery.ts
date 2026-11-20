@@ -11,9 +11,10 @@ export function useCatalogQuery(category: MaybeRefOrGetter<string> = "") {
   const parsed = computed(() => parseCatalogQuery(route.query));
   /**
    * «Только в наличии» включён по умолчанию: без параметра в URL каталог
-   * показывает товары, доступные в выбранном магазине. Явное available=0
+   * показывает товары, лежащие хоть в одном магазине сети. Явное available=0
    * снимает фильтр — тогда видны и позиции с нулевым остатком («Скоро в
-   * наличии»).
+   * наличии»). Выбранный магазин влияет на цену и порядок выдачи, но не
+   * отсекает товары других точек (19.11.2026).
    */
   const availableDefault = computed(() => route.query.available === undefined);
   const requestQuery = computed(() => ({

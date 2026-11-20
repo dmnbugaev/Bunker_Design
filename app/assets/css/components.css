@@ -518,9 +518,10 @@
   border-radius: 50%;
   background: currentColor;
 }
-/* Подсветка статуса: янтарный — «Мало в наличии», серый — нет товара
-   или нет представительства в городе. */
-.availability[data-status="low"] {
+/* Подсветка статуса: янтарный — «Мало в наличии» и «есть в других
+   магазинах», серый — нет товара или нет представительства в городе. */
+.availability[data-status="low"],
+.availability[data-status="elsewhere"] {
   color: var(--color-warning);
 }
 .availability[data-status="out"],

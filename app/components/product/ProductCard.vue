@@ -1,33 +1,32 @@
 <script setup lang="ts">
+import type { CatalogMeta } from "~~/shared/types/catalog";
 import type { Product } from "~~/shared/types/product";
+import { isStockedOffer, isUsedProduct } from "~~/shared/utils/product";
 const props = defineProps<{ product: Product }>();
 const { add, quantityOf } = useSelectionList();
-const { store } = useStoreSelection();
 // Список выбранных — часть сценария резерва: анонимам кнопка не
 // показывается (модерация рекламных карточек, 19.11.2026).
 const { loggedIn } = useSessionUser();
+const { data: meta } = useNuxtData<CatalogMeta>("catalog-meta");
 const inList = computed(() => quantityOf(props.product.id) > 0);
 const quantity = computed(() => quantityOf(props.product.id));
 /**
- * Нулевой остаток в выбранном магазине (или во всей сети, пока магазин не
- * выбран): такие позиции остаются в каталоге с меткой «Скоро в наличии»,
- * когда фильтр наличия снят.
+ * «Скоро в наличии» — позиция с нулевым остатком во всей сети: каталог
+ * показывает ассортимент всех магазинов, поэтому товар, лежащий в другой
+ * точке, бейджа не получает — метка наличия называет магазины, где он есть.
+ * У б/у позиций нулевой остаток — продажа (каждое устройство единично),
+ * поэтому метка «Нет в наличии», а не обещание пополнения.
  */
-const soldOut = computed(() => {
-  const selected = store.value;
-  const offers = selected
-    ? props.product.offers.filter((offer) => offer.storeId === selected.id)
-    : props.product.offers;
-  return (
-    offers.length > 0 &&
-    !offers.some(
-      (offer) =>
-        offer.availability === "plenty" ||
-        offer.availability === "available" ||
-        offer.availability === "low",
-    )
-  );
-});
+const soldOut = computed(
+  () =>
+    props.product.offers.length > 0 &&
+    !props.product.offers.some((offer) => isStockedOffer(offer)),
+);
+const soldOutLabel = computed(() =>
+  isUsedProduct(props.product, meta.value?.categories ?? [])
+    ? "Нет в наличии"
+    : "Скоро в наличии",
+);
 /* Листание фото окна: несколько снимков — стрелки по hover/focus на
    десктопе, свайп на тач-экранах, позиция — точки на нижней кромке.
    Логика общая с галереей страницы товара (usePhotoFlip). */
@@ -54,7 +53,7 @@ watch(
         :label="product.name"
       />
       <span v-if="soldOut" class="badge product-card__soon">
-        Скоро в наличии
+        {{ soldOutLabel }}
       </span>
       <template v-if="multiImage">
         <button

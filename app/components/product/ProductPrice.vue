@@ -17,13 +17,15 @@ const lowest = computed(() =>
     <template v-if="offer"
       ><strong>{{ formatPrice(offer.price) }}</strong></template
     >
-    <strong v-else-if="!store && lowest !== undefined"
+    <!-- Товара нет в выбранном магазине: показываем минимальную цену сети
+         с приставкой «от» — каталог ведётся по всем точкам сразу. -->
+    <strong v-else-if="lowest !== undefined"
       >от {{ formatPrice(lowest) }}</strong
     >
     <span v-else class="caption">Нет цены для выбранного города</span>
     <!-- Единица цены позиции: «1 г» у китайского чая, «1 шт» у остального. -->
     <span
-      v-if="offer || (!store && lowest !== undefined)"
+      v-if="offer || lowest !== undefined"
       class="caption product-price__unit"
       >/ {{ props.product.unit ?? "1 шт" }}</span
     >

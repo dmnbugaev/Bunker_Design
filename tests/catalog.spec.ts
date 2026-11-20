@@ -18,16 +18,25 @@ async function waitForHydration(page: Page) {
     { timeout: 10_000 },
   );
 }
-async function open(page: Page, path = "/catalog") {
+// options.ageConfirmed = false отключает cookie 18+ — для тестов первой
+// сессии: окно возраста (с 19.11.2026) спрашивается на входе до выбора
+// магазина, и проставленный cookie его подавлял бы.
+async function open(
+  page: Page,
+  path = "/catalog",
+  options: { ageConfirmed?: boolean } = {},
+) {
   await page.context().clearCookies({ name: "bunker-age-confirmed" });
-  await page.context().addCookies([
-    {
-      name: "bunker-age-confirmed",
-      value: "true",
-      domain: "127.0.0.1",
-      path: "/",
-    },
-  ]);
+  if (options.ageConfirmed ?? true) {
+    await page.context().addCookies([
+      {
+        name: "bunker-age-confirmed",
+        value: "true",
+        domain: "127.0.0.1",
+        path: "/",
+      },
+    ]);
+  }
   await page.goto(path);
   await waitForHydration(page);
 }
@@ -40,7 +49,9 @@ test.beforeEach(async ({ context }) => {
 
 test("first visit chooses a real city and store", async ({ page, context }) => {
   await context.clearCookies();
-  await open(page, "/");
+  // Первая сессия без cookie возраста: до пикера магазина сайт сначала
+  // спрашивает 18+ (окно на входе, паритет с ProHook).
+  await open(page, "/", { ageConfirmed: false });
   // Вход без аккаунта: сначала окно подтверждения возраста (19.11.2026),
   // после него — выбор города и магазина.
   const gate = page.getByRole("dialog", {
@@ -71,12 +82,17 @@ test("filters and sorting use the selected store price", async ({ page }) => {
   const filters = page.locator(".catalog-sidebar");
   await expect(filters.getByText("Бренд")).toHaveCount(0);
   await expect(filters.getByText("Материал")).toHaveCount(0);
-  // «Только в наличии» включён с открытия страницы: на Рахова, 64/70а
-  // (store-b1) нет MOOK FWRD и ARQA Premium, а новинки «Другого»,
-  // «Зажигалок» и «Картриджи / Испарители» лежат на других точках —
-  // из 23 доступных все помещаются на одной странице (лимит выдачи 24).
+  // «Только в наличии» включён с открытия страницы: наличие считается по
+  // всей сети — каталог показывает и то, что лежит на других точках (MOOK
+  // FWRD и новинки «Другого» отсутствуют на Рахова, 64/70а, но есть рядом).
+  // 28 позиций не помещаются на страницу (лимит выдачи 24) — вторая
+  // страница добирает остаток. Выбранный магазин задаёт цену и витринный
+  // порядок, но не отсекает товары.
   await expect(filters.getByLabel("Только в наличии")).toBeChecked();
-  await expect(page.locator(".product-card")).toHaveCount(23);
+  await expect(page.locator(".product-card")).toHaveCount(24);
+  await open(page, "/catalog?page=2");
+  await expect(page.locator(".product-card")).toHaveCount(4);
+  await open(page);
   await filters.getByLabel("От", { exact: true }).fill("1500");
   await filters.getByLabel("До", { exact: true }).fill("2000");
   // Цена применяется сама после паузы ввода — кнопки «Применить» нет.
@@ -88,7 +104,7 @@ test("filters and sorting use the selected store price", async ({ page }) => {
     "Pod-система Bunker Classic",
   );
   await filters.getByRole("button", { name: "Сбросить фильтры" }).click();
-  await expect(page.locator(".product-card")).toHaveCount(23);
+  await expect(page.locator(".product-card")).toHaveCount(24);
 });
 
 test("store changes availability and city price without losing the product", async ({
@@ -110,8 +126,11 @@ test("store changes availability and city price without losing the product", asy
   const picker = page.getByRole("dialog", { name: "Ваш город и магазин" });
   await picker.getByRole("radio", { name: /Танкистов/ }).check();
   await expect(picker).not.toBeVisible();
-  // У Танкистов остаток 0 — оптимистичная метка «Скоро в наличии».
-  await expect(info.locator(".availability")).toHaveText("Скоро в наличии");
+  // У Танкистов остаток 0, но товар лежит на Рахова и Фридриха: метка
+  // называет магазины с наличием вместо обещания «скоро в наличии».
+  await expect(info.locator(".availability")).toHaveText(
+    "Есть в магазинах: Рахова, 64/70а · Фридриха Энгельса, 4",
+  );
   await info.getByRole("button", { name: "Изменить магазин" }).click();
   await picker.getByRole("button", { name: "Энгельс", exact: true }).click();
   await picker.getByRole("radio", { name: /Фридриха/ }).check();
@@ -220,16 +239,17 @@ test("instant filters: availability is on by default, photo filter removed", asy
   await expect(sidebar.getByLabel("Только с фотографией")).toHaveCount(0);
   await available.uncheck();
   await expect(page).toHaveURL(/available=0/);
-  // Позиции с нулевым остатком возвращаются в выдачу с меткой: MOOK FWRD,
-  // ARQA Premium и три новинки других точек. 28 опубликованных товаров не
-  // помещаются на страницу (лимит 24) — все позиции «скоро в наличии»
-  // витринный порядок держит на первой странице.
+  // Позиции с нулевым остатком возвращаются в выдачу: 29 товаров не
+  // помещаются на страницу (лимит 24). Бейдж «Скоро в наличии» — только у
+  // ARQA Premium, единственной позиции с нулевым остатком во всей сети;
+  // «пустые» на Рахова точки лежат в других магазинах — метка наличия
+  // называет их.
   await expect(page.locator(".product-card")).toHaveCount(24);
-  await expect(page.locator(".product-card__soon")).toHaveCount(5);
+  await expect(page.locator(".product-card__soon")).toHaveCount(1);
   await expect(page.locator(".filter-chips")).toHaveCount(0);
   await sidebar.getByLabel("Только в наличии").check();
   await expect(page).toHaveURL(/available=1/);
-  await expect(page.locator(".product-card")).toHaveCount(23);
+  await expect(page.locator(".product-card")).toHaveCount(24);
   // Явно включённый фильтр получает чип: «В наличии» + «Сбросить всё».
   await expect(page.locator(".filter-chips li")).toHaveCount(2);
   await page
@@ -278,16 +298,17 @@ test("category descendants, search, missing image and API pagination", async ({
       name: "Изображение доступно только совершеннолетним пользователям",
     }),
   ).toBeVisible();
-  // Полный состав каталога (28 позиций фикстуры; 29-я в корне «Новая
-  // папка» не публикуется) — только с подтверждением 18+; анонимный запрос
-  // вернул бы общедоступные 6.
+  // Полный состав каталога — только с подтверждением 18+; анонимный запрос
+  // вернул бы общедоступные 6. Из 32 товаров фикстуры не публикуются два:
+  // позиция скрытой служебной папки «Ремонт Клиентов» и товар в корне
+  // «Новая папка» без классификации.
   const response = await request.get("/api/products?limit=2&page=2", {
     headers: { cookie: "bunker-age-confirmed=true" },
   });
   expect(response.ok()).toBe(true);
   expect(await response.json()).toMatchObject({
-    // Фикстура выросла до 29 позиций ветви (пагинация по 2).
-    total: 29,
+    // Фикстура выросла до 30 публикуемых позиций (пагинация по 2).
+    total: 30,
     page: 2,
     pageCount: 15,
   });
@@ -312,10 +333,10 @@ test("page in URL survives the price-filter sync (pagination regression)", async
   // Регрессия: вотчер черновика цены реагировал на любую смену query
   // (в том числе ?page=) и через дебаунс эмитил «apply», который стирал
   // page и возвращал пользователя на первую страницу каталога.
-  // 23 доступных позиции входят в лимит 24: page=2 клампится в 1,
-  // но параметр в URL должен пережить синхронизацию черновика цены.
+  // Выдача сети — 28 позиций: page=2 существует (4 карточки), и параметр
+  // в URL должен пережить синхронизацию черновика цены.
   await open(page, "/catalog?page=2");
-  await expect(page.locator(".product-card")).toHaveCount(23);
+  await expect(page.locator(".product-card")).toHaveCount(4);
   await page.waitForTimeout(900);
   await expect(page).toHaveURL(/page=2/);
 });

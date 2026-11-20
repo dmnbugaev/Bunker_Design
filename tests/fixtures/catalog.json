@@ -311,6 +311,13 @@
         "parentId": "cat-vex-express",
         "slug": "cat-vex-smoant",
         "description": "Товары категории «Smoant»."
+      },
+      {
+        "id": "be7f4240-d55e-11f1-0a80-11ee002ef5f9",
+        "name": "Ремонт Клиентов",
+        "parentId": "cat-vex-express",
+        "slug": "be7f4240-d55e-11f1-0a80-11ee002ef5f9",
+        "description": "Товары категории «Ремонт Клиентов»."
       }
     ],
     "brands": [],
@@ -4219,6 +4226,262 @@
         }
       ],
       "publishedAt": "2026-09-23T09:00:00Z"
+    },
+    {
+      "id": "fx-vex-repair-xros",
+      "slug": "fx-vex-repair-xros",
+      "sku": "VEX-REPAIR-001",
+      "name": "Ремонт Vaporesso Xros 6 mini (plume pink) мелкий ремонт (Б/У)",
+      "categoryId": "be7f4240-d55e-11f1-0a80-11ee002ef5f9",
+      "categoryName": "Ремонт Клиентов",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Устройство клиента в ремонте Vape Express: на витрину не публикуется.",
+      "attributes": [
+        {
+          "code": "attr-condition",
+          "name": "Состояние",
+          "value": "Б/у"
+        },
+        {
+          "code": "attr-warranty",
+          "name": "Гарантия",
+          "value": "14 дней"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 99000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-11-19T09:00:00Z"
+    },
+    {
+      "id": "fx-vex-sold-pasito",
+      "slug": "fx-vex-sold-pasito",
+      "sku": "VEX-003",
+      "name": "VEX: Smoant Pasito 2 (б/у)",
+      "categoryId": "cat-vex-smoant",
+      "categoryName": "Smoant",
+      "images": [],
+      "unit": "1 шт",
+      "description": "Комиссионное устройство, проверено сервисом Vape Express, гарантия 14 дней.",
+      "attributes": [
+        {
+          "code": "attr-condition",
+          "name": "Состояние",
+          "value": "Б/у"
+        },
+        {
+          "code": "attr-warranty",
+          "name": "Гарантия",
+          "value": "14 дней"
+        }
+      ],
+      "offers": [
+        {
+          "storeId": "store-b1",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b2",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b4",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b5",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b6",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b7",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b8",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b9",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b10",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b11",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b12",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b13",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b14",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b15",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b16",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b3",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        },
+        {
+          "storeId": "store-b17",
+          "price": 150000,
+          "currency": "RUB",
+          "availability": "unavailable"
+        }
+      ],
+      "publishedAt": "2026-10-01T12:00:00Z"
     }
   ],
   "stockDetail": {
@@ -4370,6 +4633,44 @@
       "store-b1": 1,
       "store-b2": 0,
       "store-b3": 0
+    },
+    "fx-vex-repair-xros": {
+      "store-b1": 0,
+      "store-b2": 0,
+      "store-b4": 0,
+      "store-b5": 0,
+      "store-b6": 0,
+      "store-b7": 0,
+      "store-b8": 0,
+      "store-b9": 0,
+      "store-b10": 0,
+      "store-b11": 0,
+      "store-b12": 0,
+      "store-b13": 0,
+      "store-b14": 0,
+      "store-b15": 0,
+      "store-b16": 0,
+      "store-b3": 0,
+      "store-b17": 0
+    },
+    "fx-vex-sold-pasito": {
+      "store-b1": 0,
+      "store-b2": 0,
+      "store-b4": 0,
+      "store-b5": 0,
+      "store-b6": 0,
+      "store-b7": 0,
+      "store-b8": 0,
+      "store-b9": 0,
+      "store-b10": 0,
+      "store-b11": 0,
+      "store-b12": 0,
+      "store-b13": 0,
+      "store-b14": 0,
+      "store-b15": 0,
+      "store-b16": 0,
+      "store-b3": 0,
+      "store-b17": 0
     }
   }
 }

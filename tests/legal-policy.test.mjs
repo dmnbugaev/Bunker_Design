@@ -183,15 +183,17 @@ test("applyLegalPolicy hides unclassified, keeps owner-written descriptions", ()
 test("drinks subfolders stay visible; hide-list holds only owner-hidden folders", () => {
   // Механизм скрытия подкатегорий/линеек (HIDDEN_SUBCATEGORY_IDS,
   // HIDDEN_PRODUCT_NAME_PREFIXES): в списке — только папки, снятые с
-  // витрины решением владельца: «РЕМОНТ с магазинов» (01.11.2026) и бренды
-  // жидкостей «ICE FOX»/«Soak» (04.11.2026); посторонние подкатегории
-  // «Напитков» класс корня наследуют и видны.
+  // витрины решением владельца: «РЕМОНТ с магазинов» (01.11.2026),
+  // «Ремонт Клиентов» (19.11.2026) и бренды жидкостей «ICE FOX»/«Soak»
+  // (04.11.2026); посторонние подкатегории «Напитков» класс корня
+  // наследуют и видны.
   assert.deepEqual(
     [...HIDDEN_SUBCATEGORY_IDS],
     [
       "7dfeb8f0-d55f-11f1-0a80-1d67002e42e8",
       "a73f8c59-aaac-11f1-0a80-144000238a99",
       "dbebb56c-8031-11f1-0a80-07b600485f3f",
+      "be7f4240-d55e-11f1-0a80-11ee002ef5f9",
     ],
   );
   assert.deepEqual(HIDDEN_PRODUCT_NAME_PREFIXES, [

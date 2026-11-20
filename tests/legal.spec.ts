@@ -87,9 +87,11 @@ test("banned and unclassified categories are never published; pouches are publis
       headers,
     })
   ).json();
-  // 30 позиций фикстуры минус непубликуемая nbc-01 из корня «Новая папка»
-  // (ветка Vape Express добавлена 01.11.2026: fx-vex-vinci + fx-vex-argus).
-  expect(list.total).toBe(29);
+  // 32 позиции фикстуры минус две непубликуемые: nbc-01 из корня
+  // «Новая папка» и ремонтная позиция скрытой служебной папки
+  // «Ремонт Клиентов» (ветка Vape Express: fx-vex-vinci + fx-vex-argus +
+  // проданный fx-vex-sold-pasito).
+  expect(list.total).toBe(30);
   const pouch = list.items.find(
     (item: { slug: string }) => item.slug === "chew-01",
   );
@@ -262,6 +264,13 @@ test("used-devices section is gated and points to Vape Express communities", asy
       domain: "127.0.0.1",
       path: "/",
     },
+    // Магазин выбран: метки наличия на карточках б/у считаются по точке.
+    {
+      name: "bunker-store",
+      value: "store-b1",
+      domain: "127.0.0.1",
+      path: "/",
+    },
   ]);
   await page.goto("/used");
   await expect(
@@ -282,14 +291,27 @@ test("used-devices section is gated and points to Vape Express communities", asy
   await expect(
     page.getByRole("heading", { name: "Каталог б/у устройств" }),
   ).toBeVisible();
-  await expect(page.getByRole("link", { name: "Smoant" })).toHaveAttribute(
-    "href",
-    "/catalog/cat-vex-smoant",
-  );
+  await expect(
+    page.getByRole("link", { name: "Smoant", exact: true }),
+  ).toHaveAttribute("href", "/catalog/cat-vex-smoant");
   await expect(
     page.getByRole("link", { name: "Открыть весь раздел" }),
   ).toHaveAttribute("href", "/catalog/cat-vex-express");
   await expect(page.locator(".product-card")).not.toHaveCount(0);
+  // Служебная папка «Ремонт Клиентов» (устройства клиентов в ремонте,
+  // 19.11.2026) скрыта с витрины: раздела-чипа на странице нет.
+  await expect(
+    page.locator(".subcategory-links").getByText("Ремонт Клиентов"),
+  ).toHaveCount(0);
+  // Проданное б/у устройство (нулевой остаток по всей сети) — «Нет
+  // в наличии», а не обещание пополнения «Скоро в наличии»: у б/у позиции
+  // единичны.
+  const sold = page
+    .locator(".product-card")
+    .filter({ hasText: "VEX: Smoant Pasito 2" });
+  await expect(sold.locator(".product-card__soon")).toHaveText("Нет в наличии");
+  await expect(sold.locator(".availability")).toHaveText("Нет в наличии");
+  await expect(page.locator(".product-card__soon")).toHaveCount(1);
   // Раздел доступен из основной навигации шапки.
   await expect(
     page.locator(".desktop-nav").getByRole("link", { name: "Б/у устройства" }),

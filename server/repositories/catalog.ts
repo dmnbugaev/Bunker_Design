@@ -5,7 +5,7 @@ import type {
 } from "../../shared/types/catalog";
 import type { Product } from "../../shared/types/product";
 import { enforceRegionalRestrictions } from "../../shared/legal/catalog-policy";
-import { getOffer } from "../../shared/utils/product";
+import { getOffer, isStockedOffer } from "../../shared/utils/product";
 import { storeLocations } from "../../shared/content/stores";
 import { getCatalogSnapshot } from "../services/catalog-cache";
 
@@ -150,20 +150,25 @@ export const catalogRepository: CatalogRepository = {
         if (child.parentId && categoryIds.has(child.parentId))
           categoryIds.add(child.id);
     }
-    const price = (product: Product) =>
-      query.storeId
-        ? (getOffer(product, query.storeId)?.price ?? Infinity)
-        : Math.min(...product.offers.map((offer) => offer.price));
-    const available = (product: Product) =>
-      (query.storeId
-        ? product.offers.filter((offer) => offer.storeId === query.storeId)
-        : product.offers
-      ).some(
-        (offer) =>
-          offer.availability === "plenty" ||
-          offer.availability === "available" ||
-          offer.availability === "low",
+    // Цена для фильтров и сортировки: в выбранном магазине, а если товар там
+    // не представлен — минимальная по сети (как на карточке, см.
+    // ProductPrice). До 19.11.2026 отсутствующий оффер давал Infinity и
+    // выбрасывал товар из ценовых фильтров вместе с жёстким магазинным
+    // фильтром выдачи.
+    const price = (product: Product) => {
+      const selected = query.storeId
+        ? getOffer(product, query.storeId)?.price
+        : undefined;
+      return (
+        selected ?? Math.min(...product.offers.map((offer) => offer.price))
       );
+    };
+    // «Только в наличии» — по всей сети, а не по выбранному магазину:
+    // устройство, лежащее в другой точке, не должно исчезать из категории
+    // (жалоба владельца 19.11.2026). Выбранный магазин влияет на цену
+    // и витринный порядок, но не отсекает товары.
+    const available = (product: Product) =>
+      product.offers.some((offer) => isStockedOffer(offer));
     const words = query.q.toLocaleLowerCase("ru").split(/\s+/).filter(Boolean);
     let visible = enforceRegionalRestrictions(products, catalogMeta.stores);
     // Без подтверждения 18+ выдача ограничена общедоступным ассортиментом;
@@ -186,8 +191,6 @@ export const catalogRepository: CatalogRepository = {
         );
       return (
         (!category || categoryIds.has(product.categoryId)) &&
-        (!query.storeId ||
-          product.offers.some((offer) => offer.storeId === query.storeId)) &&
         words.every((word) => haystack.includes(word)) &&
         (query.minPrice === undefined ||
           price(product) >= query.minPrice * 100) &&

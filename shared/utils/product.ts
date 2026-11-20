@@ -1,3 +1,5 @@
+import type { StoreOffer } from "../types/store";
+import type { CatalogMeta } from "../types/catalog";
 import type { Product } from "../types/product";
 export const availabilityLabels = {
   plenty: "Много в наличии",
@@ -7,6 +9,11 @@ export const availabilityLabels = {
   unavailable: "Скоро в наличии",
   unknown: "Наличие уточняется",
 } as const;
+/** В оффере есть остаток: plenty/available/low, в отличие от «Скоро в наличии». */
+export const isStockedOffer = (offer: Pick<StoreOffer, "availability">) =>
+  offer.availability === "plenty" ||
+  offer.availability === "available" ||
+  offer.availability === "low";
 const currencyFormat = new Intl.NumberFormat("ru-RU", {
   style: "currency",
   currency: "RUB",
@@ -16,6 +23,32 @@ export const formatPrice = (minorUnits: number) =>
   currencyFormat.format(minorUnits / 100);
 export const getOffer = (product: Product, storeId: string) =>
   product.offers.find((offer) => offer.storeId === storeId);
+
+/**
+ * Товар комиссионной ветки б/у устройств (корень «Vape Express», прежнее
+ * имя — «Б/у устройства (VEX)»). Б/у позиции единичны: нулевой остаток
+ * означает продажу, а не пополнение — optimistic-метка «Скоро в наличии»
+ * к ним не применяется.
+ */
+const USED_ROOT_NAMES = new Set(["vape express", "б/у устройства (vex)"]);
+export function isUsedProduct(
+  product: Pick<Product, "categoryId">,
+  categories: CatalogMeta["categories"],
+): boolean {
+  const byId = new Map(categories.map((item) => [item.id, item]));
+  let current = product.categoryId ? byId.get(product.categoryId) : undefined;
+  const visited = new Set<string>();
+  while (current) {
+    if (!current.parentId)
+      return USED_ROOT_NAMES.has(
+        current.name.trim().toLocaleLowerCase("ru").replace(/\s+/g, " "),
+      );
+    if (visited.has(current.parentId)) return false;
+    visited.add(current.id);
+    current = byId.get(current.parentId);
+  }
+  return false;
+}
 /** Русская плюрализация: 1 позиция / 2 позиции / 5 позиций. */
 export const pluralPosition = (count: number) => {
   const mod10 = count % 10;
