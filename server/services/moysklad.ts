@@ -149,23 +149,24 @@ function slugifyCity(name: string): string {
 
 /**
  * Город магазина — по группе склада (pathName в «МойСклад»): имя группы
- * становится названием города, транслитерация — его стабильным id. Склад
- * без группы попадает в группу «Магазины». Состав городов определяется
- * структурой аккаунта «Бункера», а не кодом.
+ * становится названием города, транслитерация — его стабильным id. Состав
+ * городов определяется структурой аккаунта «Бункера», а не кодом.
  */
 interface StoreCity {
   id: string;
   name: string;
 }
-function cityFor(store: MsStore): StoreCity {
-  // Город точки можно задать вручную по id склада: аккаунты без групп
-  // складов иначе сваливаются в единую группу «Магазины»
-  // (server/data/store-cities.ts).
+function cityFor(store: MsStore): StoreCity | null {
+  // Город точки можно задать вручную по id склада: аккаунт «Бункера» групп
+  // складов не использует (server/data/store-cities.ts).
   const override = storeCities[store.id]?.trim();
   if (override) return { id: slugifyCity(override), name: override };
   const groupName = store.pathName?.trim();
   if (groupName) return { id: slugifyCity(groupName), name: groupName };
-  return { id: "stores", name: "Магазины" };
+  // Склад без города (записи в store-cities.ts и группы pathName) не
+  // публикуется: учётные склады не должны всплывать на витрине сырым
+  // именем (19.11.2026 — «СКЛАД АНАСТАСИЯ(Бункер)» в группе «Магазины»).
+  return null;
 }
 
 interface MsMeta {
@@ -322,8 +323,11 @@ export async function fetchCatalog(): Promise<CatalogSnapshot> {
   const cities = new Map<string, string>();
   const stores: Store[] = msStores
     .filter((item) => !item.archived && !isInternalStore(item.name.trim()))
-    .map((item) => {
+    .flatMap((item) => {
       const city = cityFor(item);
+      return city ? [{ item, city }] : [];
+    })
+    .map(({ item, city }) => {
       cities.set(city.id, city.name);
       return {
         id: item.id,

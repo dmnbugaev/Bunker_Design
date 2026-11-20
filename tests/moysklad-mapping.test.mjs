@@ -39,7 +39,12 @@ const stores = [
     address: "ул. Примерная, 1",
   },
   { id: "store-2", name: "Энгельсский", pathName: "Энгельс" },
-  { id: "store-3", name: "Склад без группы" },
+  // Группа pathName вместо записи в store-cities.ts: город берётся из группы
+  // (имя используется в тесте остатков как уникальное учётное имя склада).
+  { id: "store-3", name: "Склад без группы", pathName: "Саратов" },
+  // Склад без города — записи в store-cities.ts и группы pathName нет:
+  // учётный склад не публикуется и в офферы не попадает.
+  { id: "store-4", name: "Склад без города" },
   { id: "rc-1", name: "РЦ Саратов", pathName: "Саратов" },
   { id: "vitrina", name: "Склад витрины", pathName: "Саратов" },
   {
@@ -206,11 +211,10 @@ test("publish/site-name fields, price types, city groups and legal policy", asyn
     true,
   );
   // Города собираются из групп складов (pathName) транслитерацией; склад
-  // без группы попадает в «Магазины».
+  // без города (записи и группы) не публикуется — группы «Магазины» нет.
   assert.deepEqual(snapshot.meta.cities.map((city) => city.id).sort(), [
     "engels",
     "saratov",
-    "stores",
   ]);
   assert.equal(
     snapshot.meta.stores.find((store) => store.id === "store-1")?.cityId,
@@ -219,6 +223,12 @@ test("publish/site-name fields, price types, city groups and legal policy", asyn
   assert.equal(
     snapshot.meta.stores.find((store) => store.id === "store-2")?.cityId,
     "engels",
+  );
+  assert.ok(!snapshot.meta.stores.some((store) => store.id === "store-4"));
+  assert.ok(
+    snapshot.products.every((product) =>
+      product.offers.every((offer) => offer.storeId !== "store-4"),
+    ),
   );
   // Служебные склады (env-имена и префиксы) и архивные не публикуются.
   assert.equal(snapshot.meta.stores.length, 4);
