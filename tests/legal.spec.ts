@@ -312,10 +312,83 @@ test("used-devices section is gated and points to Vape Express communities", asy
   await expect(sold.locator(".product-card__soon")).toHaveText("Нет в наличии");
   await expect(sold.locator(".availability")).toHaveText("Нет в наличии");
   await expect(page.locator(".product-card__soon")).toHaveCount(1);
+  // Деление витрины при выбранном магазине (store-b1 «Рахова, 64/70а»):
+  // сначала позиции точки, затем подраздел «В других магазинах сети» —
+  // argus лежит на «Танкистов, 64» (store-b2), проданный pasito не лежит
+  // нигде.
+  const localGrid = page.locator(
+    ".used-catalog h3.catalog-group__title:has-text('В магазине') + .product-grid",
+  );
+  await expect(localGrid.locator(".product-card")).toHaveCount(1);
+  await expect(
+    localGrid.locator(".product-card").filter({ hasText: "Vinci X" }),
+  ).toBeVisible();
+  const otherGrid = page.locator(
+    ".used-catalog h3.catalog-group__title:has-text('В других магазинах') + .product-grid",
+  );
+  await expect(otherGrid.locator(".product-card")).toHaveCount(2);
+  await expect(
+    otherGrid.locator(".product-card").filter({ hasText: "Argus Pro 2" }),
+  ).toBeVisible();
   // Раздел доступен из основной навигации шапки.
   await expect(
     page.locator(".desktop-nav").getByRole("link", { name: "Б/у устройства" }),
   ).toBeVisible();
+});
+
+test("used branch in catalog splits by selected store", async ({ page }) => {
+  // Ветка «Vape Express» в каталоге при выбранном магазине делится на
+  // подразделы «В магазине …» и «В других магазинах сети»: серверная
+  // сортировка держит позиции точки на первых местах выдачи, клиент
+  // раскладывает страницу по принадлежности офферов.
+  await page.context().addCookies([
+    {
+      name: "bunker-age-confirmed",
+      value: "true",
+      domain: "127.0.0.1",
+      path: "/",
+    },
+    {
+      name: "bunker-store",
+      value: "store-b1",
+      domain: "127.0.0.1",
+      path: "/",
+    },
+  ]);
+  await page.goto("/catalog/cat-vex-express");
+  const titles = page.locator(".catalog-results .catalog-group__title");
+  await expect(titles).toHaveCount(2);
+  await expect(titles.nth(0)).toHaveText("В магазине Рахова, 64/70а");
+  await expect(titles.nth(1)).toHaveText("В других магазинах сети");
+  const localGrid = page.locator(
+    ".catalog-results h2.catalog-group__title:has-text('В магазине') + .product-grid",
+  );
+  await expect(localGrid.locator(".product-card")).toHaveCount(1);
+  await expect(
+    localGrid.locator(".product-card").filter({ hasText: "Vinci X" }),
+  ).toBeVisible();
+  const otherGrid = page.locator(
+    ".catalog-results h2.catalog-group__title:has-text('В других магазинах') + .product-grid",
+  );
+  // Проданный pasito скрыт фильтром «Только в наличии» каталога
+  // (включён по умолчанию): в «других магазинах» — только argus.
+  await expect(otherGrid.locator(".product-card")).toHaveCount(1);
+  await expect(
+    otherGrid.locator(".product-card").filter({ hasText: "Argus Pro 2" }),
+  ).toBeVisible();
+  // Без выбранного магазина подразделов нет — одна сетка на всю выдачу.
+  await page.context().clearCookies();
+  await page.context().addCookies([
+    {
+      name: "bunker-age-confirmed",
+      value: "true",
+      domain: "127.0.0.1",
+      path: "/",
+    },
+  ]);
+  await page.goto("/catalog/cat-vex-express");
+  await expect(page.locator(".catalog-group__title")).toHaveCount(0);
+  await expect(page.locator(".product-card")).toHaveCount(2);
 });
 
 test("catalog pages contain no remote-sale or promotion vocabulary", async ({

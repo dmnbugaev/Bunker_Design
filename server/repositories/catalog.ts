@@ -5,7 +5,11 @@ import type {
 } from "../../shared/types/catalog";
 import type { Product } from "../../shared/types/product";
 import { enforceRegionalRestrictions } from "../../shared/legal/catalog-policy";
-import { getOffer, isStockedOffer } from "../../shared/utils/product";
+import {
+  getOffer,
+  isStockedOffer,
+  usedCategoryIds,
+} from "../../shared/utils/product";
 import { storeLocations } from "../../shared/content/stores";
 import { getCatalogSnapshot } from "../services/catalog-cache";
 
@@ -217,6 +221,19 @@ export const catalogRepository: CatalogRepository = {
       if (plenty) return 2;
       return 3;
     };
+    // Б/у позиции выбранного магазина — вперёд всей ветки (жалоба владельца
+    // 22.11.2026): комиссионные устройства единичны, покупатель ищет то, что
+    // физически лежит в его точке, а не по всей сети. Ранг стоит выше
+    // витринного приоритета, поэтому без фото, но «в магазине» б/у позиция
+    // обгоняет сфотографированную из другой точки; остальной каталог ранг
+    // не меняет. Ветка делится на подразделы и на клиенте (CatalogView,
+    // used.vue) — сортировка держит товары точки на первых страницах.
+    const usedIds = usedCategoryIds(catalogMeta.categories);
+    const usedRank = (product: Product) => {
+      if (!query.storeId || !usedIds.has(product.categoryId)) return 0;
+      const offer = getOffer(product, query.storeId);
+      return offer && isStockedOffer(offer) ? 0 : 1;
+    };
     // «Популярность» для порядка по умолчанию: в выгрузке «МойСклад» нет
     // метрики спроса, поэтому внутри витринного приоритета товары идут по
     // детерминированной перестановке (FNV-хеш id) — каталог выглядит
@@ -238,6 +255,7 @@ export const catalogRepository: CatalogRepository = {
       if (query.sort === "newest")
         return b.publishedAt.localeCompare(a.publishedAt);
       return (
+        usedRank(a) - usedRank(b) ||
         stockRank(a) - stockRank(b) ||
         popularityRank(a) - popularityRank(b) ||
         a.name.localeCompare(b.name, "ru")

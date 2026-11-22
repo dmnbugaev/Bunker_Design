@@ -1,5 +1,6 @@
 import type { StoreOffer } from "../types/store";
 import type { CatalogMeta } from "../types/catalog";
+import type { Category } from "../types/category";
 import type { Product } from "../types/product";
 export const availabilityLabels = {
   plenty: "Много в наличии",
@@ -31,6 +32,8 @@ export const getOffer = (product: Product, storeId: string) =>
  * к ним не применяется.
  */
 const USED_ROOT_NAMES = new Set(["vape express", "б/у устройства (vex)"]);
+const isUsedRootName = (name: string) =>
+  USED_ROOT_NAMES.has(name.trim().toLocaleLowerCase("ru").replace(/\s+/g, " "));
 export function isUsedProduct(
   product: Pick<Product, "categoryId">,
   categories: CatalogMeta["categories"],
@@ -39,15 +42,41 @@ export function isUsedProduct(
   let current = product.categoryId ? byId.get(product.categoryId) : undefined;
   const visited = new Set<string>();
   while (current) {
-    if (!current.parentId)
-      return USED_ROOT_NAMES.has(
-        current.name.trim().toLocaleLowerCase("ru").replace(/\s+/g, " "),
-      );
+    if (!current.parentId) return isUsedRootName(current.name);
     if (visited.has(current.parentId)) return false;
     visited.add(current.id);
     current = byId.get(current.parentId);
   }
   return false;
+}
+/**
+ * Id категорий комиссионной ветки б/у (корни «Vape Express» / «Б/у
+ * устройства (VEX)» вместе со всеми потомками): принадлежность категории
+ * или товара к ветке проверяется за O(1) — на сервере сортировки и в
+ * интерфейсе каталога, где ветка делится на «в выбранном магазине» и
+ * «в других магазинах сети».
+ */
+export function usedCategoryIds(
+  categories: CatalogMeta["categories"],
+): Set<string> {
+  const children = new Map<string, Category[]>();
+  for (const item of categories)
+    if (item.parentId)
+      children.set(item.parentId, [
+        ...(children.get(item.parentId) ?? []),
+        item,
+      ]);
+  const ids = new Set<string>();
+  const queue = categories
+    .filter((item) => !item.parentId && isUsedRootName(item.name))
+    .map((item) => item.id);
+  while (queue.length) {
+    const id = queue.pop()!;
+    if (ids.has(id)) continue;
+    ids.add(id);
+    for (const child of children.get(id) ?? []) queue.push(child.id);
+  }
+  return ids;
 }
 /** Русская плюрализация: 1 позиция / 2 позиции / 5 позиций. */
 export const pluralPosition = (count: number) => {

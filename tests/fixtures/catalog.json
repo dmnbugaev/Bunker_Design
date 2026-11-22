@@ -4126,13 +4126,13 @@
           "storeId": "store-b1",
           "price": 229000,
           "currency": "RUB",
-          "availability": "available"
+          "availability": "unavailable"
         },
         {
           "storeId": "store-b2",
           "price": 229000,
           "currency": "RUB",
-          "availability": "unavailable"
+          "availability": "available"
         },
         {
           "storeId": "store-b4",
@@ -4630,8 +4630,8 @@
       "store-b3": 4
     },
     "fx-vex-argus": {
-      "store-b1": 1,
-      "store-b2": 0,
+      "store-b1": 0,
+      "store-b2": 1,
       "store-b3": 0
     },
     "fx-vex-repair-xros": {

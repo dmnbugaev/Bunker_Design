@@ -2221,6 +2221,17 @@ button.text-link {
   gap: var(--space-6);
   min-width: 0;
 }
+/* Подраздел выдачи ветки б/у при выбранном магазине («В магазине …» /
+   «В других магазинах сети», используется и мини-витриной /used):
+   кэпшен-надзаголовок над товарной сеткой, без рамок и коробок. */
+.catalog-group__title {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-display);
+  font-size: var(--font-size-label);
+  letter-spacing: var(--tracking-overline);
+  text-transform: uppercase;
+}
 /* Скелетоны повторяют товарную сетку: 2 колонки на телефоне, 3 от
    планшета (как .product-grid в components.css). */
 .catalog-loading {

@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { vapeExpress } from "~~/shared/content/bunker";
-import { pluralPosition } from "~~/shared/utils/product";
+import type { Product } from "~~/shared/types/product";
+import {
+  getOffer,
+  isStockedOffer,
+  pluralPosition,
+} from "~~/shared/utils/product";
 
 // Раздел закрыт от индексации и открывается после подтверждения 18+
 // (маршрут не входит в PUBLIC_ROUTES): продвижение устройств ограничено
@@ -30,11 +35,27 @@ const usedCategories = computed(() =>
   ),
 );
 // "__used__" не существует в каталоге: без ветки запрос ничего не тянет
-// (приём из reserve.vue для пустой выборки).
+// (приём из reserve.vue для пустой выборки). Выбранный магазин задаёт
+// порядок витрины (позиции точки — вперёд, см. catalogRepository.list)
+// и цены карточек; смена магазина перезапрашивает выборку.
+const { store } = useStoreSelection();
 const { data: usedList } = await useProducts(() =>
   usedRoot.value
-    ? { category: usedRoot.value.slug, limit: 8 }
-    : { ids: "__used__", limit: 8 },
+    ? { category: usedRoot.value.slug, limit: 8, storeId: store.value?.id }
+    : { ids: "__used__", limit: 8, storeId: store.value?.id },
+);
+// При выбранном магазине витрина делится на «в этой точке» и «в других
+// магазинах сети»: б/у позиции единичны, покупатель ищет то, что лежит
+// у него рядом.
+const stockedAtStore = (product: Product) => {
+  const offer = store.value ? getOffer(product, store.value.id) : undefined;
+  return Boolean(offer && isStockedOffer(offer));
+};
+const localItems = computed(() =>
+  (usedList.value?.items ?? []).filter(stockedAtStore),
+);
+const otherItems = computed(() =>
+  (usedList.value?.items ?? []).filter((item) => !stockedAtStore(item)),
 );
 </script>
 
@@ -110,7 +131,19 @@ const { data: usedList } = await useProducts(() =>
           {{ child.name }}
         </NuxtLink>
       </nav>
-      <ProductGrid v-if="usedList?.items.length" :products="usedList.items" />
+      <template v-if="usedList?.items.length">
+        <template v-if="store">
+          <h3 v-if="localItems.length" class="catalog-group__title">
+            В магазине {{ store.name }}
+          </h3>
+          <ProductGrid v-if="localItems.length" :products="localItems" />
+          <template v-if="otherItems.length">
+            <h3 class="catalog-group__title">В других магазинах сети</h3>
+            <ProductGrid :products="otherItems" />
+          </template>
+        </template>
+        <ProductGrid v-else :products="usedList.items" />
+      </template>
       <div class="used-catalog__foot">
         <NuxtLink
           :to="`/catalog/${usedRoot.slug}`"

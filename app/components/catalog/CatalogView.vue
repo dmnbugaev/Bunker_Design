@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import type { Category } from "~~/shared/types/category";
+import type { Product } from "~~/shared/types/product";
+import {
+  getOffer,
+  isStockedOffer,
+  usedCategoryIds,
+} from "~~/shared/utils/product";
 const props = defineProps<{ categorySlug?: string; search?: boolean }>();
 const route = useRoute();
 const {
@@ -73,6 +79,24 @@ const sidebarChildren = computed(() =>
       (item) => item.parentId === activeRootId.value,
     ) ?? [],
   ),
+);
+// Ветка б/у устройств при выбранном магазине делится на «в этой точке» и
+// «в других магазинах сети» (б/у позиции единичны — покупатель ищет то,
+// что лежит рядом; порядок страниц задаёт серверная сортировка). Поиск
+// без категории не делится.
+const usedListing = computed(() => {
+  const usedIds = usedCategoryIds(meta.value?.categories ?? []);
+  return Boolean(category.value && usedIds.has(category.value.id));
+});
+const stockedAtStore = (product: Product) => {
+  const offer = store.value ? getOffer(product, store.value.id) : undefined;
+  return Boolean(offer && isStockedOffer(offer));
+};
+const localItems = computed(() =>
+  (data.value?.items ?? []).filter(stockedAtStore),
+);
+const otherItems = computed(() =>
+  (data.value?.items ?? []).filter((item) => !stockedAtStore(item)),
 );
 // Чипы активных фильтров: только явно применённые пользователем —
 // фильтр наличия, включённый по умолчанию, чипом не подсвечивается.
@@ -287,10 +311,21 @@ onMounted(() => {
                 ><UiButton @click="refresh()">Повторить</UiButton></template
               ></UiEmptyState
             >
-            <template v-else-if="data?.items.length"
-              ><ProductGrid :products="data.items" /><CatalogPagination
-                :page="data.page"
-                :page-count="data.pageCount"
+            <template v-else-if="data?.items.length">
+              <!-- Деление ветки б/у — по каждой странице: стык страниц
+                   показывает обе секции, пагинация общая. -->
+              <template v-if="usedListing && store">
+                <h2 v-if="localItems.length" class="catalog-group__title">
+                  В магазине {{ store.name }}
+                </h2>
+                <ProductGrid v-if="localItems.length" :products="localItems" />
+                <template v-if="otherItems.length">
+                  <h2 class="catalog-group__title">В других магазинах сети</h2>
+                  <ProductGrid :products="otherItems" />
+                </template>
+              </template>
+              <ProductGrid v-else :products="data.items" />
+              <CatalogPagination :page="data.page" :page-count="data.pageCount"
             /></template>
             <UiEmptyState v-else title="Ничего не найдено"
               >Попробуйте изменить запрос или снять часть фильтров.<template
