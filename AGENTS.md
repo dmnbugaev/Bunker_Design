@@ -81,8 +81,11 @@ build. Node 24 (часть unit-тестов тайминг-зависима и 
 
 **Прод (vapeserver, с 26.10.2026):** https://бункер-табак.рф (xn----8sbabcv8afu6axg.xn--p1ai).
 Nuxt-сборка на порту 3001 за nginx + Let's Encrypt; systemd `bunker.service`,
-юзер `bunker`, каталог /var/www/BunkerSite (git-checkout от
-github.com/dmnbugaev/Bunker_Design). Телеграм-уведомления идут через
+каталог /var/www/BunkerSite (git-checkout от
+github.com/dmnbugaev/Bunker_Design). Сервис и сборка — от `admin`
+(drop-in `bunker.service.d/override.conf`; юзер `bunker` удалён на сервере,
+bunker-deploy переведён на admin 22.11.2026, бэкап `bunker-deploy.bak-20261122`).
+Телеграм-уведомления идут через
 SSH-туннель на myserver (api.telegram.org → 127.0.0.2 в /etc/hosts, сервис
 prohook-telegram-relay). Деплой из CI: job deploy в ci.yml дергает форс-команду
 `sudo -n /usr/local/bin/bunker-deploy` на vapeserver (скрипт: git reset →
